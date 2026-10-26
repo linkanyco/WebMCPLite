@@ -68,3 +68,7 @@
 
 - [공식 초안](https://webmachinelearning.github.io/webmcp/#modelcontext-interface) §§4.2, 4.2.1: registerTool은 Promise, execute 콜백은 Promise<any>, executeTool은 플랫폼이 직렬화한 문자열을 반환합니다. 브리지에서는 콜백에 객체를 그대로 반환합니다. AbortSignal 해제와 등록 거부도 처리합니다. 구형 navigator API는 이 초안과 별개이며 초기 브리지에서 지원을 주장하지 않습니다.
 - [Kit 구현 안내](https://docs.nekuda.ai/skills/implement)도 방문자 작업에 맞춘 도구와 기존 앱 동작 연결을 다룹니다. 인계의 `ask_site` 관찰은 해당 공개 안내 페이지에서 세부 원문을 재확인한 사실이 아닙니다. 따라서 사이트 안내 도구를 Lite 고유 기능이라고 주장하지 않습니다.
+
+## 후속 H32 정정과 자료의 적용 범위
+
+이 자료의 초기 JS 대안·메타 진입점 제안은 당시 AP 기록입니다. [H32](human-intent.md)의 document.modelContext 단일 진입점 정정이 우선하며 별도 공개 fallback으로 구현하거나 권하지 않습니다. 공식 초안의 getTools/executeTool 소비와 브라우저 에이전트 내부 발견은 계속 구별합니다. 당시 리서치 사실·원 제안은 삭제하거나 휴먼 결정으로 소급하지 않습니다.

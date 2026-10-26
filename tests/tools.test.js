@@ -2,20 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildTools, pages } from '../examples/tools.js';
 import { createWorkspace, pageAreas } from '../examples/workspace.js';
-import { connectTools } from '../src/connect.js';
 function fixture(page) {
   const w = createWorkspace();
-  let bridge;
-  bridge = connectTools(buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), setHighlights: enabled => ({ ok: true, enabled }), getTools: () => bridge.list() }), { modelContext: null });
-  return { w, call: bridge.call, bridge };
+  let tools;
+  const metadata = () => tools.map(({ execute, ...info }) => structuredClone(info));
+  tools = buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), setHighlights: enabled => ({ ok: true, enabled }), getTools: metadata });
+  // Test-only access to app definitions, not a public browser discovery protocol.
+  return { w, metadata, call: (name, input = {}) => tools.find(t => t.name === name).execute(input) };
 }
 test('page manuals derive exact exposed contracts and current-page areas', async () => {
   for (const p of pages) {
-    const { bridge, call } = fixture(p.id);
+    const { metadata, call } = fixture(p.id);
     const manual = await call('page_manual');
     assert.equal(manual.page.id, p.id);
     assert.deepEqual(manual.areas, pageAreas[p.id]);
-    assert.deepEqual(manual.tools, bridge.list());
+    assert.deepEqual(manual.tools, metadata());
     const map = await call('site_map');
     assert.equal(map.pages.length, 6);
     for (const entry of map.pages) {
@@ -25,11 +26,9 @@ test('page manuals derive exact exposed contracts and current-page areas', async
         assert.equal(url.searchParams.get('page'), entry.id);
       }
     }
-    bridge.dispose();
-    assert.equal((await call('page_manual')).error.code, 'inactive');
   }
 });
-test('direct JS calls validate runtime inputs, readonly fields and current editing target', async () => {
+test('shared app actions validate runtime inputs, readonly fields and current editing target', async () => {
   const { w, call } = fixture('product');
   const before = w.read('catalog');
   for (const input of [null, [], { extra: true }, { id: 'p1', patch: { styleB: 'other' }, expectedRevision: 0 }, { id: 'p2', patch: { price: 5 }, expectedRevision: 0 }, { id: 'p1', patch: { price: null }, expectedRevision: 0 }]) {

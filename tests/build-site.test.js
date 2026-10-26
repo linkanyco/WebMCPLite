@@ -15,6 +15,7 @@ test('static artifact contains only runnable assets, stamps its SHA and resolves
     assert.deepEqual(files, ['examples/app.js', 'examples/manual.json', 'examples/style.css', 'examples/tools.js', 'examples/workspace.js', 'index.html', 'src/connect.js', 'version.json']);
     const html = await readFile(path.join(destination, 'index.html'), 'utf8');
     assert.ok(html.includes(`<meta name="build-commit" content="${commit}">`));
+    assert.doesNotMatch(html, /agentsmd|webmcpLite/);
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'version.json'), 'utf8')), { commit });
     const base = new URL('https://example.test/WebMCPLite/');
     const refs = [...html.matchAll(/(?:href|src)="([^"]+\.(?:js|css))"/g)].map(m => m[1]);
@@ -25,6 +26,7 @@ test('static artifact contains only runnable assets, stamps its SHA and resolves
     }
     for (const asset of files.filter(f => f.endsWith('.js'))) {
       const source = await readFile(path.join(destination, asset), 'utf8');
+      assert.doesNotMatch(source, /window\.webmcpLite/);
       for (const match of source.matchAll(/(?:from |new URL\()'([^']+\.(?:js|json))'/g)) {
         const url = new URL(match[1], new URL(asset, base));
         assert.ok(url.pathname.startsWith(base.pathname));

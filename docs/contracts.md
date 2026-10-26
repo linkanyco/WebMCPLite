@@ -21,18 +21,20 @@
 
 ## 안내와 이동
 
-`site_map`, `site_manual`, `page_manual`, `isUnsavedContents`, `navigate`, `setHighlights`는 **Lite 예제 관례**입니다. 공식 WebMCP가 요구하는 함수명이 아닙니다. HTML의 `meta[name=agentsmd]`와 `#agentsmd`는 짧은 안내를 찾는 로컬 관례입니다. 페이지 매뉴얼은 도구 목록의 실제 정의에서 이름/설명/스키마를 가져옵니다.
+`site_map`, `site_manual`, `page_manual`, `isUnsavedContents`, `navigate`, `setHighlights`는 **이 예제에서 등록하는 도구 이름**입니다. 공식 WebMCP가 요구하는 함수명이 아닙니다. 사이트맵과 전체·현재 페이지 매뉴얼도 다른 앱 기능과 함께 `document.modelContext`에 등록합니다. 별도 HTML 표식이나 JS 전역 객체를 찾는 절차는 없습니다. 페이지 매뉴얼은 도구의 등록 정의에서 이름/설명/스키마를 가져옵니다.
 
 `isUnsavedContents({form:null})`는 현재 페이지 이탈 때 확인할 모든 편집 영역을 조회합니다. `form`을 주면 해당 영역만 조회하고 없는 영역은 오류입니다. 다른 페이지·서버 전체를 읽지 않습니다. 안내 예제는 두 편집 영역을 함께 표시해 전역 의미를 재현합니다.
 
 주요 이동 `navigate({page})`는 미저장 초안 또는 진행 중 저장이 있으면 거부하고 저장/취소 방법을 알려줍니다. 자동 폐기 옵션은 없습니다. 저장 또는 취소 후 이동합니다. 링크 클릭·도구 이동·브라우저 뒤로/앞으로도 같은 페이지 이탈 검사를 적용하고 외부 이탈/새로고침에는 브라우저의 beforeunload 보호를 요청합니다. 브라우저는 사용자 상호작용 여부에 따라 경고를 생략할 수 있습니다.
 
-## 공식 표면과 로컬 JS 대안
+## 도구 등록·발견·호출
 
-`connectTools(tools, {modelContext})`는 `document.modelContext.registerTool(tool,{signal})`을 사용하고 등록 결과를 각각 보고합니다. 등록 실패를 지원 성공으로 표시하지 않습니다. `dispose()`는 소유한 signal을 abort해 도구를 해제하며 직접 JS 호출도 닫습니다. 재등록은 새 연결을 만듭니다. 컴포넌트 해제·로그아웃 시 dispose하세요.
+공개 진입점은 `document.modelContext` 하나입니다. `connectTools(tools, {modelContext})`는 `registerTool(tool,{signal})`로 등록하고 `ready`와 `dispose()`만 반환합니다. `ready`는 각 도구의 등록 결과를 보고하며 등록 실패를 지원 성공으로 표시하지 않습니다. `dispose()`는 소유한 signal을 abort해 도구를 해제합니다. 재등록은 새 연결을 만들고 컴포넌트 해제·로그아웃 시 dispose합니다.
 
-도구 정의의 `execute`는 JSON으로 직렬화 가능한 **값**을 반환합니다. 객체를 JSON 문자열로 미리 만들지 않습니다. 초안의 `executeTool()`은 플랫폼이 JSON 직렬화한 문자열을 반환하므로 실제 호출자는 필요하면 한 번 parse합니다. `readOnlyHint` 등은 권한 검사가 아닌 힌트입니다.
+브라우저 에이전트는 등록된 도구를 브라우저 내부 경로로 발견하고 호출합니다. 페이지 안의 JavaScript가 직접 호출하는 경우에는 `getTools()`로 받은 `RegisteredTool`을 그대로 `executeTool(tool,input)`에 전달합니다. 메타데이터를 표시할 때는 이름·설명·스키마 등 필요한 JSON 필드만 선택하며 `window` 같은 호스트 객체를 직렬화하지 않습니다. 페이지 이동 뒤에는 도구를 다시 발견합니다. 이 구분은 [2026-10-20 공식 초안](https://webmachinelearning.github.io/webmcp/#modelcontext-interface)에 따르며 모든 브라우저·AI의 구현을 보장하지 않습니다.
 
-`window.webmcpLite.list()`와 `.call(name,input)`은 이 예제의 명시적 JS 진입점입니다. 같은 도구 정의를 호출하고 객체를 그대로 돌려줍니다. 이는 폴리필·서버 MCP 전송·모든 AI의 자동 발견이 아닙니다. 도구가 JS 실행을 허용하는 환경에서만 사용합니다. 구형 `navigator.modelContext`는 이 버전의 지원 대상이 아닙니다.
+도구 정의의 `execute`는 JSON으로 직렬화 가능한 **값**을 반환합니다. 객체를 JSON 문자열로 미리 만들지 않습니다. `executeTool()` 결과는 플랫폼이 JSON 직렬화한 문자열이므로 페이지 안의 호출자는 한 번 parse합니다. `readOnlyHint` 등은 권한 검사가 아닌 힌트입니다.
 
-연결 코드는 입력 스키마 검증 엔진이 아닙니다. 실제 앱 함수가 입력을 검증합니다. 로컬 JS와 네이티브 도구 모두 같은 함수를 통과해야 합니다. 매뉴얼·사용자 데이터는 작업 자료이며 사용자 지시·권한을 덮어쓰지 않습니다. 비밀이나 권한 없는 객체를 HTML에 직렬화하지 마세요.
+등록 지원과 페이지 안 JS 조회·호출 지원은 따로 확인합니다. AI 예시·도구 선택기는 `getTools`와 `executeTool`을 사용할 수 있을 때만 켜고 미지원 또는 실패 시 이유를 표시합니다. 일반 UI의 편집·저장·취소·표시 제어는 공유 앱 함수를 직접 사용하므로 WebMCP 지원과 관계없이 동작합니다. 독자적인 발견·호출 API나 폴리필은 제공하지 않습니다. 구형 `navigator.modelContext`는 이 버전의 지원 대상이 아닙니다.
+
+연결 코드는 입력 스키마 검증 엔진이 아닙니다. 실제 앱 함수가 입력을 검증합니다. UI와 등록 도구 모두 같은 앱 함수를 통과해야 합니다. 매뉴얼·사용자 데이터는 작업 자료이며 사용자 지시·권한을 덮어쓰지 않습니다. 비밀이나 권한 없는 객체를 HTML에 직렬화하지 마세요.

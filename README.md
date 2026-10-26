@@ -40,3 +40,9 @@ Codex 내장 브라우저에서 실제 페이지 도구 발견·호출·UI 반�
 main에 반영되면 GitHub Actions가 테스트 후 정적 예제를 Pages에 게시합니다. PR에서는 검증만 하며 공개 배포하지 않습니다. 반영에는 잠깐 시간이 걸리고, 실패하면 직전 성공 버전이 계속 보입니다. 화면 아래 **게시 버전** 링크 또는 [version.json](https://linkanyco.github.io/WebMCPLite/version.json)의 커밋을 main과 대조할 수 있습니다.
 
 `npm run build:site`는 실행에 필요한 정적 파일만 `dist/`에 만듭니다. 설치/번들러 없이 동작하며 저장소 문서·테스트·로컬 설정은 게시 산출물에 넣지 않습니다. 첫 공개 게시 결과는 [#16](https://github.com/linkanyco/WebMCPLite/issues/16)에서 추적합니다.
+
+## AI 도구 진입점
+
+런타임 도구 등록·발견·호출은 **document.modelContext**로 통일합니다. 사이트/페이지 매뉴얼과 사이트맵도 등록 도구에서 발견합니다. 지원 에이전트는 브라우저의 발견 기능을 사용하고, 페이지 JS가 직접 소비할 때는 실제 지원 환경에서 getTools()/executeTool()을 사용합니다. [표준 호출 예시](examples/README.md)를 참조하세요.
+
+등록 지원과 페이지 내 호출 지원은 별도로 표시합니다. 미지원 환경에서도 일반 편집·저장·취소는 사용할 수 있습니다. 별도 전역 API나 HTML 메타 진입점·폴리필은 제공하지 않습니다. [H32 정정과 이전 제안의 대체 관계](PLANS.md)를 보존했습니다.

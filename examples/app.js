@@ -6,7 +6,7 @@ const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', 
 let page = new URL(location.href).searchParams.get('page') || 'product';
 if (!pages.some(p => p.id === page)) page = 'product';
 let entry = Number.isInteger(history.state?.liteEntry) ? history.state.liteEntry : 0;
-let restoring = false, bridge, highlights = true, failNext = true;
+let restoring = false, bridge, toolDefinitions = [], highlights = true, failNext = true;
 const workspace = createWorkspace({ onChange: () => renderEditor() });
 history.replaceState({ litePage: page, liteEntry: entry }, '', `?page=${page}`);
 const show = value => { $('#result').textContent = JSON.stringify(value, null, 2); return value; };
@@ -117,24 +117,55 @@ $('#editor').addEventListener('click', async event => {
   }
   if (button.dataset.action) {
     const form = button.dataset.area;
-    show(await bridge.call(button.dataset.action, { form, expectedRevision: workspace.read(form).revision }));
+    const revision = workspace.read(form).revision;
+    show(button.dataset.action === 'save' ? await workspace.save(form, revision, saveOptions()) : workspace.cancel(form, revision));
   }
 });
+const saveOptions = () => page === 'async' ? { latency: 700, shouldFail: failNext } : {};
+function setHighlights(enabled) {
+  highlights = enabled; document.body.classList.toggle('hide-highlights', !enabled);
+  $('#highlights').checked = enabled; return { ok: true, enabled };
+}
+function toolMetadata() {
+  return toolDefinitions.map(({ execute, ...info }) => structuredClone(info));
+}
+// The playground consumes the standard API; it is not another public entrypoint.
+async function callTool(name, input = {}) {
+  const context = document.modelContext;
+  if (typeof context?.getTools !== 'function' || typeof context?.executeTool !== 'function') {
+    return fail('unsupported', '이 브라우저는 페이지 안의 표준 도구 호출을 지원하지 않습니다.');
+  }
+  const owner = bridge;
+  await owner.ready;
+  try {
+    const tools = await context.getTools();
+    if (owner !== bridge) return fail('inactive', '페이지가 바뀌었습니다. 현재 도구를 다시 선택하세요.');
+    const tool = tools.find(t => t.name === name && t.window === window);
+    if (!tool) return fail('not_found', '현재 페이지에서 등록된 도구를 찾을 수 없습니다.');
+    return JSON.parse(await context.executeTool(tool, input));
+  } catch {
+    return fail('tool_failed', '표준 도구 호출에 실패했습니다. 현재 페이지의 도구를 다시 조회하세요.');
+  }
+}
 function activate() {
   bridge?.dispose(); notice('');
   $('#pages').innerHTML = pages.map(p => `<a href="?page=${p.id}" data-page="${p.id}" ${p.id === page ? 'aria-current="page"' : ''}>${p.title}</a>`).join('');
   renderEditor();
-  bridge = connectTools(buildTools({ workspace, page, navigate, getTools: () => bridge.list(), setHighlights: enabled => {
-    highlights = enabled; document.body.classList.toggle('hide-highlights', !enabled); $('#highlights').checked = enabled; return { ok: true, enabled };
-  }, saveOptions: () => page === 'async' ? { latency: 700, shouldFail: failNext } : {} }));
-  window.webmcpLite = bridge;
+  toolDefinitions = buildTools({ workspace, page, navigate, getTools: toolMetadata, setHighlights, saveOptions });
+  bridge = connectTools(toolDefinitions);
   const owner = bridge;
-  $('#native-status').textContent = '네이티브 WebMCP 등록 확인 중…';
+  for (const id of ['demo', 'run', 'tool', 'args']) $(`#${id}`).disabled = true;
+  $('#native-status').textContent = 'WebMCP 등록 확인 중…';
+  $('#tool-status').textContent = '페이지 안의 표준 도구 호출 지원을 확인하고 있습니다.';
   bridge.ready.then(states => {
     if (owner !== bridge) return;
-    $('#native-status').textContent = states.every(s => s.state === 'registered') ? '네이티브 등록 완료 · 실제 에이전트 호출은 별도 확인' : states.some(s => s.state === 'failed') ? '네이티브 등록 실패 · JS 직접 호출 사용 가능' : '네이티브 WebMCP 미지원 · JS 직접 호출 사용 가능';
+    const registered = states.every(s => s.state === 'registered');
+    $('#native-status').textContent = registered ? 'WebMCP 등록 완료 · 에이전트 지원은 별도 확인' : states.some(s => s.state === 'failed') ? 'WebMCP 등록 실패 · 일반 편집 사용 가능' : 'WebMCP 미지원 · 일반 편집 사용 가능';
+    const inPage = registered && typeof document.modelContext?.getTools === 'function' && typeof document.modelContext?.executeTool === 'function';
+    for (const id of ['demo', 'run', 'tool', 'args']) $(`#${id}`).disabled = !inPage;
+    $('#tool-status').textContent = inPage ? '아래 버튼은 표준 도구 목록을 조회한 뒤 호출합니다.' : '이 브라우저에서는 페이지 안의 도구 호출을 지원하지 않습니다. 일반 편집은 사용할 수 있습니다.';
   });
-  $('#tool').innerHTML = bridge.list().map(t => `<option>${t.name}</option>`).join('');
+  $('#tool').innerHTML = toolDefinitions.map(t => `<option>${t.name}</option>`).join('');
   $('#tool').value = page === 'bulk' ? 'getProducts' : page === 'sheet' ? 'getSheet' : page === 'board' ? 'getBoard' : page === 'guide' ? 'getNotes' : 'getProduct';
   selectTool(); $('#result').textContent = '아직 호출하지 않았습니다.';
   $('#scenario').textContent = { product: '제품 이름·가격을 수정하고 직접 이어서 편집하세요.', bulk: '두 제품의 가격을 한 번에 수정합니다.', sheet: '제품 번호 B를 조회한 뒤 B 번호로 표시합니다.', board: '보드 제목과 메모를 고칩니다.', guide: '두 번째 영역을 수정한 뒤 이동을 시도하세요.', async: '가격 수정 → 저장 실패 → 실패 토글 끄기 → 재시도.' }[page];
@@ -145,25 +176,25 @@ const examples = () => {
   return { getProduct: { id }, setProduct: { id, patch: { name: 'AI와 함께 만든 제품' }, expectedRevision: rev }, setProducts: { updates: [{ id: 'p1', patch: { price: 50 } }], expectedRevision: rev }, setSheet: { patch: { numberType: 'B' }, expectedRevision: rev }, setBoard: { patch: { title: '함께 정리한 보드' }, expectedRevision: rev }, setNote: { form: 'guideDetails', patch: { text: 'AI가 수정한 안내' }, expectedRevision: workspace.read('guideDetails').revision }, save: { form: area, expectedRevision: rev }, cancel: { form: area, expectedRevision: rev }, navigate: { page: page === 'board' ? 'product' : 'board' }, setHighlights: { enabled: false }, isUnsavedContents: { form: null } };
 };
 function selectTool() {
-  const tool = bridge.list().find(t => t.name === $('#tool').value);
+  const tool = toolMetadata().find(t => t.name === $('#tool').value);
   $('#args').value = JSON.stringify(examples()[tool.name] || {}, null, 2);
   $('#schema').textContent = JSON.stringify(tool, null, 2);
 }
 $('#tool').addEventListener('change', selectTool);
 $('#run').addEventListener('click', async () => {
   let input; try { input = JSON.parse($('#args').value); } catch { show(fail('validation', '입력 JSON을 확인하세요.')); return; }
-  show(await bridge.call($('#tool').value, input));
+  show(await callTool($('#tool').value, input));
 });
-$('#highlights').addEventListener('change', async event => show(await bridge.call('setHighlights', { enabled: event.target.checked })));
+$('#highlights').addEventListener('change', event => show(setHighlights(event.target.checked)));
 $('#pages').addEventListener('click', event => { const link = event.target.closest('a'); if (link) { event.preventDefault(); show(navigate(link.dataset.page)); } });
 $('.brand').addEventListener('click', event => { event.preventDefault(); show(navigate('product')); });
 $('#demo').addEventListener('click', async () => {
-  const call = (name, input) => bridge.call(name, input);
-  if (page === 'bulk') { const state = await call('getProducts', {}); show(await call('setProducts', { updates: [{ id: 'p1', patch: { price: 48 } }, { id: 'p2', patch: { price: 92 } }], expectedRevision: state.revision })); }
-  else if (page === 'sheet') { const product = await call('getProduct', { id: 'p1' }); const state = await call('getSheet', {}); show({ relatedProduct: product, edit: await call('setSheet', { patch: { numberType: 'B' }, expectedRevision: state.revision }) }); }
-  else if (page === 'board') { const state = await call('getBoard', {}); show(await call('setBoard', { patch: { title: 'AI와 함께 만든 보드', note: '사람이 이 메모를 이어서 편집할 수 있습니다.' }, expectedRevision: state.revision })); }
-  else if (page === 'guide') { const state = await call('getNotes', {}); show(await call('setNote', { form: 'guideDetails', patch: { text: '두 번째 편집 영역의 AI 변경' }, expectedRevision: state.forms.guideDetails.revision })); }
-  else { const id = page === 'async' ? 'p3' : 'p1', state = await call('getProduct', { id }); show(await call('setProduct', { id, patch: { name: 'AI와 함께 만든 제품', price: 55 }, expectedRevision: state.revision })); }
+  const call = callTool;
+  if (page === 'bulk') { const state = await call('getProducts', {}); if (!state.ok) { show(state); return; } show(await call('setProducts', { updates: [{ id: 'p1', patch: { price: 48 } }, { id: 'p2', patch: { price: 92 } }], expectedRevision: state.revision })); }
+  else if (page === 'sheet') { const product = await call('getProduct', { id: 'p1' }); if (!product.ok) { show(product); return; } const state = await call('getSheet', {}); if (!state.ok) { show(state); return; } show({ relatedProduct: product, edit: await call('setSheet', { patch: { numberType: 'B' }, expectedRevision: state.revision }) }); }
+  else if (page === 'board') { const state = await call('getBoard', {}); if (!state.ok) { show(state); return; } show(await call('setBoard', { patch: { title: 'AI와 함께 만든 보드', note: '사람이 이 메모를 이어서 편집할 수 있습니다.' }, expectedRevision: state.revision })); }
+  else if (page === 'guide') { const state = await call('getNotes', {}); if (!state.ok) { show(state); return; } show(await call('setNote', { form: 'guideDetails', patch: { text: '두 번째 편집 영역의 AI 변경' }, expectedRevision: state.forms.guideDetails.revision })); }
+  else { const id = page === 'async' ? 'p3' : 'p1', state = await call('getProduct', { id }); if (!state.ok) { show(state); return; } show(await call('setProduct', { id, patch: { name: 'AI와 함께 만든 제품', price: 55 }, expectedRevision: state.revision })); }
 });
 activate();
 
