@@ -1,0 +1,11 @@
+{
+  "name": "webmcplite-examples",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Small WebMCP conventions and shared editing examples",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": { "node": ">=22" }
+}
