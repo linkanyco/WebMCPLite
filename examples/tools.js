@@ -30,7 +30,7 @@ export function buildTools({ workspace: w, page, navigate, setHighlights, getToo
   add('site_map', 'List the six example pages with URLs and purposes.', object(), () => ({ ok: true, pages: pages.map(p => ({ ...p, url: `?page=${p.id}` })) }), true);
   add('site_manual', 'Read common site rules, storage limits and how to start.', object(), async () => {
     try { const response = await fetch(new URL('./manual.json', import.meta.url)); if (!response.ok) throw Error(); return { ok: true, manual: await response.json() }; }
-    catch { return fail('manual_unavailable', 'Could not load the site manual. Retry or read the visible entry guide.'); }
+    catch { return fail('manual_unavailable', 'Could not load the site manual. Retry or call page_manual for current page tool contracts.'); }
   }, true);
   add('page_manual', 'Read this page purpose, editing areas and exact tool contracts.', object(), () => ({ ok: true, page: pages.find(p => p.id === page), areas, tools: getTools() }), true);
   add('isUnsavedContents', 'Check every editing area on the CURRENT page when form is null or omitted; never the entire server.', object({ form: { type: ['string', 'null'], enum: [...areas, null] } }, []), ({ form = null }) => w.unsaved(page, form), true);
