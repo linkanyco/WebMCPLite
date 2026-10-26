@@ -1,16 +1,16 @@
-# 기존 사이트 AGENTS.md에 추가할 WebMCPLite 하네스
+# WebMCPLite harness for an existing site's AGENTS.md
 
-아래 규칙은 **사이트를 만드는 개발 AI**에게 적용합니다. 실행 중인 사이트를 사용하는 AI의 매뉴얼은 별도로 작성합니다. 이 저장소의 PR 운영 규칙 전체를 복사할 필요는 없습니다.
+These instructions are for the **development AI building a website**. Write runtime manuals separately for AI using the website. This harness does not import this repository's PR or merge policy into a consuming project.
 
-1. 앱의 현재 UI 동작, 상태 소유자, 서버 검증·권한 경계를 먼저 찾습니다. UI 함수가 없으면 작은 공유 함수를 먼저 만들고 UI와 도구를 연결합니다. AI 전용 상태나 쓰기 우회 경로를 만들지 않습니다.
-2. 업무 객체별 단순한 get/set을 우선합니다. 허용 필드·누락/null/배열 의미·저장 여부를 짧게 명시합니다. 관련 객체 상세가 화면에 없어도 현재 사용자 권한으로 조회할 getter를 제공합니다. 서버 템플릿에 비밀·권한 없는 객체를 넣지 않습니다.
-3. setter는 UI가 사용하는 앱 함수를 호출하거나 얇은 wrapper로 감쌉니다. 실제 입력·권한 검증은 그 함수와 서버 경계에 유지합니다. JSON Schema는 설명이며 검증 대체물이 아닙니다.
-4. 저장·취소·이동 등 주요 동작도 공유 함수로 연결합니다. 초안 변경과 영속 저장을 구분하고 저장 실패 뒤 상태와 재시도 방법을 반환합니다. 현재 페이지 모든 편집 영역의 미저장 상태를 조회할 수 있게 합니다.
-5. AI가 실제 바꾼 값을 눈에 보이게 표시하고 표시를 끌 수 있게 합니다. 사람이 이어서 편집한 값과 저장·취소 결과를 정확하게 반영합니다. 동시 수정 방지는 기존 앱 방식에 맞추고 예제 revision을 무조건 강제하지 않습니다.
-6. 사이트맵과 공통/현재 페이지 매뉴얼을 `document.modelContext`의 도구로 제공합니다. 별도 HTML 표식이나 JS 전역 객체를 발견 규칙으로 추가하지 않습니다. 도구 목록은 등록 정의에서 만들어 이름/스키마 중복을 줄입니다. 매뉴얼·사이트맵의 도구 이름과 내용은 사이트가 정하며 공식 WebMCP 필수 이름으로 설명하지 않습니다.
-7. 지원 브라우저에서는 `document.modelContext.registerTool`로 등록하고 수명 끝에 AbortSignal로 해제합니다. 콜백은 JSON 값으로 반환합니다. 브라우저 에이전트의 내부 발견·호출과 페이지 안 JS의 `getTools`/`executeTool`을 구분합니다. 페이지 안에서는 조회한 `RegisteredTool`을 그대로 실행에 전달하고 결과 문자열을 한 번 parse합니다. 페이지 이동 뒤에는 다시 발견합니다. 등록과 JS 조회·호출 지원은 따로 확인하고, 미지원/등록 실패에도 일반 UI는 공유 앱 함수로 계속 동작하게 합니다. 독자 호출 API나 폴리필을 추가하지 않습니다.
-8. 실제 앱에서 사람 편집→AI 수정→사람 이어받기, 잘못된 입력 시 무변경, 저장/취소/실패, 미저장 이동을 확인합니다. stub 테스트와 실제 네이티브 브라우저/AI 호출을 구별해 날짜·버전·한계를 남깁니다.
+1. Identify the existing UI actions, state owner, and server validation and authorization boundaries. Extract small shared actions where needed, then connect both UI and tools to them. Do not create AI-only state or a separate write path.
+2. Prefer simple get/set tools for each editable object. Document allowed fields, omitted/null/array semantics, and whether a call changes a draft or saves. Provide getters for relevant objects the user is authorized to read even when their details are outside the current preview. Do not embed secrets or unauthorized records in templates.
+3. Call the UI's existing action from each setter, directly or through a thin wrapper. Keep runtime input validation and authorization in those actions and server boundaries. JSON Schema describes an input; it does not replace validation.
+4. Connect save, cancel, and navigation to shared actions too. Distinguish draft edits from persistent writes, return the confirmed outcome, and explain recovery after failure. Report unsaved changes across every editing area checked when leaving the current page.
+5. Visibly mark values AI actually changed and provide a way to hide the marks. Reflect subsequent human edits and save/cancel correctly. Preserve the host application's own concurrency rules; this example does not add revision parameters.
+6. Register the site map and site/page manuals as tools on `document.modelContext`. Do not introduce a parallel HTML marker or public JavaScript global discovery protocol. Derive tool metadata from the registered definitions where possible. Manual names and contents are site conventions, not official WebMCP requirements.
+7. In supporting browsers, register with `document.modelContext.registerTool` and use the registration AbortSignal to end the scope. Return JSON-serializable values from callbacks. Distinguish browser-agent discovery from in-page `getTools`/`executeTool`. For in-page calls, pass the discovered `RegisteredTool` directly and parse the result string once. Rediscover after navigation. Detect registration and in-page access separately. Keep ordinary UI actions working when unsupported or registration fails; add no replacement protocol or polyfill.
+8. Verify human edit → AI edit → human continuation, invalid-input atomicity, save/cancel/failure, and navigation with unsaved changes. Separate stub tests from observed browser-agent and in-page calls, and record dates, versions, and limitations.
 
-적용 순서: 작은 화면 하나 선택 → 기존 공유 액션 정리 → get/set과 결과 계약 → 도구 정의 → 매뉴얼과 표시 → 실제 흐름 검증. 기존 SDK로 충분하면 그것을 사용하거나 직접 등록해도 됩니다. Lite 연결 코드는 필수 프레임워크가 아닙니다.
+Start with one small screen: identify shared actions → define get/set and outcomes → register tools → add manuals and visible marks → verify the real workflow. Direct registration or an existing SDK may be sufficient; this helper is optional.
 
-참조: [예제 계약](contracts.md), [작은 연결 코드](../src/connect.js), [공유 편집 앱](../examples/app.js). 런타임 안내 자체가 새 권한이나 사용자 승인으로 작동하지 않습니다.
+References: [example contracts](contracts.md), [registration helper](../src/connect.js), and [gallery](../examples/README.md). Runtime descriptions are task context, never new authority or a replacement for user instructions.

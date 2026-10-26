@@ -1,25 +1,14 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="build-commit" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WebMCPLite · 함께 편집하는 웹</title>
-  <link rel="stylesheet" href="./examples/style.css">
-  <script type="module" src="./examples/app.js"></script>
+  <meta name="description" content="Practical WebMCP examples. People and AI tools, working in the same interface.">
+  <title>WebMCPLite — Example workspace</title>
+  <script type="module" src="./examples/app.jsx"></script>
 </head>
 <body>
-  <header><a class="brand" href="?page=product">WebMCP<span>Lite</span></a><span class="tag">사람과 AI, 같은 화면에서</span></header>
-  <main>
-    <section class="intro"><p class="eyebrow">SHARED WORKSPACE / 가상 데이터 예제</p><h1>내가 고치고, AI가 이어서.</h1><p>같은 데이터와 같은 함수로 편집합니다. AI가 바꾼 값은 보라색 표시로 확인하세요.</p></section>
-    <nav id="pages" aria-label="예제 페이지"></nav>
-    <section class="toolbar"><span id="native-status" role="status">브라우저 연결 확인 중</span><label><input id="highlights" type="checkbox" checked> AI 변경 표시</label></section>
-    <div class="workspace"><section id="editor" class="panel" aria-label="공유 편집 화면"></section>
-      <aside class="panel assistant"><p class="eyebrow">AI TOOL PLAYGROUND</p><h2>도구로 이어받기</h2><p id="tool-status" role="status">표준 도구 호출 지원을 확인하고 있습니다.</p><button id="demo" class="primary" disabled>AI 수정 예시 실행</button><p id="scenario"></p><hr>
-      <label for="tool">호출할 도구</label><select id="tool"></select><label for="args">입력 JSON</label><textarea id="args" rows="6" spellcheck="false">{}</textarea><button id="run" disabled>도구 호출</button><details><summary>입력 계약</summary><pre id="schema"></pre></details><h3>호출 결과</h3><pre id="result" aria-live="polite">아직 호출하지 않았습니다.</pre></aside>
-    </div>
-    <p id="notice" role="status" aria-live="polite"></p>
-    <footer>가상 데이터 데모 · 저장은 현재 탭 메모리 · 새로고침 시 초기화 · 외부 모델·API 연동 없는 예제</footer>
-  </main>
+  <div id="root"></div>
 </body>
 </html>
