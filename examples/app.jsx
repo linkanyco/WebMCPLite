@@ -15,7 +15,7 @@ const listeners = new Set();
 let snapshot = 0;
 const emit = () => { snapshot++; for (const listener of listeners) listener(); };
 const subscribe = listener => { listeners.add(listener); return () => listeners.delete(listener); };
-const workspace = createWorkspace({ onChange: emit });
+const workspace = createWorkspace({ onChange: () => { notice = null; emit(); } });
 let page = new URL(location.href).searchParams.get('page') || 'product';
 if (!pages.some(p => p.id === page)) page = 'product';
 let entry = Number.isInteger(history.state?.liteEntry) ? history.state.liteEntry : 0;
