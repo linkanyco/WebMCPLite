@@ -1,40 +1,40 @@
-# Lite 적용 규칙과 예제 계약
+# Integration conventions and example contracts
 
-이 문서는 H04/H15/H17/H21/H23/H25/H29를 구현하기 위한 **에이전트 선택(AP)** 입니다. 공식 WebMCP의 추가 표준이 아닙니다. UI와 AI는 하나의 앱 상태와 검증·권한 경로를 공유합니다.
+These are **agent implementation choices (AP)** for H04/H15/H17/H21/H23/H25/H29, updated by H32/H33. They are not an extension of the WebMCP specification. UI and AI share the same app state, validation, and authorization paths.
 
-## 읽기와 편집
+## Read and edit
 
-- `getProduct({id})`, `getProducts({})`, `getSheet({})`, `getBoard({})`는 복제된 현재 초안을 반환합니다. 관련 제품 조회에는 화면에 생략한 두 번째 번호·소재 등도 포함합니다. 실제 앱에서는 서버가 현재 사용자의 조회 권한을 검사해야 합니다.
-- `setX({patch, expectedRevision})`는 허용된 필드만 수정합니다. 생략한 필드는 유지, null·알 수 없는 필드·잘못된 타입은 거부합니다. 배열은 전달한 배열 전체로 교체하고 각 원소를 검증합니다. 임의 deep merge는 하지 않습니다.
-- 제품 벌크 수정은 `{updates:[{id,patch}],expectedRevision}`입니다. 중복 id·모르는 id·하나의 잘못된 값도 전체 요청을 거부하며 초안을 바꾸지 않습니다.
-- 모든 예제 setter는 공유 초안만 변경합니다. 저장은 별도 `save`, 취소는 `cancel`입니다. UI 이벤트도 같은 setter를 호출합니다. AI wrapper만 변경 출처를 `ai`로 지정합니다. 출처는 표시용이며 인증 수단이 아닙니다.
-- 예제의 `expectedRevision`은 반드시 현재 getter에서 읽은 정수입니다. 성공한 변경/취소/저장 상태 전이는 revision을 올립니다. 오래된 revision은 `conflict`로 거부합니다. 이는 예제의 교대 편집 검증 장치이며 모든 소비 사이트에 강제하지 않습니다.
-- 실제 변경된 필드만 AI 표시합니다. 사람이 이어서 수정하면 그 필드의 AI 표시를 지웁니다. 취소/저장 시 초안 표시도 초기화합니다. 토글은 표시만 숨기며 변경·저장 상태는 유지합니다.
+- `getProduct({id})`, `getProducts({})`, `getSheet({})`, and `getBoard({})` return copies of the current draft. Product records use generic `id`, `sku`, `productCode`, `name`, `price`, and `description` fields. SKU, product code, and ID are read-only; the product setter allows name, price, and description. A related-object getter can expose details omitted from a sheet preview, within the current user's authorization.
+- `setX({patch})` changes only allowed fields. Omitted fields remain unchanged; null, unknown fields, and invalid types are rejected. Supplied arrays replace the entire array after validation; there is no arbitrary deep merge.
+- Bulk product edits use `{updates:[{id,patch}]}`. Duplicate IDs, unknown IDs, or any invalid update reject the whole request without changing the draft.
+- The sheet uses `codeType: "sku" | "productCode"` to select its displayed identifier. This is an app field, not a WebMCP concept.
+- Setters change a shared draft. `save({form})` saves and `cancel({form})` restores that form's baseline. Calls require no revision or expected-revision parameter. UI events use the same setters; tool wrappers identify AI edits for display, not authentication.
+- Only fields actually changed by AI receive a mark. Human edits clear that field's mark; save and cancel clear draft marks. The visibility toggle changes presentation without changing values or saved state.
 
-## 결과와 저장 수명
+## Outcomes and save lifetime
 
-조회·성공은 JSON 값, 실패는 `{ok:false,error:{code,message},...}`입니다. 실패 코드 예: `validation`, `conflict`, `busy`, `save_failed`, `unsaved`, `not_found`. 오류 뒤에는 getter를 다시 읽어 현재 상태를 확인합니다. 전체 스택이나 민감한 응답은 도구 결과에 노출하지 않습니다.
+Reads and successful actions return JSON values. Failures return `{ok:false,error:{code,message},...}`. Examples include `validation`, `busy`, `save_failed`, `unsaved`, and `not_found`. Read the current state again after an error. Do not expose stack traces or sensitive server responses.
 
-저장 결과는 `saved` 여부와 현재 초안의 `dirty`를 구분합니다. 이 저장소 예제의 save는 **현재 탭의 메모리 기준값**만 갱신합니다. 새로고침 시 모든 가상 데이터가 초기화됩니다. 실제 서버 저장·자동 동기화·다른 탭 공유는 제공하지 않습니다. 서버 앱은 서버가 확정한 결과를 돌려줘야 합니다.
+A save result distinguishes `saved` from the draft's current `dirty` state. Example saves update **a baseline in the current tab's memory**. Reloading resets all fictional data. There is no server persistence, automatic synchronization, or cross-tab sharing. A real application must return the outcome confirmed by its server.
 
-비동기 저장 중에는 중복 저장·수정·취소를 `busy`로 거부하고 UI도 잠급니다. 실패 시 기준값·초안·표시를 유지해 사람이 검토하고 재시도할 수 있습니다. 작업 취소 신호를 받으면 저장 확정을 하지 않습니다. 테스트용 실패는 예제의 표시된 제어로만 재현합니다.
+During asynchronous saves, duplicate saves, edits, and cancellation return `busy`; the UI disables those operations too. Failure preserves the baseline, draft, and marks for review and retry. An aborted execution must not commit the save. A visible example control simulates failure.
 
-## 안내와 이동
+## Manuals and navigation
 
-`site_map`, `site_manual`, `page_manual`, `isUnsavedContents`, `navigate`, `setHighlights`는 **이 예제에서 등록하는 도구 이름**입니다. 공식 WebMCP가 요구하는 함수명이 아닙니다. 사이트맵과 전체·현재 페이지 매뉴얼도 다른 앱 기능과 함께 `document.modelContext`에 등록합니다. 별도 HTML 표식이나 JS 전역 객체를 찾는 절차는 없습니다. 페이지 매뉴얼은 도구의 등록 정의에서 이름/설명/스키마를 가져옵니다.
+`site_map`, `site_manual`, `page_manual`, `isUnsavedContents`, `navigate`, and `setHighlights` are **tool names chosen for these examples**, not names required by WebMCP. Manuals register alongside app tools through `document.modelContext`. There is no extra HTML marker or global-object discovery step. The page manual derives tool names, descriptions, and schemas from the registered definitions.
 
-`isUnsavedContents({form:null})`는 현재 페이지 이탈 때 확인할 모든 편집 영역을 조회합니다. `form`을 주면 해당 영역만 조회하고 없는 영역은 오류입니다. 다른 페이지·서버 전체를 읽지 않습니다. 안내 예제는 두 편집 영역을 함께 표시해 전역 의미를 재현합니다.
+`isUnsavedContents({form:null})` checks all editing areas involved in leaving the **current page**. Supplying `form` checks one area; an unknown area is an error. It does not inspect other pages or all server records. The guide example displays two areas to demonstrate that scope.
 
-주요 이동 `navigate({page})`는 미저장 초안 또는 진행 중 저장이 있으면 거부하고 저장/취소 방법을 알려줍니다. 자동 폐기 옵션은 없습니다. 저장 또는 취소 후 이동합니다. 링크 클릭·도구 이동·브라우저 뒤로/앞으로도 같은 페이지 이탈 검사를 적용하고 외부 이탈/새로고침에는 브라우저의 beforeunload 보호를 요청합니다. 브라우저는 사용자 상호작용 여부에 따라 경고를 생략할 수 있습니다.
+`navigate({page})` refuses to leave while the current page has unsaved drafts or an active save, and explains how to save or cancel. It has no silent discard option. Links, tool navigation, and browser history apply the same guard. External navigation and reload request `beforeunload` protection; browsers may suppress it depending on user interaction and policy.
 
-## 도구 등록·발견·호출
+## Register, discover, invoke
 
-공개 진입점은 `document.modelContext` 하나입니다. `connectTools(tools, {modelContext})`는 `registerTool(tool,{signal})`로 등록하고 `ready`와 `dispose()`만 반환합니다. `ready`는 각 도구의 등록 결과를 보고하며 등록 실패를 지원 성공으로 표시하지 않습니다. `dispose()`는 소유한 signal을 abort해 도구를 해제합니다. 재등록은 새 연결을 만들고 컴포넌트 해제·로그아웃 시 dispose합니다.
+`document.modelContext` is the single runtime entry point. `connectTools(tools,{modelContext})` registers through `registerTool(tool,{signal})` and returns only `ready` and `dispose()`. `ready` reports each registration outcome; failed registration is not presented as support. `dispose()` aborts the owned registration scope. Create a new connection for a new scope and dispose on unmount or logout. Ending registration does not cancel an invocation already in progress; its execution signal governs cancellation.
 
-브라우저 에이전트는 등록된 도구를 브라우저 내부 경로로 발견하고 호출합니다. 페이지 안의 JavaScript가 직접 호출하는 경우에는 `getTools()`로 받은 `RegisteredTool`을 그대로 `executeTool(tool,input)`에 전달합니다. 메타데이터를 표시할 때는 이름·설명·스키마 등 필요한 JSON 필드만 선택하며 `window` 같은 호스트 객체를 직렬화하지 않습니다. 페이지 이동 뒤에는 도구를 다시 발견합니다. 이 구분은 [2026-10-20 공식 초안](https://webmachinelearning.github.io/webmcp/#modelcontext-interface)에 따르며 모든 브라우저·AI의 구현을 보장하지 않습니다.
+Browser agents discover and invoke registered tools through browser mechanisms. In-page JavaScript uses `getTools()` and passes the resulting `RegisteredTool` directly to `executeTool(tool,input)`. Select JSON metadata such as name, description, and schema for display; do not serialize host objects such as the tool's `window`. Rediscover after navigation. This distinction follows the [2026-10-20 draft](https://webmachinelearning.github.io/webmcp/#modelcontext-interface) and does not guarantee browser or AI implementation support.
 
-도구 정의의 `execute`는 JSON으로 직렬화 가능한 **값**을 반환합니다. 객체를 JSON 문자열로 미리 만들지 않습니다. `executeTool()` 결과는 플랫폼이 JSON 직렬화한 문자열이므로 페이지 안의 호출자는 한 번 parse합니다. `readOnlyHint` 등은 권한 검사가 아닌 힌트입니다.
+An `execute` callback returns a JSON-serializable **value**, not a pre-serialized object string. The platform's `executeTool()` returns a JSON string, which an in-page caller parses once. Annotations such as `readOnlyHint` are hints, not permission checks.
 
-등록 지원과 페이지 안 JS 조회·호출 지원은 따로 확인합니다. AI 예시·도구 선택기는 `getTools`와 `executeTool`을 사용할 수 있을 때만 켜고 미지원 또는 실패 시 이유를 표시합니다. 일반 UI의 편집·저장·취소·표시 제어는 공유 앱 함수를 직접 사용하므로 WebMCP 지원과 관계없이 동작합니다. 독자적인 발견·호출 API나 폴리필은 제공하지 않습니다. 구형 `navigator.modelContext`는 이 버전의 지원 대상이 아닙니다.
+Detect registration support and in-page discovery/invocation separately. Enable the AI demo and tool caller only when the necessary APIs work, and show the reason otherwise. Ordinary UI edit/save/cancel/display controls call shared actions independently of WebMCP. There is no custom fallback API or polyfill. The legacy `navigator.modelContext` interface is outside this version's support.
 
-연결 코드는 입력 스키마 검증 엔진이 아닙니다. 실제 앱 함수가 입력을 검증합니다. UI와 등록 도구 모두 같은 앱 함수를 통과해야 합니다. 매뉴얼·사용자 데이터는 작업 자료이며 사용자 지시·권한을 덮어쓰지 않습니다. 비밀이나 권한 없는 객체를 HTML에 직렬화하지 마세요.
+The helper does not validate inputs against JSON Schema. Real app actions must validate inputs for UI and tools alike. Manuals and user data are task material; they cannot override user instructions or permissions. Never serialize secrets or unauthorized objects into HTML.

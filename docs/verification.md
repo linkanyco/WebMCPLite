@@ -1,54 +1,68 @@
-# 검증 범위와 재현 기록
+# Verification scope and reproduction record
 
-기준일: **2026-10-25 (America/Los_Angeles)**. GitHub 기록은 UTC로 다음 날 표시될 수 있습니다.
+Reference date: **2026-10-25 (America/Los_Angeles)**. GitHub records may show the next day in UTC.
 
-**기록 범위:** 다음 초기 환경·흐름 표는 H32 정정 전의 실제 관측입니다. 당시 JS 대안에 관한 행은 과거 기록이며 현재 진입점 권고가 아닙니다. 현재 변경과 검증은 문서 마지막 H32 절을 읽으세요.
+The initial tables below are **historical observations before H32/H33**. Their public JS fallback, revision checks, domain terminology, setup, and artifact layout are not current recommendations. Subsequent corrections are described separately.
 
-## 초기 확인 환경
+## Historical initial environments
 
-| 환경 | 실제 확인 | 한계 |
+| Environment | Observed | Limits |
 |---|---|---|
-| Node 26.0.0 / macOS | 내장 테스트, 로컬 정적 서버 | 소비 사이트 서버 검증을 대신하지 않음 |
-| GitHub Actions / Node 22 | 계약 테스트 CI | 브라우저 엔진 테스트가 아님 |
-| Codex 내장 브라우저(IAB) | 실제 페이지의 `document.modelContext` 등록 → 브라우저 도구 발견 → getter/setter/save/navigate 호출과 UI 반영 | 연결 도구가 브라우저/엔진 버전을 노출하지 않아 버전은 확인하지 못함. 엔진 자체 네이티브 구현인지 제공 계층인지는 독립 판별하지 않음 |
-| 직접 JS 대안 | 예시 버튼/도구 선택기에서 `webmcpLite.call` → 같은 상태·화면 변경 | 임의 JS 실행을 허용하지 않는 외부 AI의 호환을 보장하지 않음 |
-| API 없는 환경 | `modelContext:null` 주입 Node 테스트로 unsupported 상태·직접 호출 확인 | 별도 일반 브라우저의 미지원 환경은 실제 실행하지 않음 |
+| Node 26.0.0 / macOS | Built-in tests and local static server | Does not replace a consuming app's server checks |
+| GitHub Actions / Node 22 | Contract-test CI | Not browser-engine coverage |
+| Codex in-app browser (IAB) | document.modelContext registration → browser tool discovery → getter/setter/save/navigate → visible UI update | Browser/engine version was not exposed; native engine versus a provided layer was not independently determined |
+| Historical direct JS fallback | Demo/tool caller used webmcpLite.call to update the same state/UI | Removed by H32; never established compatibility with AI that cannot execute JS |
+| No-API case | Node test injected modelContext:null and checked unsupported status and the then-existing direct call | A separate unsupported ordinary browser was not actually run |
 
-일반 Chrome·Edge·Safari, 모바일 기기, 외부 확장/AI, iframe·권한 정책 조합은 검증하지 않았습니다. 등록이 성공했다고 모든 AI가 도구를 발견한다고 주장하지 않습니다. 실제 IAB 도구 호출 관측은 stub 테스트와 별개이며, 이것만으로 브라우저 전체의 표준 준수를 인증하지 않습니다.
+Chrome, Edge, Safari, mobile devices, external extensions/AI, iframe combinations, and permission-policy combinations were not verified. Successful registration does not prove every AI discovers tools. Real IAB calls are distinct from stubs and do not certify standard conformance.
 
-## 의미 있는 자동 검증
+## Historical initial automated checks
 
-`npm test`: 14개 테스트 통과. 등록 미지원/실패/해제·취소, 객체 결과의 직렬화 경계, 문서와 실제 도구 목록 일치, 런타임 입력 검증, UI/AI 공유 상태와 복제, 벌크 원자성, 관련 제품 B 조회/라인시트 배열 교체, 두 영역 미저장 범위, 저장 중 쓰기 차단, 실패·취소 후 초안 보존과 성공 재시도를 확인합니다.
+At initial gallery delivery, `npm test` passed 14 tests: registration unsupported/failure/disposal/cancellation, value serialization, manual/tool-list agreement, runtime validation, shared state and snapshots, bulk atomicity, related-product reads, whole-row-array replacement, two-area unsaved scope, busy-write guards, retained drafts after failed/aborted save, and successful retry.
 
-등록 테스트의 `registerTool`은 stub입니다. 실제 IAB 호출에서는 getter의 결과가 문자열이었고 **JSON.parse 한 번**으로 객체를 얻었습니다. execute 콜백이 미리 문자열을 만들지 않는 계약과 일치합니다.
+Registration used a stub. An actual IAB getter returned a string that parsed once into an object, consistent with callbacks returning values rather than pre-serialized JSON.
 
-`node --check`로 앱 모듈 문법을 확인했고, 로컬 서버 smoke 검사에서 HTML/JS/JSON 응답 200, `/.git/config`·`/.env`·없는 경로 404를 관측했습니다. 서버는 127.0.0.1에만 바인딩합니다. 실서비스 호스팅을 위한 서버로 제공하지 않습니다.
+Module syntax checks passed. Local smoke checks observed 200 responses for HTML/JS/JSON and 404 for `/.git/config`, `/.env`, and nonexistent paths. The historical server bound only to 127.0.0.1 and was not offered as a production server.
 
-## 실제 브라우저 흐름
+## Historical actual browser flows
 
-아래 전체 흐름은 작성자와 독립 리뷰어가 서로 다른 탭에서 확인했습니다. 첫 전체 검증은 `28b6b43030e6b039f775875d97a72705b9e62764`이며, 뒤로 가기/새로고침 경계는 수정된 최종 커밋 `3947fa66e3311e9a05e019b46f93b4a63d023ead`의 새 컨텍스트 리뷰가 별도 탭에서 재현하여 통과했습니다. product→board→guide→reload→두 번째 폼 수정→뒤로 차단→취소→뒤로 board 이동을 확인했습니다. 최종 SHA와 판정은 [리뷰 기록](reviews/README.md) 및 PR에서 추적합니다.
+The author and independent reviewer used separate tabs. The first full pass examined `28b6b43030e6b039f775875d97a72705b9e62764`; after fixes, a fresh-context review reproduced reload/history boundaries on `3947fa66e3311e9a05e019b46f93b4a63d023ead`. The sequence product → board → guide → reload → edit second area → blocked back → cancel → back to board passed. See [reviews](reviews/README.md) and linked PRs.
 
-| 예제 | 관측 |
+| Example | Observation at that time |
 |---|---|
-| 제품 | 네이티브 getter → setter로 이름·가격 수정 → 같은 폼과 보라색 표시 → 사람 이름 수정 시 이름 표시만 지워짐. 오래된 revision 거부. 표시 토글은 값·dirty를 유지. 저장 후 dirty=false·표시 초기화 |
-| 벌크 | 잘못된 가격이 섞인 요청은 전체 무변경. 두 제품의 정상 변경은 함께 반영. UI 예시 버튼은 JS 직접 경로 사용 |
-| 라인시트 | 미리보기에 없는 styleB·소재를 getProduct로 읽음. numberType=B·rows 수정 후 B 번호·수량·순서가 화면에 반영. UI 재정렬도 같은 setter 사용 |
-| 보드 | getBoard/setBoard로 제목·메모 수정 후 사람 입력으로 이어받기. 취소로 기준값 복원 |
-| 안내/이동 | site_manual을 로컬 JSON으로 읽고 page_manual에서 실제 도구 계약 확인. 두 번째 폼만 바꿨을 때 전체 dirty=true, 첫 폼 dirty=false. 도구/링크/브라우저 뒤로 가기가 이탈을 막음 |
-| 비동기 | 저장 중 폼·저장·취소 버튼 잠김. 실패 결과 후 초안·revision·AI 표시 유지. 실패 스위치 해제 후 native save가 saved=true, dirty=false 반환. 새로고침 시 초기값으로 복원 |
+| Product | Browser getter/setter changed name/price in the same form with purple marks. A human edit cleared only that field's mark. The former stale-revision check rejected an outdated write. Display toggle preserved values/dirty; save cleared dirty/marks. |
+| Bulk | One invalid price rejected the entire request. Two valid product edits appeared together. The UI demo used the historical JS fallback. |
+| Historical domain-oriented sheet | Related product fields omitted from previews were readable. Switching the former numberType and replacing rows updated identifiers, quantities, and order. UI reorder used the same setter. H33 replaces this terminology with SKU/productCode/codeType. |
+| Board | getBoard/setBoard edited title/note, human typing continued, and cancel restored the baseline. |
+| Guide/navigation | site_manual loaded local JSON and page_manual exposed real contracts. Editing only the second form made page-wide dirty true while the first form stayed clean. Tool/link/browser-back navigation was guarded. |
+| Async | Save locked fields/save/cancel. Failure retained draft, the then-existing counter, and AI marks. After disabling simulated failure, browser save returned saved:true and dirty:false. Reload restored fictional data. |
 
-UI는 현재 브라우저의 좁은 기본 패널에서도 세로 배치로 실행했습니다. 별도의 데스크톱/모바일 기기 호환성 검증으로 확대하지 않습니다. 외부 이탈의 beforeunload 경고는 브라우저 정책·사용자 상호작용 여부에 따라 표시되지 않을 수 있습니다.
+The UI was also used in the browser's narrow default panel. That is not separate desktop/mobile-device coverage. Browsers may suppress beforeunload depending on policy and prior user interaction.
 
-## 확인한 범위의 끝
+## Save and authority limits
 
-저장은 현재 탭 메모리만 바꿉니다. 실제 서버 영속 저장·인증·권한·감사·다른 탭 동기화·배포·npm 발행은 제공하지 않았습니다. 도구 입력과 응답은 연결된 AI가 읽을 수 있으므로 실제 앱은 기존 권한과 데이터 정책을 유지해야 합니다. 공개 가상 데이터만 사용했습니다.
+Saves update current-tab memory only. No real server persistence, authentication/authorization backend, audit integration, or cross-tab synchronization is provided. Inputs/results may be read by connected AI; consuming apps must preserve their existing authorization and data policies. Only fictional data is used. No npm package was published. Pages publishing was separately authorized by H31.
 
-## 후속 Pages 검증
+## Pages follow-up — H31
 
-H31의 게시 요청으로 정적 artifact 검사와 사이트맵 경로 회귀 검증을 추가해 그 시점의 `npm test`는 15개였습니다. 기존 14개 전체 검증 기록은 당시 범위로 유지합니다. 빌드는 필요한 8개 파일(index·앱/도구/상태/CSS/매뉴얼·연결 코드·version.json)만 생성하고, `/WebMCPLite/` 하위의 자원/모듈/매뉴얼 경로와 게시 SHA를 검사합니다. 실제 첫 공개 배포와 HTTPS 브라우저 관측은 [#16](https://github.com/linkanyco/WebMCPLite/issues/16) 및 연결 PR에 기록하며, 배포 설정만으로 검증 성공을 주장하지 않습니다.
+At that stage the suite had 15 tests, including artifact and repository-subpath checks. The historical build allowlisted eight runtime files and checked assets/modules/manuals under `/WebMCPLite/` and the published SHA. That file layout is superseded by the H33 bundled gallery. Actual first deployment and HTTPS observations are in [issue #16](https://github.com/linkanyco/WebMCPLite/issues/16) and PR #17; settings alone were not evidence of success.
 
-## H32 이후 단일 표준 진입점 검증
+## Standard entry point — H32
 
-현재 테스트 16개가 통과했습니다. core는 ready/dispose만 반환하고 등록 미지원 시 별도 호출/발견 API를 만들지 않음을 검사합니다. HTML·게시 산출물에도 이전 메타 표식/공개 전역 경로가 없음을 확인합니다. 등록 signal 해제가 이미 진행 중인 호출을 취소하지 않는 표준 수명과, 실행 signal 취소 전달을 각각 검증합니다. 이 자동 테스트의 registerTool은 stub이며 네이티브 브라우저 관측으로 가장하지 않습니다.
+At this stage 16 tests passed. They checked ready/dispose-only helper behavior, no fallback discovery/call API, no historical marker/global in HTML/artifacts, registration abort not cancelling already running calls, and execution-signal forwarding. registerTool was still a stub in automated tests.
 
-IAB 로컬에서는 실제 document.modelContext.getTools()/executeTool()을 사용하는 페이지 내 예시 버튼으로 관련 제품 B 조회→라인시트 표시 변경, site_manual 읽기, 일반 UI 저장, 표준 navigate 호출 후 새 보드의 조회·편집까지 확인했습니다. 이는 브라우저 에이전트의 내부 발견·호출과 별도 소비 경로이며 모든 브라우저/AI 지원으로 일반화하지 않습니다. 실제 최종 커밋 및 공개 Pages 관측은 [#18](https://github.com/linkanyco/WebMCPLite/issues/18)과 연결 PR에 남깁니다.
+Local IAB in-page getTools/executeTool calls read related-product details, changed the sheet display, read site_manual, saved through ordinary UI, navigated through the standard tool, and discovered/edited the new board. This path was verified separately from browser-agent discovery/invocation. Exact final-commit review and public observations are in [issue #18](https://github.com/linkanyco/WebMCPLite/issues/18) and PR #19. These observations do not establish all-browser/AI support.
+
+## Current follow-up — H33
+
+The new English Ant Design/LobeHub gallery removes revision counters and uses neutral SKU/product-code examples. Run `npm install`, `npm test`, and `npm run build:site`; use `npm start` for local browser checks with Node 22.22 or newer.
+
+Required checks cover simplified input/output contracts, absence of counters and parallel protocols, runtime validation, shared UI/AI state, atomic bulk edits, row replacement, AI marks, save/cancel, async busy/failure/abort recovery, page-wide unsaved scope, and bundled subpath-safe assets. Verify the rendered new UI and actual registered tools, not just the tests.
+
+Observed results, environment details, test counts, final reviewed SHA, and public deployment checks for this follow-up are recorded on [issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) and its linked PR as they occur. Historical passing counts above do not establish that this new final commit passed.
+
+Before final review, a clean `npm ci`, 17 contract/artifact tests, and a production build passed on Node 26/macOS. The build contains bundled runtime assets and the English manual, with relative paths and commit identity; the bundler reports a large UI chunk. The application does not load the theme's optional remote fonts. The original H33 quotation intentionally retains two trailing spaces that a generic whitespace check flags; other changed files pass that check.
+
+In a new IAB tab, the rendered Ant Design/LobeHub UI was observed at the browser's 1280×720 viewport. In-page standard calls changed a product without a counter, human edits cleared only their field's mark, unsaved navigation was blocked, and ordinary UI save returned saved:true/dirty:false. The searchable tool picker loaded the English site_manual. The product-list example retrieved related SKU/product-code data and changed the displayed identifier; UI row reordering was visible through a separately discovered browser-agent getSheet call. Discard restored the baseline. Standard tool navigation completed after registration scope disposal and registered the destination tools. Final-commit review and public deployment remain separate evidence recorded on the PR.
+
+Independent review found a stale-alert case: after a UI save failure, a successful browser-agent save updated the draft badge but left the old active error alert visible. The common workspace change notification now clears stale UI feedback for both UI and tool actions. The exact fixed commit and actual regression observation are tracked on the PR, separately from the earlier review.

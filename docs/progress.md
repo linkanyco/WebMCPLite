@@ -1,28 +1,34 @@
-# 작업 기록
+# Progress record
 
-기준일: 2026-10-25 (America/Los_Angeles).
+Reference date: 2026-10-25 (America/Los_Angeles). Use [issue index #1](https://github.com/linkanyco/WebMCPLite/issues/1) and the linked PRs for current status, dependencies, final reviewed SHAs, checks, and deployment results.
 
-초기 H01–H29와 리서치를 보존하고 H29를 PLANS에 반영했습니다. 공개 전 독립 리뷰에서 BrowserMCP 사실 오류를 수정했습니다. 초기 문서 이후 계약·연결 코드·여섯 예제를 PR로 검토하고 머지했습니다. 현재 문서는 최종 검증/인계 기록 PR의 산출물이며, 그 PR의 머지 상태와 최종 SHA 판정은 GitHub에서 확인합니다.
+## Historical initial delivery — H01–H29
 
-| 이슈 | 산출물 | 구현 PR |
+The original intent and research were preserved, including the supplemental H29. An independent review corrected the BrowserMCP factual error before publication. Contracts, helper, and six examples were then reviewed and merged through PRs.
+
+| Issues | Deliverable at the time | PR |
 |---|---|---|
-| [#2](https://github.com/linkanyco/WebMCPLite/issues/2), [#3](https://github.com/linkanyco/WebMCPLite/issues/3) | 최소 계약·소비 사이트 AGENTS 하네스 | [#12](https://github.com/linkanyco/WebMCPLite/pull/12), 머지 |
-| [#4](https://github.com/linkanyco/WebMCPLite/issues/4) | 47줄 연결 코드·등록/실패/해제·JS 대안 | [#13](https://github.com/linkanyco/WebMCPLite/pull/13), 머지 |
-| [#5](https://github.com/linkanyco/WebMCPLite/issues/5)–[#10](https://github.com/linkanyco/WebMCPLite/issues/10) | 제품·벌크·라인시트·보드·안내/이동·비동기 복구 | [#14](https://github.com/linkanyco/WebMCPLite/pull/14), 머지 |
-| [#11](https://github.com/linkanyco/WebMCPLite/issues/11) | 브라우저 관측·검증 한계·최종 방향 리뷰·인계 | 이 문서를 포함한 최종 기록 PR |
+| [#2](https://github.com/linkanyco/WebMCPLite/issues/2), [#3](https://github.com/linkanyco/WebMCPLite/issues/3) | Minimal contracts and consumer harness | [#12](https://github.com/linkanyco/WebMCPLite/pull/12), merged |
+| [#4](https://github.com/linkanyco/WebMCPLite/issues/4) | Initial 47-line helper, registration/failure/disposal, historical JS fallback | [#13](https://github.com/linkanyco/WebMCPLite/pull/13), merged |
+| [#5](https://github.com/linkanyco/WebMCPLite/issues/5)–[#10](https://github.com/linkanyco/WebMCPLite/issues/10) | Product, bulk, historical domain-oriented sheet, board, navigation, async recovery | [#14](https://github.com/linkanyco/WebMCPLite/pull/14), merged |
+| [#11](https://github.com/linkanyco/WebMCPLite/issues/11) | Browser observations, limits, direction review, handoff | [#15](https://github.com/linkanyco/WebMCPLite/pull/15), merged |
 
-[진행 인덱스 #1](https://github.com/linkanyco/WebMCPLite/issues/1)에서 완료 상태·의존 관계·마지막 PR을 추적합니다. [리뷰 기록](reviews/README.md)에는 실제 검토 SHA가, [검증 기록](verification.md)에는 자동 테스트와 실제 브라우저 관측의 경계가 있습니다. 각 생성 이슈는 인계된 관련 휴먼 발화 전체를 보존하고 에이전트 제안을 구별했으며 게시 후 본문을 대조했습니다.
+The initial gallery used browser modules without installation/build and had 14 contract tests plus CI. Real IAB discovery, invocation, and shared editing were observed. Those setup and domain choices are historical, superseded by H33. Each issue preserved relevant human quotations separately from proposals and its posted body was checked.
 
-초기 산출물: 제품 철학/PLANS, 저장소 개발 규칙, 소비 하네스, 작은 연결 코드, 6개 실행 예제, 14개 계약 테스트와 CI. 실제 IAB 도구 발견·호출·공동 편집도 관측했습니다. [실행법](../examples/README.md)대로 설치/빌드 없이 로컬에서 열 수 있습니다.
+[Reviews](reviews/README.md) record examined commits; [verification](verification.md) separates stubs from actual browser observations. Real persistence, a production authorization backend, general browser/AI compatibility, and a reuse license were not delivered. Advanced search, PDF processing, and hosted chat remained future/out-of-scope.
 
-남은 한계는 새 필수 작업으로 숨기지 않습니다. 실제 서버 권한·영속 저장·서비스 배포·npm 발행은 이번 범위에 포함하지 않았습니다. 일반 브라우저/외부 AI 호환과 라이선스 선택은 미확인/미결입니다. 고급 검색·PDF 처리·자체 챗봇은 장래 항목입니다. 기존 요청 범위에 필요한 미완료 구현은 없으며 새로운 요청은 이 채팅과 기존 인덱스를 확인해 이어갑니다.
+## GitHub Pages — H30/H31
 
-## 후속: GitHub Pages 예제 게시
+[Issue #16](https://github.com/linkanyco/WebMCPLite/issues/16) and [PR #17](https://github.com/linkanyco/WebMCPLite/pull/17) added the fictional public gallery, repository-subpath-safe assets, runtime-only build artifacts, main-only deployment, and published commit identity. H31 specifically added this authority to the initial local/source scope. The test suite at that stage had 15 tests.
 
-H30/H31에 따라 [#16](https://github.com/linkanyco/WebMCPLite/issues/16)에서 main의 마지막 성공 배포를 보여주는 공개 예제를 추가합니다. 초기 배포 제외는 이 후속 명시 요청으로 Pages 가상 예제에 한해 변경됐습니다. 경로 수정·정적 산출물 허용 목록·main 전용 배포·게시 SHA를 제공하며, 실제 첫 게시/공개 주소 확인은 해당 이슈와 PR에 남깁니다. 자동 테스트는 정적 산출물/하위 경로 회귀 검증을 포함해 15개입니다.
+## One standard entry point — H32
 
-## 후속: 단일 표준 진입점 정정
+[Issue #18](https://github.com/linkanyco/WebMCPLite/issues/18) and [PR #19](https://github.com/linkanyco/WebMCPLite/pull/19) replaced the historical metadata/global protocol with document.modelContext. Registered manual tools and ordinary UI shared actions remained. The old JS fallback in the table above is delivery history, not current guidance.
 
-[H32와 이슈 #18](https://github.com/linkanyco/WebMCPLite/issues/18)은 document.modelContext 단일 진입점으로 정정합니다. 위 표의 초기 JS 대안 산출물은 당시 구현 기록이며 현재 권고가 아닙니다. 별도 메타/HTML 표식과 공개 전역 호출 API를 제거하고 매뉴얼은 등록 도구로 유지합니다. 일반 UI의 공유 앱 동작은 계속 유지합니다.
+At this stage, 16 tests covered registration/execution lifetime separation and absence of parallel public entry points. Local IAB in-page getTools/executeTool was observed for manual reads, related-product display, navigation, and calls on the new page. Final-SHA review, CI, and public Pages evidence are recorded on the PR. Revision contracts were not changed during H32.
 
-자동 테스트는 등록 수명과 실행 수명의 분리·공개 병렬 경로 부재를 포함해 16개입니다. 실제 IAB 로컬에서 표준 getTools/executeTool을 사용하는 예시 버튼·매뉴얼 조회·도구 이동 후 새 페이지 호출을 확인했습니다. 최종 SHA 리뷰·CI·공개 Pages 결과는 관련 PR에 기록합니다. 리비전 설계는 이번 범위에서 변경하지 않았습니다.
+## English gallery redesign and simpler contracts — H33
+
+[Issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) tracks the current follow-up: English site/docs, README motivation, no revision counters, neutral SKU/product-code data, and Ant Design with the LobeHub theme. The core remains framework independent; the gallery now requires dependency installation and a Vite build.
+
+The original Korean human quotations and historical AP/verification remain preserved with English explanation. Current contracts and walkthroughs describe the simplified calls. Required checks, actual rendered/browser observations, fresh-context review of the exact final SHA, merge, and public deployment are recorded on the linked PR as each happens. This work-in-progress entry does not claim completion before that evidence exists.

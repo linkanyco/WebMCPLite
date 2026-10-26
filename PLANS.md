@@ -1,208 +1,171 @@
-# WebMCPLite — 제품 의도·리서치·프로젝트 실행 계획
+# WebMCPLite — intent, research, and execution plan
 
-기준일: 2026-10-25. 상태: 문서·하네스·작은 연결 코드·여섯 실행 예제 구현과 독립 리뷰/검증 완료. 최종 기록 PR의 상태는 작업 기록과 GitHub에서 확인.
+Reference date: 2026-10-25. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 is the current follow-up scope; its final verification and merge status are tracked in [issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) and the linked PR.
 
-## 1. 이 문서 읽는 법
+## 1. How to read this document
 
-이 문서는 브레인스토밍 대화를 다음 개발 세션이 오해 없이 실행하도록 옮긴 출발 문서입니다. 휴먼의 표현을 최대한 보존하되 사실 검증과 구현 선택은 별도 책임으로 둡니다.
+This plan carries a brainstorming discussion into development without mixing sources or inventing authority.
 
-- **H — 명시된 휴먼 의도**: 아래 원문 증거에 직접 나타난 목표·범위·선호·권한. 요약 문장은 에이전트가 작성했으며 원문이 의미의 근거입니다.
-- **R — 리서치 사실**: 연결된 공식 초안·문서·소스가 지지하는 관찰. 조사 시점과 확인 범위를 보존합니다. 규격 초안과 실제 브라우저/AI 제품 지원은 별개입니다.
-- **AP — 에이전트 제안**: 구현·예제·개발 순서에 대한 현재 권고입니다. 휴먼 요구로 표현하지 않으며 검증 결과에 따라 바꿀 수 있습니다.
+- **H — explicit human intent:** goals, boundaries, preferences, and authorization directly supported by the preserved quotations. Summaries are written by agents; the quotations govern meaning.
+- **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
+- **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-[H01–H29 원문 전체](docs/sources/human-intent.md)와 [R 리서치 및 확인 한계](docs/sources/research.md)를 함께 읽습니다. 두 파일은 이 계획의 출처 자료이며 요약으로 대체하지 않습니다. 이전 AI 답변의 자신감, 코드에 구현되어 있다는 사실, 휴먼의 침묵이나 PR 머지는 AP를 새 H로 만들지 않습니다. 이 문서의 세부 계획은 완성된 설계나 구현 완료 증거가 아닙니다.
+Read the [full H01–H33 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
-## 2. 제품이 해결하려는 일 — 에이전트 정리, 근거는 H 원문
+## 2. The problem — agent synthesis of H
 
-ERP·B2B 운영 화면은 사람이 일하는 장소입니다. 고객은 복잡한 프리셋·검색 UI를 다 배워야 하기보다 자신의 AI에게 말로 일을 맡기고 같은 화면에서 결과를 보며 다음 작업을 함께하고 싶어 합니다. 사이트는 DOM을 매번 해석하게 하는 대신 자신의 데이터·사용법·호출 가능한 기능을 간단하고 정확하게 공개합니다.
+People work in operational websites and would like to ask their existing AI for help while seeing and continuing the changes on the same screen. The website can describe its data and available actions instead of requiring repeated interpretation of the entire DOM.
 
-사용자는 기존 외부 AI와 브라우저 도구를 사용할 수 있고, 사이트에 자체 챗봇이나 모델 호스팅을 먼저 추가할 필요는 없습니다. 음성·번갈아 조작은 원하는 사용 경험이지만 WebMCPLite가 음성 인식·모델·브라우저 제어기까지 직접 만드는 요구는 아닙니다. 100% 무인 실행만을 목표로 하지 않으며 휴먼과 AI의 공동 편집을 핵심 사용 상황으로 봅니다.
+A separate hosted chatbot, model service, voice-recognition system, or browser controller is not a prerequisite. Voice and alternating control describe a desired experience, not new infrastructure WebMCPLite must build. Shared human–AI editing matters alongside higher levels of automation.
 
-이름은 **WebMCPLite**입니다. WebMCP 규격 초안을 활용하면서 사이트 작성자가 이해하고 붙이기 쉬운 개발 규칙·하네스·작은 연결 코드와 예제를 제공합니다. 공식 규격의 독립적인 활용 프로젝트이며 공식 팀/nekuda의 하위 제품이라고 주장하지 않습니다.
+**WebMCPLite** is a practical companion to the existing WebMCP draft: small development conventions, a consumer harness, a registration helper, and runnable examples. H33 clarifies the motivation: the author began with a personal need, found an existing specification, and wants to help others with similar needs use it easily. Do not claim a competing protocol, official affiliation, certification, unique invention, or universal support.
 
-## 3. 명시된 범위와 경계 — H의 에이전트 요약
+## 3. Explicit scope and boundaries — agent summary of H
 
-### 3.1 이번에 만드는 것
+### 3.1 Deliverables
 
-- 제품 철학과 개발 규칙.
-- WebMCPLite 기능을 소비 사이트에 추가하게 하는 **AGENTS.md용 하네스**.
-- WebMCPLite에서 사용하는 간단한 공통 규칙과 작은 연결 코드.
-- 실행 가능한 **5~6가지 예제**. 제품 단건 편집·임의 벌크 제품 편집은 대화에서 직접 요청된 출발 예입니다. 나머지 사례의 선정은 에이전트에게 맡겨진 구현 선택입니다.
-- `get_sheet(index=-1)` / `set_sheet(index,json)`, `getBoard` / `setBoard`처럼 편집 대상 중심의 단순한 읽기·수정 접근. 필드마다 동작 함수를 무조건 증식시키지 않습니다.
-- 사이트 안내·페이지 안내·사이트맵을 쉽게 발견·호출하는 접근. `site_map`이라는 예시는 휴먼이 직접 제시했습니다. `site_manual`, `page_manual`의 정확한 이름과 반환 형식은 AP입니다.
-- 저장·취소·페이지 이동 등 주요 기능과 AJAX 기반 작업도 AI가 쉽게 사용할 수 있는 함수 설계.
-- 현재 화면에 표시하지 않는 관련 객체도 기존 사용자 권한 안에서 `getProduct` 등으로 조회할 수 있어야 합니다. UI 값 반영 함수와 AI setter는 처음부터 같은 함수를 공유하거나 wrapper로 재사용합니다(H29). Twig/Liquid는 구현 아이디어이며 채택 요구가 아닙니다.
-- AI가 변경한 값은 사람이 알아볼 수 있도록 하이라이트. 표시가 거슬리면 끄는 제어도 고려합니다.
-- 뒤로 가기 때 확인할 모든 편집 영역을 포함하는 미저장 변경 조회. 휴먼이 제시한 `isUnsavedContents(specific form = null)`의 전역은 사이트 전체 DB가 아니라 **현재 페이지에서 이탈 시 확인할 편집 영역 전체**입니다.
+- Product principles and development conventions.
+- An **AGENTS.md harness** for development AI integrating tools into an existing website.
+- Small common connecting code and understandable app-level contracts.
+- **5–6 runnable examples**. Single-product and bulk editors are explicit starting requests; selection of the remaining examples is AP.
+- Simple object-oriented reads and edits such as `getBoard`/`setBoard` or the historical `get_sheet`/`set_sheet` illustration, instead of automatically adding a verb per field.
+- Discoverable site/page guidance and a site map. The human suggested `site_map`; exact `site_manual`/`page_manual` names and response formats are AP.
+- Save, cancel, navigation, and asynchronous actions available through clear functions.
+- Authorized related-object reads beyond details currently displayed in a preview (H29), and shared functions or thin wrappers for UI and tool updates. Twig/Liquid were implementation ideas, not mandated technologies.
+- Visible marks for AI changes, with a control to hide the marks.
+- Unsaved-state queries covering **all editing areas checked when leaving the current page** (H17), not every record on a server.
+- Under H33, English current site/documentation, no example revision counters, generic SKU/product-code data, and an Ant Design gallery with the LobeHub theme.
 
-### 3.2 미래 가능성으로만 남기는 것
+### 3.2 Future possibilities
 
-복잡한 조건 조합을 통한 제품 검색과 화면에 노출하지 않은 고급 필터는 유효한 활용 가능성입니다. 휴먼은 이를 내용에 넣되 **이번 예제 범위에는 넣지 말고 나중에 있을 수 있는 기능**으로 구분하라고 명시했습니다. 기능 소유자가 제공하는 정상적인 필터 인터페이스이지 권한 우회나 숨은 DB 접근이 아닙니다.
+Complex product searches and filters not fully represented in the UI are a useful future scenario, explicitly excluded from the initial examples. They must remain ordinary authorized app interfaces, not hidden access bypasses.
 
-제품 PDF를 AI에게 주고 스타일 번호를 기준으로 데이터를 채우는 시나리오도 장래의 소비 AI 작업 예입니다. PDF 파서·파일 업로드·OCR·모델 호스팅을 Lite core의 초기 필수 기능으로 확장하지 않습니다.
+Historical discussion included filling product fields from a PDF. That does not require a PDF parser, uploads, OCR, or model hosting in the Lite core. H33 removes fashion-specific presentation from current examples.
 
-### 3.3 범위에서 제외
+### 3.3 Excluded scope
 
-- ERP 자체 구현, 실제 고객 데이터 저장, 기존 제품 API/Product Import와 Variant 생성 주체의 재설계.
-- 이미지 선업로드·제품 저장·이미지 이관·트랜잭션 같은 옆길 논의의 구현. 해당 문제들은 별도 논의 대상입니다.
-- 자체 챗봇, 외부 모델 호스팅 사업, AI 공급자 SDK/키 관리, 범용 에이전트 런타임.
-- 모든 브라우저/AI 지원 보장, 자동 네이티브 지원을 만들어주는 폴리필이라는 주장.
-- npm 발행·실서비스 배포·실제 외부 시스템을 바꾸는 자동화. 별도 명시가 없으면 로컬 실행과 공개 소스 제공까지입니다.
+Do not redesign the ERP, real customer data storage, existing Product Import APIs, variant creation, product/image ordering, image migration, or transaction ownership. Do not add a hosted chatbot, AI-provider keys, a general agent runtime, or a new MCP transport. Do not claim a polyfill creates native browser support.
 
-## 4. 현재 권하는 최소 구조 — AP, 구현 전·중 재검토
+Initial delivery excluded deployments and package publishing. H31 subsequently authorizes **only this repository's fictional GitHub Pages gallery**, including automatic deployment from main. Other servers, real data, and npm publishing remain outside authority.
 
-### AP-01 두 종류의 매뉴얼
+## 4. Minimal approach — AP, updated by later H
 
-개발용 AGENTS.md 하네스는 **사이트를 만드는 AI**에게 어디에 무엇을 연결하고 검증할지 알려줍니다. 런타임 사이트·페이지 매뉴얼은 **사이트를 쓰는 AI**에게 어떤 화면인지, 어디로 이동하고 어떤 데이터를 읽고 수정할지 설명합니다. 둘은 대상과 배포 시점이 다릅니다. 저장소 운영 규칙 전체를 소비 사이트 하네스에 복사하지 않습니다.
+### AP-01: Two audiences for manuals
 
-### AP-02 초기의 두 진입 경로 제안 — H32에 의해 대체됨
+Development AGENTS.md tells **AI building a site** what to connect and verify. Runtime manuals tell **AI using that site** what it can read, edit, save, and navigate. Do not copy this repository's operating policy wholesale into a consumer harness.
 
-> **과거 AP 기록(현재 적용하지 않음):**
-> 도구의 이름·설명·입력 형식·실행 함수를 한 곳에서 정의하고, 네이티브 WebMCP 등록과 JS로 접근하는 대안 진입점/짧은 메타 안내가 같은 정의를 사용하게 합니다. 정확한 전역 객체 이름·매뉴얼 위치는 아직 고정하지 않았습니다. 기존 논의의 `#agentsmd`/`#llms` 같은 표식을 설명 없이 공식 WebMCP 기능으로 쓰지 않습니다.
->
-> 지원 환경에서는 공식 초안의 `document.modelContext.registerTool`을 사용합니다. 페이지 안에서의 `getTools`와 브라우저가 외부 AI에게 도구를 전달하는 경로를 혼동하지 않습니다. JS 전역 함수를 노출했다고 모든 AI가 자동으로 읽거나 실행할 수 있다는 뜻은 아닙니다. 미지원 환경에서도 일반 UI는 동작해야 합니다.
->
+### AP-02: One standard runtime entry point
 
-**현재 방향(H32):** 런타임 등록·발견·호출은 `document.modelContext`로 통일합니다. 별도 HTML 메타/DOM 표식과 공개 JS 전역 API를 병렬 경로로 두지 않습니다. 매뉴얼과 사이트맵은 등록 도구로 제공합니다. 브라우저 에이전트는 브라우저의 발견·호출 기능을, 페이지 JS는 실제 지원 환경에서 같은 API의 `getTools()`/`executeTool()`을 사용합니다. 이 두 소비 방식의 지원 여부를 구별하며 미지원 환경은 일반 UI를 유지합니다.
+**Current, under H32/H33:** register, discover, and invoke through `document.modelContext`. Manuals and site maps are registered tools. Browser agents use browser discovery/invocation; in-page JavaScript requires implemented `getTools()`/`executeTool()` APIs. Detect these separately and keep ordinary UI working when unavailable.
 
-### AP-03 get/set의 최소 의미
+**Historical, superseded by H32:** the early AP proposed shared definitions for both native registration and a public JS list/call fallback with a short metadata/DOM entry guide. It mentioned `#agentsmd`/`#llms` without treating them as official APIs. That proposal was implemented in the early examples, then removed. It is not current guidance or a prior human decision to create a second protocol.
 
-읽기는 현재 편집 가능한 데이터를 구조화해 반환합니다. 쓰기는 수정 가능한 필드만 검증해 UI와 같은 앱 동작을 호출합니다. 화면 밖 관련 제품 조회도 같은 권한 경계에서 제공합니다(H29). UI와 setter가 별도 상태를 만들지 않습니다. 초기 권고는 **일부 필드 수정 → 공유 초안·화면 반영 → 저장은 별도 동작**입니다. 이 권고는 휴먼이 명시한 저장 의미가 아니며, 문서와 예제에서 효과를 정확히 설명하고 근거가 있으면 바꿀 수 있습니다.
+### AP-03: Minimal get/set semantics
 
-`setBoard`를 객체 전체 무제한 덮어쓰기나 임의 상태·권한 변경 통로로 만들지 않습니다. 누락 필드, null, 배열, 읽기 전용 필드, 유효하지 않은 값의 의미를 정합니다. 작은 예제에서 불필요한 범용 상태 엔진·스키마 DSL을 만들지는 않습니다.
+Read copies of the current editable data. Validate allowed fields and use the same actions as UI, including authorized related-object getters. The example choice is **partial patch → shared draft and visible UI → separate save**. Clearly define omitted fields, null, arrays, invalid values, and read-only fields; do not build a universal state engine or schema DSL.
 
-### AP-04 사람이 확인할 수 있는 공동 편집
+### AP-04: Visible shared editing
 
-UI와 AI의 편집은 같은 상태·검증 경로로 들어오고, AI가 바꾼 값을 표시합니다. 저장 기준값, 초안, 변경 출처, 오래된 읽기 이후의 수정 충돌은 필요성이 있는 예제에서 검증합니다. revision/expectedRevision 같은 기술은 선행 샘플에서 사용한 AP이며 모든 Lite 소비자에게 강제할 규격으로 정해진 것은 아닙니다.
+UI and AI enter the same validation/state path. Mark actual AI changes and reflect human continuation, save, and cancel. **H33 removes the example revision/expectedRevision mechanism.** It was an agent choice for detecting stale writes, never a WebMCP requirement. Real apps retain whatever concurrency guarantees their own server requires; the gallery does not add that mechanism.
 
-### AP-05 실행 동작과 권한
+### AP-05: Actions and authority
 
-저장·취소·이동은 이름과 반환값으로 실제 효과를 알 수 있게 합니다. 초안 변경/저장 요청/완료/실패를 거짓 성공으로 합치지 않습니다. 앱의 기존 검증·권한·감사 정책을 보존합니다. 필요한 사람 확인은 실제 제안 내용과 연결하고 수정 후 오래된 승인으로 실행하지 않습니다.
+Distinguish draft edits, requested persistence, confirmed save, failure, and cancellation. Keep existing app permissions and audits. Where real confirmation is required, tie it to a concrete proposal and do not reuse stale approval after edits.
 
-초기 가상 데이터 예제에는 사람이 변경을 검토하고 저장하는 흐름을 보여주는 것을 권합니다. 동시에 휴먼이 언급한 더 높은 자동화 수준도 문서화합니다. 실제 저장/제출의 허용 범위는 소비 사이트와 사용자 권한의 책임이며 모든 setter마다 확인창을 강제하는 별도 보편 규격을 만들지 않습니다.
+The examples let people inspect drafts and explicitly save them. H23 also allows more automation when the app/user permits it; do not impose a new universal confirmation dialog on every setter.
 
-### AP-06 매뉴얼은 짧은 목차와 필요한 본문
+### AP-06: Small manuals
 
-`site_map()`은 페이지·URL·용도 중심으로, 사이트 매뉴얼은 공통 개념과 동작 원칙 중심으로, 페이지 매뉴얼은 현재 데이터·도구·순서 중심으로 검토합니다. AJAX로 같은 출처의 정적 문서나 사이트가 관리하는 내용을 읽을 수 있습니다. 매뉴얼 조회를 위해 또 다른 LLM을 실행할 이유는 없습니다. 긴 전체 사이트 문서를 매 호출에 반복하는 대신 필요한 부분만 읽을 수 있게 하되, 검색 엔진/벡터 DB를 선행 구축하지 않습니다.
+Use a short site map for pages/URLs/purposes, common guidance for shared concepts, and a page manual for current tools and workflows. Static same-origin JSON is enough for these examples; do not add an LLM, search engine, or vector database just to retrieve guidance.
 
-## 5. 제안하는 여섯 예제 — AP, 선정은 수정 가능
+## 5. Six examples — AP selection
 
-예제는 별도 기능 수를 채우는 장난감보다 소비 사이트 개발자가 복사해 이해할 수 있는 다른 작업 상황을 보여줍니다. 공통 UI 기반과 helper는 공유할 수 있습니다.
+1. **Product editor:** get/set, human and AI edits, marks, save/cancel.
+2. **Bulk catalog:** multiple rows, atomic validation, human continuation in the same table.
+3. **Selection sheet:** fictional rows, order and quantity; get related products and switch the display between SKU and product code. No real ERP pricing/inventory integration.
+4. **Board:** use understandable get/set on a non-product entity.
+5. **Manuals and navigation:** find a page, inspect two editing areas, and handle unsaved changes before leaving.
+6. **Asynchronous save recovery:** controlled delay, validation/failure, retained draft, retry, and confirmed outcome. Do not invent a complex partially successful backend.
 
-1. **제품 단건 편집**: get/set, 폼의 직접 수정과 AI 수정, 변경 표시와 저장·취소.
-2. **제품 벌크 테이블 편집**: 여러 행/필드 변경, 검증 실패 시 결과, 사람이 같은 표에서 이어서 수정.
-3. **라인시트와 비슷한 구성표 편집**: 행 선택·순서·수량 등 가상 데이터 편집. 화면에 없는 제품 번호 B를 조회한 뒤 표시 방식을 바꾸는 H29 흐름을 검증. 실제 ERP/가격/재고 규칙은 구현하지 않음.
-4. **보드/일반 엔터티 편집**: ERP에 종속되지 않는 `getBoard`/`setBoard`, 단순한 계약을 다른 UI에 적용.
-5. **매뉴얼·사이트맵·화면 이동**: 사이트 안내에서 페이지를 찾고 편집 중 이탈/미저장 확인을 이해하는 흐름.
-6. **비동기 저장과 복구**: 제어 가능한 지연·유효성 실패·저장 실패 후 초안 유지·재시도, 실제 결과 확인. 억지로 일부만 성공하는 복잡한 백엔드 모델은 만들지 않음.
+Examples 1–2 were explicit requests. The historical sheet idea followed the original domain; H33 now requires neutral products and identifiers. Examples 4–6 are agent selections. Replace AP choices if a smaller set teaches the purpose better; keep advanced hidden filters out.
 
-1·2는 휴먼이 직접 요청한 예제이고 3은 라인시트 중심 니즈에 맞춘 제안, 4~6은 에이전트가 선정한 사례입니다. 더 좋은 최소 구성이 있으면 목적과 차이를 설명하고 교체합니다. 고급 숨은 검색 필터는 이 여섯 예제에 넣지 않습니다.
+## 6. GitHub execution authority and workflow
 
-## 6. GitHub 실행 인계 — 휴먼이 권한을 준 작업, 세부 순서는 AP
+H27 explicitly authorizes reading this plan, creating planning issues, implementing through PRs, repeated fresh-context direction reviews, and direct merges **for WebMCPLite only**. H28 says the project already exists. Reuse the existing repository and execution chat; do not duplicate them. H31 separately adds Pages publishing.
 
-### 실행 범위
+1. Read original H, current R, and AP. Check existing work, then create useful issues with index links and dependency order.
+2. Implement reviewable `codex/` branches and PRs; inspect actual code and behavior.
+3. Review the entire final change in a fresh session that does not inherit the author's conversation. Check correctness and whether the design is unnecessarily large.
+4. After fixes, validate the changed final commit and obtain another fresh-context review. Merge only with required passing checks and no important unresolved defect. Never bypass checks or protection.
+5. Continue dependent work. Reconsider direction at milestones without endless redesign. Ask only about genuine conflicts with H or missing authority.
+6. When scope is fulfilled, report required work, limitations, and future ideas separately. Resume the original chat/issues after interruption instead of creating replacement tasks.
 
-휴먼은 별도 채팅에서 PLANS.md를 읽고 프로젝트 계획 이슈를 여러 개 생성한 뒤 PR로 구현하도록 요청했습니다. **WebMCPLite 한정으로 직접 머지 가능**하다고 명시했고, 계속 새 세션으로 리뷰하며 방향성도 의심하라고 요청했습니다. 이 권한의 원문은 H 증거에 보존합니다. 다른 저장소의 머지, 실제 ERP 데이터 실행, 호스팅/패키지 발행 권한으로 해석하지 않습니다.
+Early candidate work units covered terminology, harness, contracts, helper, six examples, browser verification, and final documentation. These were proposals rather than proof issues already existed. The actual delivered issue/PR mapping is in [progress](docs/progress.md).
 
-### 제안하는 작업 분할
+## 7. Evidence for completion — AP execution criteria
 
-아래는 이슈의 후보이며 아직 생성되었다는 뜻이 아닙니다. 실행 담당자는 기존 이슈를 확인해 적절한 단위로 합치거나 나누고 의존 관계를 유지합니다.
+- Explain the separate development harness and runtime manual audiences and how to integrate each.
+- Keep rules and code consistent; UI/AI use shared app actions.
+- Reproduce 5–6 examples with discoverable inputs, visible changes, and honest save state.
+- Verify AI marks, display controls, page-wide unsaved state, meaningful contracts, and actual browser editing.
+- Separate stub tests from observed browser WebMCP calls; expose unsupported and unrun areas.
+- Record fresh-context review of the exact final commit, required checks, linked issues, and merged PRs.
+- Make README describe actual behavior and support, without substituting marketing or novelty claims for evidence.
 
-- 제품 범위·용어·WebMCP와 자체 관례의 경계·README/라이선스 결정.
-- 소비 사이트에 붙일 AGENTS.md 하네스와 적용·검증 예시.
-- get/set·매뉴얼·동작 결과·미저장 상태의 최소 계약.
-- 작은 등록/해제 연결 코드와 표준 진입점, 미지원 처리. 초기 JS 대안 제안은 H32로 대체됐습니다.
-- 공통 예제 껍데기와 단건 제품 편집.
-- 제품 벌크 테이블.
-- 라인시트형 구성표.
-- 보드/일반 엔터티.
-- 사이트 안내·이동·이탈 확인.
-- 비동기 저장·실패 복구.
-- 실제 브라우저 검증·호환성 표·최종 문서와 방향 재검토.
+## 8. Direction review prompts — AP
 
-자세한 체크리스트와 스택은 실사 후 정합니다. `TypeScript`, 빌드 도구, 프레임워크·패키지 구조·라이선스는 휴먼이 선택한 요구가 아닙니다. 작은 core, 예제 재현성, 유지보수 비용을 근거로 선택하고 공표합니다. MIT는 후보일 뿐 이 부트스트랩에서 확정하지 않습니다.
+Does this recreate WebMCP registration? Is the value clear in small conventions and easy-to-follow examples? Are get/set contracts clear rather than unrestricted JSON? Does each dependency solve an actual example need? Do manuals agree with behavior without duplicated metadata drifting? Can a person see AI changes and continue editing consistently? Is automation consistent with user authority? Are overlaps with existing projects acknowledged without claims of being first, official, or universally compatible?
 
-### PR와 독립 리뷰 흐름
+## 9. Public sources and private experiments
 
-1. 원 요구/H, 현재 규격/R, 제안/AP를 읽고 중복 없는 이슈를 만든다. 인덱스와 의존 관계를 남긴다.
-2. 작은 브랜치·PR 단위로 구현하고 실제 코드·동작을 확인한다.
-3. 작성자의 작업 맥락을 그대로 상속하지 않는 새 세션/새 컨텍스트에서 실제 최종 변경을 독립 검토한다. 각 리뷰는 기능 정확성과 방향의 과도함·중복을 함께 질문한다.
-4. 수정하면 바뀐 최종 커밋을 재검증하고 새 세션 리뷰를 받는다. 중요 결함이 없고 필요한 검증이 통과한 최종 커밋만 직접 머지한다. 체크 실패나 보호 규칙을 우회하지 않는다.
-5. 다음 의존 작업으로 계속 진행한다. 주요 단계에서 방향을 다시 검토하되 무한 재설계로 끝내지 않는다. H의 변경이 필요할 때만 정확한 충돌을 묻는다.
-6. 프로젝트 범위가 충족되면 열린 필수 작업·검증 한계·미래 항목을 구별해 완료를 보고한다. 실행 채팅이 중단되면 기존 채팅/이슈를 재개하며 새 작업을 중복 생성하지 않는다.
+Private single/bulk editing experiments preceded this repository. They explored fictional data, shared drafts, marks, review/save, recovery, and optional registration. They are historical observations, not proof of this public implementation or browser compatibility.
 
-## 7. 완료를 판단할 증거 — AP 실행 기준
+Do not copy private code, actual product data, screenshots, documents, internal links, or local private paths. Write independent fictional public examples. Check rights, attribution, and licenses before reusing code. A public repository alone is not a reuse license.
 
-- 소비 사이트 개발 AI가 읽을 하네스와 런타임 사이트 매뉴얼의 역할·적용법을 설명한다.
-- 핵심 규칙과 작은 연결 코드가 일치하며 UI/AI가 같은 앱 동작을 쓴다.
-- 5~6개 예제를 로컬에서 재현할 수 있고 AI가 읽을 진입점, 입력, 화면 변화, 저장 상태를 확인할 수 있다.
-- 변경 하이라이트/표시 제어와 미저장 상태의 범위를 실제 예제로 확인한다.
-- 의미 있는 계약 테스트와 브라우저에서의 실제 편집 검증을 통과한다.
-- stub 등록 테스트와 실제 네이티브 WebMCP 지원 검증을 구별해 보고한다. 미지원·미실행 영역을 숨기지 않는다.
-- 각 PR에 새 컨텍스트 독립 리뷰와 검증한 최종 커밋의 근거가 있고 관련 이슈와 연결해 머지한다.
-- 최종 README는 실제 제공한 기능·지원 환경·제한을 설명한다. 홍보 문구로 기능 완료나 독창성을 대신하지 않는다.
+## 10. Historical execution choices
 
-## 8. 계속 의심할 질문 — AP 리뷰 프롬프트
-
-- 이 코드는 WebMCP가 이미 제공하는 도구 등록을 불필요하게 다시 구현하고 있지 않은가?
-- 프로젝트의 가치가 작은 규칙과 따라 하기 쉬운 공동 편집 예제로 충분히 드러나는가?
-- get/set은 데이터 구조를 명확히 보여주는가, 아니면 아무 JSON이나 받는 불명확한 만능 도구가 되었는가?
-- 새로운 API·의존성·추상화가 초기 예제의 실제 문제를 해결하는가?
-- 매뉴얼은 설명과 실제 동작이 일치하는가? 같은 내용을 여러 곳에 복제해 쉽게 어긋나지 않는가?
-- AI가 바꾼 값과 현재 저장 상태를 사람이 바로 이해하는가? 사람이 이어서 편집해도 결과가 일관되는가?
-- 자동화를 높일 수 있다는 의도가 사이트 권한/휴먼 제어와 모순 없이 표현되어 있는가?
-- 비교 프로젝트의 현재 기능과 겹치는 부분을 인정하고 있는가? 최초·유일·공식·모든 AI 지원 같은 검증되지 않은 주장을 만들지 않았는가?
-
-## 9. 공개 자료와 선행 샘플
-
-이 대화 이전에 제품 단건/벌크 공동 편집의 내부 실험이 있었고, 가상 데이터·공유 상태·변경 표시·검토 저장·오류 복구·선택적인 네이티브 등록을 탐색했습니다. 이 사실은 구현 가능성을 보여주는 선행 관찰이며 공개 프로젝트의 완성도나 네이티브 호환 검증을 대신하지 않습니다.
-
-비공개 저장소의 코드·실제 제품 데이터·스크린샷·내부 문서와 로컬 경로는 공개 저장소에 복사하지 않습니다. 공개 예제는 독립적인 가상 데이터로 작성하고 재사용이 필요한 코드의 권리·출처를 먼저 확인합니다. 비교 프로젝트의 코드 사용에는 해당 라이선스를 확인합니다.
-
----
-
-## 10. 실행 인계와 이번 작업의 구체화 — AP
-
-이 채팅을 독립 실행 장소로 지정한 최신 휴먼 원문:
+The human designated this chat as the execution place:
 
 ```text
 아 내 이야기는 코덱스에 프로젝트 넣어놨으니 거기서 진행시키라고.. 그래야지 작업이 분리가 되니
 ```
 
-기존 공개 저장소는 생성된 상태이고 초기 조회 당시 비어 있었습니다. 같은 저장소나 실행 채팅을 다시 만들지 않습니다.
+The existing public repository was empty at the first check. It was reused.
 
-- **AP 기술 선택**: 브라우저 ES modules와 Node 내장 테스트/정적 서버. 빌드 단계·런타임 의존성을 추가하지 않고 소비 사이트가 코드를 읽고 복사할 수 있게 합니다. 브라우저 회귀 검증 도구만 개발 의존성으로 검토합니다.
-- **AP 계약 선택**: 허용된 필드만 partial patch, 생략 필드 유지, 배열 명시적 교체, null 거부, 별도 save/cancel. 예제의 revision은 사람/AI의 오래된 쓰기를 드러내기 위한 장치이며 Lite 규격의 필수 요소가 아닙니다.
-- **AP 저장 모델**: 예제의 저장은 탭 메모리 기준값 갱신입니다. 새로고침 시 가상 데이터로 초기화됩니다. 비동기 예제는 저장 지연/실패를 재현합니다. 실제 서버 영속 저장으로 설명하지 않습니다.
-- **AP 작업 단위**: (A) 계약·소비 하네스, (B) 연결 코드와 테스트, (C) 제품·벌크·라인시트, (D) 보드·안내/이동·비동기, (E) 브라우저 검증·최종 문서. 각 단위에서 이슈→PR→최종 커밋 새 컨텍스트 리뷰→머지를 진행합니다. 실행 중 C/D는 같은 상태·이동·UI 기반을 사용하는 하나의 여섯 예제 갤러리 PR로 합쳤습니다. 재사용 연결 코드는 별도 PR로 유지하고 최종 검증 문서는 후속 PR로 검토합니다. 이는 AP 작업 분할 조정이며 휴먼 요구 변경이 아닙니다. 일괄 PR 스택이나 외부 Workflow 실행을 요청한 것으로 확대하지 않습니다.
-- **라이선스**: 휴먼이 지정하지 않았으므로 아직 사용 허락 라이선스를 부여하지 않습니다. 코드 열람/예제 실행은 가능하나 외부 재배포를 위한 오픈소스 라이선스 선택은 미결입니다.
+- **Historical AP stack, superseded by H33:** browser ES modules and Node built-in tests/static server, initially no build step or runtime dependencies. H33 explicitly selects a UI library/theme; the current gallery uses React, Ant Design, LobeHub UI and Vite while the reusable helper stays independent.
+- **Historical AP contracts:** allowed-field patches, omitted-field retention, explicit array replacement, null rejection, separate save/cancel. Those meanings remain. Revision-based conflict checks were AP and are removed under H33.
+- **Save model, still current:** tab-memory baselines reset on reload, with simulated delay/failure for async examples; no server persistence.
+- **Historical work units:** contracts/harness, helper/tests, product/bulk/sheet, board/manuals/async, browser verification/final docs. Shared gallery work was combined into one PR; the helper and final documentation stayed separate. This adjusted AP sequencing, not H.
+- **License, unresolved:** no reuse license selected by the human. Viewing/running does not grant redistribution or publishing permission.
 
-진행 상태와 검증한 커밋은 [작업 기록](docs/progress.md)에 남깁니다.
+## 11. Initial delivery — historical record
 
-## 11. 구현 결과와 남은 범위 — AP 실행 기록
+Contracts/harness PR #12, registration helper PR #13, and six examples PR #14 were merged after required validation and fresh-context final-commit reviews. Documentation and verification followed. [Walkthroughs](examples/README.md), [verification](docs/verification.md), [reviews](docs/reviews/README.md), and [progress](docs/progress.md) retain the trace.
 
-- 계약·소비 하네스 #12, 작은 연결 코드 #13, 여섯 공유 편집 예제 #14가 최종 커밋 새 컨텍스트 리뷰와 필요한 검증 후 머지됐습니다.
-- [예제 실행법](examples/README.md), [검증 범위](docs/verification.md), [독립 리뷰 근거](docs/reviews/README.md), [진행 기록](docs/progress.md)에서 재현·추적합니다.
-- 초기 연결 코드는 프레임워크 없는 47줄 ES module이었으며(이후 H32 정정으로 단순화), 앱 상태·검증을 소유하지 않습니다. 14개 의미 있는 계약 테스트가 로컬/CI에서 통과했습니다.
-- 실제 IAB WebMCP 도구 발견과 호출을 확인했습니다. 버전·엔진 구현 방식·다른 브라우저/AI로 일반화하지 않습니다.
-- 현재 제공한 저장은 탭 메모리입니다. 실제 서버 권한·영속 저장·배포·npm 발행은 구현하거나 실행하지 않았습니다.
-- 숨은 고급 검색, PDF 처리, 자체 챗봇, 범용 agent 플랫폼은 초기 범위에 추가하지 않았습니다. 라이선스 선택은 미결이며 공개 저장소라는 이유로 재배포 권한을 주장하지 않습니다.
-- 이 초기 범위는 여기서 마무리하고, 새 사용자 요구가 들어오면 기존 이슈/기록을 확인해 이어갑니다. 미검증 환경을 끝없는 확장 작업으로 바꾸지 않습니다.
+The initial helper was a 47-line ES module and the initial suite had 14 tests. IAB discovery/invocation was observed without determining engine/version or generalizing to other browsers. No real persistence, authorization backend, production service, or package publishing was added. Hidden search, PDF processing, hosted chat, and a general agent platform stayed future/out-of-scope. That initial scope ended; later human requests are tracked as follow-ups.
 
-## 12. 후속 GitHub Pages 게시 — H30/H31과 AP
+## 12. GitHub Pages — H30/H31
 
-초기 범위 종료 후 [H30/H31 원문](docs/sources/human-intent.md)에 따라 **이 저장소의 가상 예제를 GitHub Pages에 게시**합니다. 초기 계획의 배포 제외는 초기 범위 기록으로 유지하며, 이번 명시적 요청이 Pages 예제 게시만 추가로 허용합니다. 다른 서버·실제 고객 데이터·npm 배포 권한을 만들지 않습니다.
+H30 asked how repository examples could run at a public URL; H31 explicitly requested publishing. This adds only the fictional GitHub Pages gallery to the original scope.
 
-AP 구현: main push 시 테스트→정적 산출물 생성→Pages 게시. PR에서는 테스트와 산출물 생성만 하고 게시하지 않습니다. HTML 진입점을 루트로 옮기고 자원/매뉴얼/사이트맵을 하위 경로에서도 작동하게 합니다. 산출물에는 실행에 필요한 파일만 포함하고 전체 저장소는 업로드하지 않습니다. 공개 주소는 `https://linkanyco.github.io/WebMCPLite/`입니다.
+AP delivery uses main push → tests → static build → Pages deployment. PRs test/build without publishing. Assets, manuals, and site-map paths support the repository subpath. Publish runtime assets only, not the whole repository. The public address is `https://linkanyco.github.io/WebMCPLite/`.
 
-사이트는 **마지막으로 게시에 성공한 main 커밋**의 상태를 보여줍니다. 머지 직후에는 배포 시간만큼 이전 상태가 보일 수 있고 실패하면 이전 성공 배포가 유지됩니다. 화면 아래 게시 버전 링크와 `version.json`의 full SHA로 GitHub main/배포 기록과 대조할 수 있습니다. 저장은 계속 탭 메모리입니다. Pages 설정·실제 첫 게시·공개 브라우저 검증 결과는 [후속 이슈 #16](https://github.com/linkanyco/WebMCPLite/issues/16)과 연결 PR에 기록합니다.
+The site shows the **last successfully deployed main commit**. A new merge takes time to deploy; failure leaves the previous successful deployment visible. The footer and `version.json` identify the full commit. This deployment identifier is unrelated to the removed editing revision counter. Save remains tab memory. See [issue #16](https://github.com/linkanyco/WebMCPLite/issues/16) and linked PR #17.
 
-## 13. H32 진입점 정정의 실행 — 현재 적용
+## 13. Single standard entry point — H32
 
-[H32 원문](docs/sources/human-intent.md)과 [후속 이슈 #18](https://github.com/linkanyco/WebMCPLite/issues/18)에 따라 `document.modelContext` 하나로 정리합니다. `#agentsmd` 메타/HTML 안내와 `window.webmcpLite.list/call` 공개 경로를 제거합니다. 개발용 저장소·소비 하네스 AGENTS.md는 유지합니다. 당시 AP/휴먼 발화·검증은 위와 출처 자료에 과거 기록으로 남깁니다.
+[H32](docs/sources/human-intent.md) and [issue #18](https://github.com/linkanyco/WebMCPLite/issues/18) replace parallel HTML metadata/markers and `window.webmcpLite.list/call` with `document.modelContext`. Keep the developer/consumer harness and registered manual tools. Preserve the old proposals and observations as historical records.
 
-AP 구현 선택: 연결 helper는 등록 결과 ready와 해제 dispose만 반환합니다. 사이트/페이지 매뉴얼은 같은 등록 도구 목록에서 발견합니다. 일반 UI는 앱 공유 함수를 사용하고, 예제의 도구 호출 버튼은 지원 환경에서 표준 getTools→executeTool 흐름을 사용합니다. 콜백은 JSON 값을, executeTool은 JSON 문자열을 반환하는 계약을 구별합니다. 등록 수명 종료가 이미 실행 중인 호출을 취소하는 것으로 오해하지 않으며 실행 취소는 해당 실행의 signal을 따릅니다.
+The helper returns only ready/dispose. Ordinary UI uses shared app actions. The in-page demo calls standard getTools → executeTool, returns JSON values from callbacks, and parses the platform's result string once. Registration expiry must not cancel an already running call; execution cancellation uses its execution signal. Registration failure and missing in-page support are distinct; only unavailable AI controls disable. No polyfill or transport was added.
 
-등록 미지원·실패와 페이지 내 도구 호출 미지원을 구별해 표시하고, 실행 불가능한 AI 호출 버튼만 비활성화합니다. 일반 편집·저장·취소·표시 제어는 유지합니다. 폴리필·새 transport를 추가하지 않습니다. 현재 IAB 로컬 검증에서 in-page getTools/executeTool 호출로 매뉴얼 읽기·제품 B 표시·도구 이동 후 보드 편집이 동작했습니다. 정확한 최종 SHA의 독립 리뷰와 공개 게시 결과는 이슈/PR에 기록합니다.
+The earlier revision question did not authorize a change during H32. H33 now explicitly removes that example mechanism.
 
-직전 리비전 질문은 별도 설계 논의이며 이번 진입점 정정에서 revision 필수 계약을 변경하지 않습니다. 기존 AP라는 구분과 소비 앱에 강제하지 않는 원칙을 유지합니다.
+## 14. English gallery and simpler contracts — H33, current follow-up
+
+[H33 verbatim evidence](docs/sources/human-intent.md) and [issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) require continued WebMCP alignment, the README's personal motivation and practical purpose, removal of revision counters, English site/documentation, an entirely renewed Ant Design UI with the LobeHub theme, and neutral SKU/product-code examples.
+
+**Supersession:** H33 replaces the historical revision API, fashion-oriented sample terminology, Korean current documentation/site copy, and no-build/no-runtime-dependency gallery AP. Original human quotations stay in their original Korean; historical proposals and observations remain explicitly historical.
+
+**AP implementation:** use React with Ant Design and the compatible `@lobehub/ui` ThemeProvider; use Vite for development and static bundling. This UI stack does not enter `src/connect.js`. Product fields are `id`, `sku`, `productCode`, `name`, `price`, `description`; sheet `codeType` selects `sku` or `productCode`. Setters, save, and cancel have no expected-revision input. Keep existing validation, shared state, marks, atomic bulk edits, async recovery, and unsaved-page guards.
+
+The user will test after delivery. Required automated checks, actual browser observations, fresh-context final-SHA review, merge, and public deployment must be recorded as they happen in the issue/PR; this section does not claim those steps have already passed.

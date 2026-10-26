@@ -1,21 +1,27 @@
-# 새 컨텍스트 독립 리뷰 기록
+# Independent reviews in fresh contexts
 
-각 리뷰는 작성자의 대화 맥락을 상속하지 않는 새 세션(`fork_turns: none`)으로 수행했습니다. 리뷰어는 실제 저장소 지침·PLANS·H/R과 최종 diff를 읽었습니다. 에이전트 검토이며 GitHub의 인간 승인 리뷰나 규격 인증과 구별합니다.
+Each review used a new session (`fork_turns: none`) without inheriting the author's conversation. Reviewers read actual repository instructions, PLANS, human/research sources, and the final diff. These are agent reviews, not human GitHub approvals or standards certification.
 
-| 범위 | 최종 검토 커밋 | 판정과 추적 |
+## Historical initial reviews
+
+| Scope | Final reviewed commit | Decision and trace |
 |---|---|---|
-| 부트스트랩 | `894d1d6759b347824b44b7b8c474e1c562425bf3` | 공개 push 차단 결함 없음. H/R/AP, H29, 공개 자료와 방향 점검. 최초 리뷰가 찾은 BrowserMCP 사실 오류를 수정 후 별도 새 세션으로 재검토 |
-| 계약·소비 하네스 | `b0fffc5056d75451b204333b1515d62c1278d7d6` | 4개 문서 최종 diff와 원문 대조, 중요 결함 없음. [PR #12 기록](https://github.com/linkanyco/WebMCPLite/pull/12#issuecomment-6407509183) |
-| 연결 코드 | `73c9d4c8113d0d555425f3390259514b3a546cf1` | 5개 테스트·등록/취소 경계 직접 확인, 중요 결함 없음. 앞선 리뷰가 찾은 없는 start 명령 제거 후 새 세션 재검토. [PR #13 기록](https://github.com/linkanyco/WebMCPLite/pull/13#issuecomment-6407509428) |
-| 여섯 예제 | `3947fa66e3311e9a05e019b46f93b4a63d023ead` | 전체 13파일·14개 테스트·IAB reload/back 경계 검증, 중요 결함 없음. [PR #14 기록](https://github.com/linkanyco/WebMCPLite/pull/14#issuecomment-6407509653) |
-| 최종 검증·인계 문서 | 이 파일을 포함한 최종 문서 PR의 head | 최종 검토 SHA·CI·판정은 해당 PR 댓글에 남깁니다. 자기 커밋 해시를 문서에 넣기 위한 무한 후속 커밋은 만들지 않습니다 |
+| Bootstrap | `894d1d6759b347824b44b7b8c474e1c562425bf3` | No defect blocking public push. Checked H/R/AP, H29, public-source boundaries, and direction. Re-reviewed in another fresh session after correcting the BrowserMCP factual error. |
+| Contracts/harness | `b0fffc5056d75451b204333b1515d62c1278d7d6` | Four final document diffs checked against sources; no important defect. [PR #12 record](https://github.com/linkanyco/WebMCPLite/pull/12#issuecomment-6407509183) |
+| Helper | `73c9d4c8113d0d555425f3390259514b3a546cf1` | Five tests and registration/cancellation boundaries checked; no important defect. Re-reviewed after removing a nonexistent start command. [PR #13 record](https://github.com/linkanyco/WebMCPLite/pull/13#issuecomment-6407509428) |
+| Six examples | `3947fa66e3311e9a05e019b46f93b4a63d023ead` | Full 13-file diff, 14 tests, and IAB reload/back guard verified; no important defect. [PR #14 record](https://github.com/linkanyco/WebMCPLite/pull/14#issuecomment-6407509653) |
+| Verification/handoff documents | Final head recorded on [PR #15](https://github.com/linkanyco/WebMCPLite/pull/15) | Reviewed SHA, CI, and decision are in the PR comments; no self-hash follow-up commits. |
 
-여섯 예제의 앞선 별도 리뷰는 `28b6b43`에서 실제 IAB 여섯 흐름을 직접 재현했습니다. 작성자가 찾아 통지한 reload/history 문제는 코드 대조 후 수정 요청으로 남겼고, 수정 후 `3947fa6` 전체를 다른 새 세션이 다시 검토했습니다. CSS 끝 빈 줄은 기능상 비차단으로 분류했고 최종 기록 PR에서 제거했습니다.
+An earlier gallery review on `28b6b43` reproduced all six workflows in its own IAB tab. After the author reported reload/history issues, the reviewer checked them and requested fixes; another fresh session reviewed the complete corrected `3947fa6` commit. A trailing CSS blank line was nonblocking and removed in the final documentation PR.
 
-방향 점검 결과: 공동 편집·앱 함수 재사용은 공식 WebMCP와 Kit에도 있는 목적이므로 독창성을 주장하지 않습니다. 이 저장소의 실익은 작은 적용 규칙·공유 편집·화면 표시·실패 복구를 읽고 따라 할 수 있는 예제입니다. 연결 코드가 앱 상태·검증·서버를 소유하지 않고, 여섯 예제가 서로 다른 계약을 드러내므로 현재 범위는 적절하다고 판정했습니다. 별도 모델 서비스나 범용 프레임워크를 추가할 근거는 찾지 못했습니다.
+The direction review recognized that shared editing and app-action reuse already appear in WebMCP and Kit. The practical value here is readable conventions and examples covering marks, review, and failure recovery. The helper does not own app state, validation, or a server. No basis was found for a hosted model or general framework.
 
-한계: 원 대화 자체·과거 모든 소스 관찰·전체 브라우저 호환까지 검증한 리뷰가 아닙니다. [검증 범위](../verification.md)를 함께 읽으세요.
+Limits: reviews did not reconstruct the entire original conversation, audit every historical source, or establish universal browser compatibility. See [verification](../verification.md).
 
-## 후속 H32 진입점 정정
+## H32 entry-point correction
 
-위 초기 커밋 리뷰는 당시 구현에 대한 기록이며 현재 모든 AP를 고정하는 승인이 아닙니다. H32 이후 별도 메타/전역 진입점은 폐기하고 document.modelContext로 통일합니다. 이 변경의 최종 SHA·새 컨텍스트 리뷰·CI 및 게시 관측은 [#18](https://github.com/linkanyco/WebMCPLite/issues/18)과 연결 PR에서 추적합니다.
+Initial approvals concern the implementation at that time, not a permanent mandate for every AP. H32 retired the parallel marker/global API. The final-SHA fresh-context review, checks, and public-site observations are tracked in [issue #18](https://github.com/linkanyco/WebMCPLite/issues/18) and [PR #19](https://github.com/linkanyco/WebMCPLite/pull/19).
+
+## H33 follow-up
+
+The English redesign and removal of the example revision mechanism require their own review. [Issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) and its linked PR record the exact reviewed final commit, findings, checks, and decision. Earlier approvals are not approvals of this new implementation. After any fix changes the commit, a new fresh-context review must cover that final SHA.
