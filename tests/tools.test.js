@@ -16,7 +16,15 @@ test('page manuals derive exact exposed contracts and current-page areas', async
     assert.equal(manual.page.id, p.id);
     assert.deepEqual(manual.areas, pageAreas[p.id]);
     assert.deepEqual(manual.tools, bridge.list());
-    assert.equal((await call('site_map')).pages.length, 6);
+    const map = await call('site_map');
+    assert.equal(map.pages.length, 6);
+    for (const entry of map.pages) {
+      for (const base of ['https://example.test/', 'https://example.test/WebMCPLite/']) {
+        const url = new URL(entry.url, base);
+        assert.equal(url.pathname, new URL(base).pathname);
+        assert.equal(url.searchParams.get('page'), entry.id);
+      }
+    }
     bridge.dispose();
     assert.equal((await call('page_manual')).error.code, 'inactive');
   }

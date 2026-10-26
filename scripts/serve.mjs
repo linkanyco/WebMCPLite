@@ -9,7 +9,7 @@ http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://localhost');
     let name = decodeURIComponent(url.pathname);
-    if (name === '/') name = '/examples/index.html';
+    if (name === '/') name = '/index.html';
     if (name.split('/').some(part => part.startsWith('.')) || !types[path.extname(name)] || !['GET', 'HEAD'].includes(request.method)) throw Error();
     const filename = path.resolve(root, `.${name}`);
     if (!filename.startsWith(root)) throw Error();
