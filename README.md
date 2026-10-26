@@ -9,6 +9,7 @@ Lightweight conventions, glue, and runnable examples for humans and AI working t
 2026-10-25: 프로젝트 방향과 실행 인계를 담은 문서 부트스트랩 단계입니다. 런타임 구현·예제·브라우저 호환 검증은 아직 제공되지 않습니다.
 
 - [PLANS.md](PLANS.md): 명시된 휴먼 의도, 리서치, 에이전트 제안과 실행 범위.
+- [소비 사이트 하네스](docs/consumer-AGENTS.md)와 [예제 계약](docs/contracts.md).
 - [AGENTS.md](AGENTS.md): 이 저장소에서 작업하는 개발 AI의 실행·검증·리뷰 규칙.
 
 WebMCP 규격 초안을 활용하는 독립 프로젝트입니다. WebMCP 또는 nekuda WebMCP Kit의 공식 하위 프로젝트를 뜻하지 않습니다.
