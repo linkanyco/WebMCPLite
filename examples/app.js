@@ -166,3 +166,12 @@ $('#demo').addEventListener('click', async () => {
   else { const id = page === 'async' ? 'p3' : 'p1', state = await call('getProduct', { id }); show(await call('setProduct', { id, patch: { name: 'AI와 함께 만든 제품', price: 55 }, expectedRevision: state.revision })); }
 });
 activate();
+
+// A deployed revision is stamped into the HTML by the static build.
+const publishedCommit = document.querySelector('meta[name="build-commit"]')?.content;
+if (/^[a-f0-9]{40}$/.test(publishedCommit)) {
+  const version = document.createElement('a');
+  version.href = `https://github.com/linkanyco/WebMCPLite/commit/${publishedCommit}`;
+  version.textContent = `게시 버전 ${publishedCommit.slice(0, 7)}`;
+  document.querySelector('footer').append(' · ', version);
+}
