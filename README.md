@@ -4,7 +4,7 @@ I started this project because I wanted an easier way for people and AI to work 
 
 **[Open the examples](https://linkanyco.github.io/WebMCPLite/)** · [Example walkthroughs](examples/README.md) · [Integration guide](docs/consumer-AGENTS.md)
 
-This is an independent companion to the [WebMCP draft](https://webmachinelearning.github.io/webmcp/): small development conventions, a framework independent registration helper, and six examples of shared editing. It does not define another discovery protocol, require a hosted chatbot, or claim official affiliation or universal browser support.
+This is an independent companion to the [WebMCP draft](https://webmachinelearning.github.io/webmcp/): small development conventions, a framework independent registration helper, and six ecommerce administrator tutorials. It does not define another discovery protocol, require a hosted chatbot, or claim official affiliation or universal browser support.
 
 ## Try it locally
 
@@ -21,10 +21,14 @@ The gallery uses **Ant Design with the LobeHub theme**. The reusable [registrati
 
 ## What the examples show
 
-- Simple `getProduct` / `setProduct` and `getBoard` / `setBoard` tools that share the UI's app actions and validation.
-- Product and bulk editors, a selection sheet using SKU or product code, a board, navigation with unsaved changes, and asynchronous save recovery.
-- Visible AI changes that a person can review, continue editing, save, or cancel.
-- Site and page manuals exposed as ordinary registered tools.
+- Polish English product copy and fill a separate Korean description in the same form.
+- Reduce prices across a SKU prefix with an atomic bulk update.
+- Search by SKU and price, then ask about authorized stock data omitted from the table, scoped to the current results.
+- Edit category-banner HTML/CSS and inspect it in a sandboxed Preview.
+- Find the project information page through registered manuals and navigation.
+- Remember product details and create the same product in another tab through its ordinary New product form.
+
+The welcome page introduces WebMCP discovery with a cartoon banner. Tutorial prompts sit above ordinary admin screens; the tool playground is in a separate Developer tools tab. The EN / 한국어 buttons switch interface copy without changing drafts; English is the default. AI highlights start on and `setHighlights` can hide them.
 
 Setters update drafts; saving is a separate action. Calls do not require revision counters. These are example app contracts, not additional requirements imposed by WebMCP.
 

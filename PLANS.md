@@ -1,6 +1,6 @@
 # WebMCPLite — intent, research, and execution plan
 
-Reference date: 2026-10-25. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 is the current follow-up scope; its final verification and merge status are tracked in [issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) and the linked PR.
+Reference date: 2026-10-25. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21. H34/H35 define the current administrator tutorial follow-up in [issue #22](https://github.com/linkanyco/WebMCPLite/issues/22).
 
 ## 1. How to read this document
 
@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [full H01–H33 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [full H01–H35 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -38,7 +38,7 @@ A separate hosted chatbot, model service, voice-recognition system, or browser c
 
 ### 3.2 Future possibilities
 
-Complex product searches and filters not fully represented in the UI are a useful future scenario, explicitly excluded from the initial examples. They must remain ordinary authorized app interfaces, not hidden access bypasses.
+Complex hidden filters were excluded from the initial examples. H34 now authorizes a small SKU/price search in the UI followed by read-only stock questions about its current results. More advanced searches remain future work; all data access must stay within ordinary app authorization.
 
 Historical discussion included filling product fields from a PDF. That does not require a PDF parser, uploads, OCR, or model hosting in the Lite core. H33 removes fashion-specific presentation from current examples.
 
@@ -78,7 +78,7 @@ The examples let people inspect drafts and explicitly save them. H23 also allows
 
 Use a short site map for pages/URLs/purposes, common guidance for shared concepts, and a page manual for current tools and workflows. Static same-origin JSON is enough for these examples; do not add an LLM, search engine, or vector database just to retrieve guidance.
 
-## 5. Six examples — AP selection
+## 5. Initial six examples — historical AP selection, superseded by H34
 
 1. **Product editor:** get/set, human and AI edits, marks, save/cancel.
 2. **Bulk catalog:** multiple rows, atomic validation, human continuation in the same table.
@@ -87,7 +87,7 @@ Use a short site map for pages/URLs/purposes, common guidance for shared concept
 5. **Manuals and navigation:** find a page, inspect two editing areas, and handle unsaved changes before leaving.
 6. **Asynchronous save recovery:** controlled delay, validation/failure, retained draft, retry, and confirmed outcome. Do not invent a complex partially successful backend.
 
-Examples 1–2 were explicit requests. The historical sheet idea followed the original domain; H33 now requires neutral products and identifiers. Examples 4–6 are agent selections. Replace AP choices if a smaller set teaches the purpose better; keep advanced hidden filters out.
+Examples 1–2 were explicit requests. The historical sheet idea followed the original domain; H33 now requires neutral products and identifiers. Examples 4–6 are agent selections. Replace AP choices if a smaller set teaches the purpose better; H34 replaces these examples as described in §15.
 
 ## 6. GitHub execution authority and workflow
 
@@ -160,7 +160,7 @@ The helper returns only ready/dispose. Ordinary UI uses shared app actions. The 
 
 The earlier revision question did not authorize a change during H32. H33 now explicitly removes that example mechanism.
 
-## 14. English gallery and simpler contracts — H33, current follow-up
+## 14. English gallery and simpler contracts — H33, delivered
 
 [H33 verbatim evidence](docs/sources/human-intent.md) and [issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) require continued WebMCP alignment, the README's personal motivation and practical purpose, removal of revision counters, English site/documentation, an entirely renewed Ant Design UI with the LobeHub theme, and neutral SKU/product-code examples.
 
@@ -169,3 +169,13 @@ The earlier revision question did not authorize a change during H32. H33 now exp
 **AP implementation:** use React with Ant Design and the compatible `@lobehub/ui` ThemeProvider; use Vite for development and static bundling. This UI stack does not enter `src/connect.js`. Product fields are `id`, `sku`, `productCode`, `name`, `price`, `description`; sheet `codeType` selects `sku` or `productCode`. Setters, save, and cancel have no expected-revision input. Keep existing validation, shared state, marks, atomic bulk edits, async recovery, and unsaved-page guards.
 
 The user will test after delivery. Required automated checks, actual browser observations, fresh-context final-SHA review, merge, and public deployment must be recorded as they happen in the issue/PR; this section does not claim those steps have already passed.
+
+## 15. Administrator tutorials and welcome page — H34/H35, current follow-up
+
+[H34/H35 evidence](docs/sources/human-intent.md) and [issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) define one ordinary ecommerce store administrator, six tutorials, a welcome page, and a supporting New product destination. H34 supersedes the selection-sheet, board-note, two-note guide and save-recovery AP examples. H35 allows Korean site UI while keeping English as the default; repository documentation remains English.
+
+Human-selected scenarios: polish deliberately poor English copy and fill a separate Korean description; discount every SKU starting with KEY-1; search SKU containing KEY and price ≤ $20, then read stock ≤ 5 only in current results; edit three category banners as HTML/CSS in an upper Textarea and render a lower Preview; find a light project-information page through manuals; read a product and recreate it in a new tab through remembered data. No duplicate feature or uniqueness constraint is needed. AI highlights start on and can be hidden through a tool, without a UI switch. The prompt sits in a cartoon-like upper region; below it is ordinary app UI. Developer tools live in a separate tab.
+
+AP choices: keep legacy route IDs for shared links; use 12 fictional products (eight KEY-1 matches, six KEY/≤$20 results, four of those with stock ≤5), descriptionEn/descriptionKo fields, and a local newProduct draft. getProducts on the list reads current search results including read-only stock; setSearch uses visible UI filters. Storefront source renders only on Preview in a script-disabled sandbox. Tabs have independent memory; the browser AI carries values and opens the destination tab using browser controls. No cross-tab protocol or hidden storage transfer. Landing discovery copy describes required browser/AI support honestly; it cannot enable missing support. Generated banner assets are stored with the example. UI language switching changes copy and document language without editing drafts.
+
+Verify meaningful contracts, actual browser edits/previews and multi-tab reuse, both UI languages, desktop/mobile layout, final-SHA independent review and Pages deployment. Report observed support separately from automated stub tests.
