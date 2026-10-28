@@ -25,3 +25,7 @@ Initial approvals concern the implementation at that time, not a permanent manda
 ## H33 follow-up
 
 The English redesign and removal of the example revision mechanism require their own review. [Issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) and its linked PR record the exact reviewed final commit, findings, checks, and decision. Earlier approvals are not approvals of this new implementation. After any fix changes the commit, a new fresh-context review must cover that final SHA.
+
+## H34/H35 follow-up
+
+[Issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) tracks the administrator tutorials and optional Korean interface. Review the H34/H35 quotations and PLANS §15 against the entire final diff, original contracts, tests and rendered results. Final reviewed SHAs and any corrected-commit reviews are recorded on its PR; this entry does not pre-approve the implementation.

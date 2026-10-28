@@ -29,6 +29,12 @@ At this stage, 16 tests covered registration/execution lifetime separation and a
 
 ## English gallery redesign and simpler contracts — H33
 
-[Issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) tracks the current follow-up: English site/docs, README motivation, no revision counters, neutral SKU/product-code data, and Ant Design with the LobeHub theme. The core remains framework independent; the gallery now requires dependency installation and a Vite build.
+[Issue #20](https://github.com/linkanyco/WebMCPLite/issues/20) tracked the delivered follow-up (merged PR #21): English site/docs, README motivation, no revision counters, neutral SKU/product-code data, and Ant Design with the LobeHub theme. The core remains framework independent; the gallery now requires dependency installation and a Vite build.
 
 The original Korean human quotations and historical AP/verification remain preserved with English explanation. Current contracts and walkthroughs describe the simplified calls. Required checks, actual rendered/browser observations, fresh-context review of the exact final SHA, merge, and public deployment are recorded on the linked PR as each happens. This work-in-progress entry does not claim completion before that evidence exists.
+
+## Administrator tutorials and bilingual UI — H34/H35
+
+[Issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) follows merged #21. Human requests are preserved separately from AP implementation choices in PLANS §15 and the source evidence. The implementation replaces the former generic examples with six administrator scenarios, a cartoon welcome page, a supporting New product form, English-default/Korean UI, tool-only highlight visibility control, and a developer tab.
+
+Nineteen automated tests and real IAB edits/search/preview/multi-tab reuse were observed before review; see [verification](verification.md) for limits, including unverified mobile rendering. Final-SHA review, checks, merge and deployment must be recorded on the PR/issue when completed. No new runtime dependency or connector change was needed.

@@ -12,7 +12,7 @@ test('UI and AI share product draft; copies cannot mutate state; human takes ove
   assert.equal(human.data[0].price, 50);
   assert.deepEqual(human.aiFields, ['p1.price']);
   assert.deepEqual(Object.keys(human).sort(), ['aiFields', 'data', 'dirty', 'ok', 'saving']);
-  const next = w.setProducts([{ id: 'p1', patch: { description: 'A compact workspace keyboard.' } }], 'ai');
+  const next = w.setProducts([{ id: 'p1', patch: { descriptionEn: 'A compact workspace keyboard.' } }], 'ai');
   assert.equal(next.data[0].name, 'Human title');
   assert.equal(next.data[0].price, 50);
 });
@@ -21,7 +21,7 @@ test('bulk update is atomic for invalid values, fields, duplicates and unknown I
   const w = createWorkspace(), before = w.read('catalog');
   for (const bad of [
     [{ id: 'p1', patch: { name: 'Changed' } }, { id: 'p2', patch: { price: -1 } }],
-    [{ id: 'p1', patch: { id: 'p4' } }], [{ id: 'p1', patch: { description: null } }],
+    [{ id: 'p1', patch: { id: 'p4' } }], [{ id: 'p1', patch: { descriptionEn: null } }],
     [{ id: 'p1', patch: { sku: 'OTHER-001' } }], [{ id: 'p1', patch: { productCode: 'OTHER-1001' } }],
     [{ id: 'p1', patch: { name: 'A' } }, { id: 'p1', patch: { price: 2 } }],
     [{ id: 'unknown', patch: { name: 'A' } }], [null], [],
@@ -31,57 +31,59 @@ test('bulk update is atomic for invalid values, fields, duplicates and unknown I
   }
 });
 
-test('product list supports product codes, validated array replacement and cancel', () => {
-  const w = createWorkspace();
-  assert.equal(w.read('catalog').data[0].productCode, 'PRD-1001');
-  const result = w.set('sheet', { codeType: 'productCode', rows: [{ productId: 'p2', quantity: 9 }] }, 'ai');
-  assert.equal(result.data.title, 'Workspace essentials');
-  assert.deepEqual(result.data.rows, [{ productId: 'p2', quantity: 9 }]);
-  for (const invalid of [
-    { rows: [{ productId: 'p1', quantity: 0 }] },
-    { rows: [{ productId: 'p1', quantity: 1 }, { productId: 'p1', quantity: 2 }] },
-    { codeType: 'unknown' },
-  ]) {
-    assert.equal(w.set('sheet', invalid).ok, false);
-    assert.deepEqual(w.read('sheet'), result);
-  }
-  const cancelled = w.cancel('sheet');
-  assert.equal(cancelled.data.codeType, 'sku'); assert.equal(cancelled.dirty, false);
-  assert.deepEqual(cancelled.aiFields, []);
+test('search scopes read-only stock to current results and leaves product drafts unchanged', () => {
+  const w = createWorkspace(), before = w.read('catalog');
+  const result = w.setSearch({ skuContains: 'key', maxPrice: 20 });
+  assert.equal(result.count, 6);
+  assert.deepEqual(result.data.filter(p => p.stock <= 5).map(p => p.id), ['p4', 'p6', 'p7', 'p9']);
+  assert.ok(!result.data.some(p => p.id === 'p11')); // Low stock outside the current price filter.
+  assert.deepEqual(w.read('catalog'), before);
+  result.data[0].stock = 1000;
+  assert.equal(w.search().data[0].stock, 3);
+  assert.equal(w.setSearch({ maxPrice: -1 }).ok, false);
+  assert.deepEqual(w.search().filters, { skuContains: 'key', maxPrice: 20 });
+  assert.equal(w.unsaved('sheet').unsaved, false);
 });
 
-test('unsaved(null) covers both current-page forms and rejects unrelated areas', () => {
-  const w = createWorkspace(); w.set('guideDetails', { text: 'AI second area' }, 'ai');
-  assert.equal(w.unsaved('guide').unsaved, true);
-  assert.equal(w.unsaved('guide', 'guideNote').unsaved, false);
-  assert.equal(w.unsaved('guide', 'guideDetails').unsaved, true);
-  assert.equal(w.unsaved('product').unsaved, false);
-  assert.equal(w.unsaved('guide', 'catalog').error.code, 'not_found');
+test('new-product reuse keeps source and target tabs independent; no SKU uniqueness restriction', async () => {
+  const source = createWorkspace(), target = createWorkspace();
+  source.setProducts([{ id: 'p1', patch: { descriptionKo: '기계식 키보드' } }], 'ai');
+  const { id, stock, ...values } = source.getProduct('p1').data;
+  assert.equal(target.set('newProduct', values, 'ai').ok, true);
+  assert.equal(target.unsaved('new').unsaved, true);
+  assert.equal(target.unsaved('new', 'catalog').ok, false);
+  assert.equal((await target.save('newProduct')).saved, true);
+  assert.equal(target.read('newProduct').data.sku, 'KEY-101');
+  assert.equal(target.read('newProduct').data.id, 'new-product');
+  assert.equal(target.read('catalog').data[0].descriptionKo, '');
+  assert.equal(source.read('newProduct').data.name, '');
+  assert.equal(target.set('newProduct', { stock: 1 }).ok, false);
+  assert.equal((await createWorkspace().save('newProduct')).ok, false);
 });
 
 test('async failure preserves draft/markers and blocks edits, cancel and duplicate save', async () => {
-  const w = createWorkspace(); w.set('asyncProduct', { price: 99 }, 'ai');
-  const before = w.read('asyncProduct');
-  const pending = w.save('asyncProduct', { latency: 10, shouldFail: true });
-  assert.equal(w.read('asyncProduct').saving, true);
-  assert.equal(w.set('asyncProduct', { price: 10 }).error.code, 'busy');
-  assert.equal(w.cancel('asyncProduct').error.code, 'busy');
-  assert.equal((await w.save('asyncProduct')).error.code, 'busy');
+  const w = createWorkspace(); w.setProducts([{ id: 'p1', patch: { price: 99 } }], 'ai');
+  const before = w.read('catalog');
+  const pending = w.save('catalog', { latency: 10, shouldFail: true });
+  assert.equal(w.read('catalog').saving, true);
+  assert.equal(w.setProducts([{ id: 'p1', patch: { price: 10 } }]).error.code, 'busy');
+  assert.equal(w.cancel('catalog').error.code, 'busy');
+  assert.equal((await w.save('catalog')).error.code, 'busy');
   assert.equal((await pending).error.code, 'save_failed');
-  assert.deepEqual(w.read('asyncProduct'), before);
-  const saved = await w.save('asyncProduct');
+  assert.deepEqual(w.read('catalog'), before);
+  const saved = await w.save('catalog');
   assert.equal(saved.saved, true); assert.equal(saved.dirty, false); assert.equal(saved.saving, false);
   assert.equal(saved.storage, 'tab-memory'); assert.deepEqual(saved.aiFields, []);
-  w.set('asyncProduct', { price: 80 });
-  assert.equal(w.cancel('asyncProduct').data.price, 99);
+  w.setProducts([{ id: 'p1', patch: { price: 80 } }]);
+  assert.equal(w.cancel('catalog').data[0].price, 99);
 });
 
 test('abort cannot commit a save and keeps the draft available for retry', async () => {
   const w = createWorkspace(), controller = new AbortController();
-  w.set('board', { title: 'Unsaved title' }, 'ai');
-  const pending = w.save('board', { latency: 100, signal: controller.signal });
+  w.set('storefront', { html: '<div>Unsaved banner</div>' }, 'ai');
+  const pending = w.save('storefront', { latency: 100, signal: controller.signal });
   controller.abort();
   assert.equal((await pending).error.code, 'aborted');
-  assert.equal(w.read('board').saving, false); assert.equal(w.read('board').dirty, true);
-  assert.equal(w.cancel('board').data.title, 'Project board');
+  assert.equal(w.read('storefront').saving, false); assert.equal(w.read('storefront').dirty, true);
+  assert.equal(w.cancel('storefront').data.html.includes('categories'), true);
 });

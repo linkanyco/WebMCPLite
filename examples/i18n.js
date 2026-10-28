@@ -1,0 +1,30 @@
+// UI copy only. Switching language never translates or mutates product records.
+const korean = {
+  'New draft': '새 초안', 'Add product': '상품 추가', 'AI edited': 'AI 수정', 'Welcome': '시작하기', 'Product editor': '상품 편집', 'Bulk editor': '일괄 편집', 'Product list': '상품 목록', 'Storefront editor': '스토어프런트 편집', 'Guides & navigation': '가이드와 이동', 'Memory & Reuse': '기억과 재사용', 'New product': '새 상품',
+  'Human + AI, together': '사람과 AI가 함께', 'WebMCP specification': 'WebMCP 명세', 'DEMO STORE': '데모 스토어', 'ASK YOUR AI': 'AI에게 이렇게 말해보세요',
+  'Polish the English description, then translate it and fill in the Korean description too.': '디스크립션 다듬어주고, 번역해서 한국어 디스크립션도 기입해줘.',
+  'Reduce the price of every product whose SKU starts with KEY-1 by 10%.': 'SKU가 KEY-1로 시작하는 제품들 가격을 모두 10% 내려줘.',
+  'Find products with KEY in the SKU priced at $20 or less.': 'SKU에 KEY가 포함된 제품 중에 가격이 $20 이하인 걸 찾아줘.',
+  'Among these results, are any products at 5 units of stock or fewer?': '지금 검색된 제품 중에 재고가 5개 이하인 제품들 있어?',
+  'Move each category name to the center of its image and add a white text shadow so it stands out.': '카테고리명을 각 이미지 중앙으로 옮기고, 흰색 그림자를 넣어 잘 보이게 해줘.',
+  'I really like this site. Where can I find more information about it?': '이거 사이트 너무 맘에 드는데, 어디서 자세한 정보를 얻을 수 있지?',
+  'Create an identical product in a new tab.': '이 상품과 동일한 상품을 새 탭 하나 열어서 만들어줘.',
+  'Use the product details you read in the other tab to fill in this new product.': '다른 탭에서 읽은 상품 정보로 이 새 상품을 채워줘.',
+  'This website exposes WebMCP tools through document.modelContext. Use your browser’s WebMCP support to discover the tools registered on this page. Read site_manual, site_map and page_manual to get started. If WebMCP is unavailable in your browser or AI environment, tell me.': '이 웹사이트는 document.modelContext를 통해 WebMCP 도구를 제공해. 브라우저의 WebMCP 기능으로 이 페이지에 등록된 도구를 찾아줘. site_manual, site_map, page_manual을 읽고 시작해줘. 브라우저나 AI 환경에서 WebMCP를 사용할 수 없다면 알려줘.',
+  'Now that you have discovered WebMCP, what can you do on this page?': 'WebMCP 인식 후, 지금 페이지에서 WebMCP로 할 수 있는 일이 뭐야?',
+  'A SHARED WORKSPACE FOR YOU AND YOUR AI': '나와 AI가 함께 사용하는 작업 공간', 'One website.': '하나의 웹사이트.', 'Two collaborators.': '함께하는 사람과 AI.',
+  'Ask your AI. Watch the page change. Pick up where it leaves off.': 'AI에게 부탁하고, 화면의 변화를 확인하고, 이어서 작업하세요.',
+  'Help your AI find WebMCP': 'AI가 WebMCP를 발견하도록 도와주세요', 'Already connected? Skip to the next prompt. Your AI and browser need WebMCP access.': '이미 연결됐다면 다음 프롬프트로 넘어가세요. AI와 브라우저의 WebMCP 지원이 필요해요.',
+  'Ask what this page can do': '지금 페이지에서 가능한 일을 물어보세요', 'You can ask this on any page.': '어느 페이지에서든 물어볼 수 있어요.',
+  'Take a tour': '각 페이지를 둘러보세요', 'Use the menu to visit each page and try its tutorial prompt with your AI.': '메뉴에서 각 페이지로 이동해 AI와 튜토리얼 프롬프트를 실행해보세요.', 'Try the product editor': '상품 편집 시작하기', 'Copy prompt': '프롬프트 복사', 'Copied': '복사됨',
+  'Product details': '상품 정보', 'Product name': '상품명', 'Product code': '상품 코드', 'Unit price': '판매가', 'English description': '영문 디스크립션', 'Korean description': '한국어 디스크립션',
+  'Saving…': '저장 중…', 'Unsaved changes': '저장하지 않은 변경사항', 'Saved': '저장됨', 'Save changes': '변경사항 저장', 'Create product': '상품 생성', 'Discard': '변경 취소',
+  'Products': '상품', 'Product': '상품명', 'products': '개 상품', 'results': '개 결과', 'Price for': '판매가:', 'SKU contains': 'SKU 포함 문자', 'Maximum price': '최대 가격', 'Reset': '초기화',
+  'Storefront custom HTML': '스토어프런트 커스텀 HTML', 'HTML / CSS': 'HTML / CSS', 'Preview': '미리보기', 'Storefront preview': '스토어프런트 미리보기',
+  'Explore the project on GitHub.': '프로젝트는 GitHub에서 확인해보세요.', 'Developer tools': '개발자 도구', 'Tool playground': '도구 플레이그라운드', 'Registered tool': '등록된 도구', 'Arguments': '입력값', 'Execute tool': '도구 실행', 'Response': '응답', 'Input schema': '입력 스키마', 'No tool response yet.': '아직 도구 응답이 없어요.',
+  'Checking browser support…': '브라우저 지원 확인 중…', 'Registration failed.': '도구 등록에 실패했어요.', 'WebMCP is unavailable. Ordinary UI remains usable.': 'WebMCP를 사용할 수 없어요. 일반 화면은 그대로 이용할 수 있어요.', 'Tools registered. In-page invocation is unavailable.': '도구가 등록됐어요. 페이지 내 호출 기능은 사용할 수 없어요.', 'tools registered · in-page invocation ready': '개 도구 등록 · 페이지 내 호출 가능',
+  'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드',
+  'Save or discard changes in every form on this page before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.',
+  'Name, SKU and product code are required before saving.': '저장하기 전에 상품명, SKU, 상품 코드를 입력해주세요.', 'Save or discard every current-page form before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.', 'Invalid product value.': '상품 입력값을 확인해주세요.', 'Invalid field type or length.': '입력값의 형식이나 길이를 확인해주세요.', 'Invalid search filters.': '검색 조건을 확인해주세요.'
+};
+export const translate = (text, language) => language === 'ko' ? korean[text] ?? text : text;

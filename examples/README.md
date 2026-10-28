@@ -1,51 +1,46 @@
-# Six runnable examples
+# Six administrator tutorials
 
-The [public gallery](https://linkanyco.github.io/WebMCPLite/) opens without local setup. It shows the last successful deployment from `main`; the footer identifies the published commit.
+Open the [public gallery](https://linkanyco.github.io/WebMCPLite/) or use Node 22.22+, `npm install`, then `npm start`. `PORT=4187 npm start` changes the local port. `npm test` checks contracts and `npm run build:site` bundles the public runtime. The footer identifies the last deployed main commit.
 
-For local development, use Node 22.22 or newer and run `npm install`, then `npm start` from the repository root. Open the printed local URL. Set `PORT=4187 npm start` to choose another port. `file://` execution is unsupported. `npm test` runs contracts and `npm run build:site` builds the static site.
+One fictional ecommerce administrator uses six tutorials. English is the default; EN / 한국어 changes interface copy and prompts without changing any draft data. Each tutorial places its prompt above ordinary app UI. The manual tool caller and schemas are under **Developer tools**; it does not host an AI or automatically perform the natural-language task.
 
-The UI uses Ant Design with the LobeHub theme. All data is fictional. Save **updates a baseline in the current tab's memory**; reload resets it. Product and bulk editors share a catalog; the selection sheet reads that catalog. The asynchronous example has a separate fictional product.
-
-| Page | Try this | Read / edit tools |
+| Page | Ask your AI | Read / action tools |
 |---|---|---|
-| `?page=product` | Run the AI demo → edit the name yourself → inspect the remaining AI marks → save/cancel | getProduct / setProduct (`p1`) |
-| `?page=bulk` | Change two product prices → include one invalid row and verify the whole request is rejected | getProducts / setProducts |
-| `?page=sheet` | Read product codes with getProduct → switch codeType to productCode and replace rows → reorder in the UI | getSheet / setSheet, getProduct |
-| `?page=board` | Read and edit a title and note → continue typing yourself | getBoard / setBoard |
-| `?page=guide` | Edit the second area → compare page-wide and single-area unsaved state → try navigation → cancel and move | getNotes / setNote, manuals and site map |
-| `?page=async` | Run the AI demo → simulate save failure → inspect the retained draft → disable failure → retry | getProduct / setProduct, save/cancel |
+| `?page=product` | Polish the English description, then translate it and fill in the Korean description too. | getProduct / setProduct (`p1`) |
+| `?page=bulk` | Reduce the price of every product whose SKU starts with KEY-1 by 10%. | getProducts / setProducts |
+| `?page=sheet` | Find products with KEY in the SKU priced at $20 or less. Then: among these results, are any at 5 units of stock or fewer? | setSearch / getProducts, getProduct |
+| `?page=board` | Move each category name to the center of its image and add a white text shadow. | getStorefront / setStorefront / previewStorefront |
+| `?page=guide` | I really like this site. Where can I find more information about it? | site_manual / site_map / navigate |
+| `?page=async` | Create an identical product in a new tab. | getProduct; browser opens `?page=new`; destination setProduct / save |
 
-The tool caller displays registered input contracts and examples when in-page `document.modelContext.getTools` and `executeTool` are available. Otherwise the AI demo and tool caller are disabled with a support message; ordinary UI edit/save/cancel still work. Registration and in-page invocation support are shown separately. Setters change drafts only. No call requires a revision counter.
+`?page=home` is the welcome page with discovery prompts and the cartoon banner. `?page=new` is the supporting creation form, not a seventh tutorial. The legacy `sheet`, `board` and `async` route IDs are retained for existing links. There is no duplicate button or tool, custom tool protocol, shared browser storage or cross-tab synchronization.
 
-## Use the registered tools
+## Data and visible outcomes
 
-The runtime entry point is `document.modelContext`. Discover `site_map` to find pages, `site_manual` for shared behavior, and `page_manual` for the current page's contracts. These names are example conventions, not official required tool names. There is no HTML-marker or public JavaScript-global discovery step.
+There are 12 products. Eight SKUs start with KEY-1. Before edits, KEY plus price ≤ $20 returns six products; four of those have stock ≤ 5. Stock is authorized read-only context in tool responses and is absent from the visible table. On the list, getProducts reads **only the current results**, and setSearch updates the visible SKU/price controls. Filtering and follow-up reads do not edit product data or create unsaved drafts.
 
-Browser agents discover registered tools and schemas through their browser. Rediscover after navigating; a browser may add a suffix to the displayed tool name. In-page JavaScript follows the separate path below, after registration has completed, in an environment implementing `getTools` and `executeTool`. Registration alone does not guarantee in-page invocation or support by every AI. See the [draft's distinction](https://webmachinelearning.github.io/webmcp/#modelcontext-interface).
+The English description for p1 starts with deliberate typos and a casual sales pitch; descriptionKo starts empty. AI-changed fields are highlighted by default. A human edit clears its own field's AI mark. Ask the AI to call setHighlights({enabled:false}) to hide marks; no UI switch is shown. Save/cancel clear draft marks.
+
+Storefront source editing changes the Textarea first. Preview renders that source in a script-disabled sandbox; save is separate. The three decorative photos load from images.unsplash.com, so they need network access. Other runtime assets, including the generated cartoon banner, are bundled locally.
+
+Save updates a baseline **in the current tab's memory only**. Reload resets all examples. Product/bulk/reuse views share one catalog within a tab; the new-product draft has its own baseline. For reuse, read the source, keep its values in AI context, open New product in a separate tab with browser controls, rediscover that tab's tools, populate and save. Copy sku, productCode, name, price, descriptionEn and descriptionKo; omit source id and stock. The destination owns its local ID. Matching SKUs are allowed in this fictional example. Creating the product confirms a saved new-product form; it does not synchronize it into another tab's catalog.
+
+## Standard WebMCP entry point
+
+Tools register through `document.modelContext`. Discover site_map, site_manual and page_manual as needed; these names are example conventions, not official requirements. The landing prompt helps an AI find supported tools but cannot add missing browser or AI support. Rediscover tools after page/tab changes.
+
+Browser-agent discovery is separate from in-page getTools/executeTool support. In-page invocation passes the exact discovered RegisteredTool, including its host-object identity, and parses the returned JSON string once:
 
 ```js
-// On ?page=product, after the app has registered its tools.
 const context = document.modelContext;
-if (typeof context?.getTools !== 'function' || typeof context?.executeTool !== 'function') {
-  throw new Error('This browser does not support in-page WebMCP discovery and invocation.');
-}
-async function invoke(name, input = {}) {
-  const tools = await context.getTools();
-  const tool = tools.find(t => t.name === name && t.window === window);
-  if (!tool) throw new Error(`No tool is registered on this page: ${name}`);
-  const result = JSON.parse(await context.executeTool(tool, input));
-  if (result.ok === false) throw new Error(result.error.message);
-  return result;
-}
-await invoke('page_manual');
-await invoke('getProduct', { id: 'p1' });
-await invoke('setProduct', {
-  id: 'p1', patch: { name: 'Shared desk lamp', description: 'Updated together on this page.' }
-});
-// Review the draft, then explicitly save it.
-await invoke('save', { form: 'catalog' });
+const tools = await context.getTools();
+const tool = tools.find(t => t.name === 'setProduct' && t.window === window);
+const result = JSON.parse(await context.executeTool(tool, {
+  id: 'p1', patch: {
+    descriptionEn: 'A compact mechanical keyboard with quiet switches.',
+    descriptionKo: '조용한 스위치를 갖춘 컴팩트한 기계식 키보드입니다.'
+  }
+}));
 ```
 
-Pass the discovered `RegisteredTool` directly to execution. It includes host objects such as `window`, so do not JSON-serialize the whole tool. For a displayed list, select `name`, `description`, and `inputSchema`. The page manual uses metadata from the registration definitions too. Read current state again after a call fails.
-
-The reusable integration helper is [src/connect.js](../src/connect.js). [workspace.js](workspace.js) owns example state and validation; [tools.js](tools.js) defines tools, and [app.jsx](app.jsx) connects them to the UI. A consuming app connects its own state and server actions and need not adopt this example state model or UI stack.
+Only use this path where those APIs are implemented and registration succeeded. Ordinary UI actions remain usable without WebMCP. Setters patch drafts; save/cancel use the same application actions as the UI. The small [connector](../src/connect.js) is framework independent; [workspace.js](workspace.js), [tools.js](tools.js), [app.jsx](app.jsx) and [i18n.js](i18n.js) belong to the example app.

@@ -428,3 +428,78 @@ These are agent classifications, not human quotations.
 - H29 was the relevant supplemental comment retrieved during handoff. This public packet omits private repository addresses and identifiers while preserving the checked timestamp and provenance description. Do not claim other unverified comments were read.
 - Prior agent answers and research are not direct human evidence. Official WebMCP, nekuda WebMCP Kit, FrontMCP, SiteMCP, and BrowserMCP observations belong in research with URLs, dates, and limitations.
 - The packet contains public project intent, not operational records, secrets, credentials, or private user files.
+
+## H34 — Administrator tutorials and landing page
+
+Human request (verbatim)
+
+### Administrator storytelling
+```text
+각 페이지마다. 스토리 텔링해봐줘. 나도 급하게 진행시키느라 이걸 안했네 아니 거의 너한테 맡겨서 그렇지. 스토리텔링부터 해서 사용자들이 오 이런 기능이?할 수 있어야하는데 이게 좀 적었네, 사실 프로덕트 리스에선 거의 검색쪽이랑 간단한 기능만 하면 좋은데, 이건 네가 바이어 입장이랑 b2b 입장이랑 섞었네. 
+일단 퍼소나를 만든다던지해서 그냥 일반 이커머스 입장 관리자 페이지에서 하는걸로 해서 시나리오 잡아줘
+아 플래닝 보드는 어떤걸 생각하는거야?
+
+그리고 Tool playground 이런건 구지 일단 드러나게 하지 말고 탭으로 가리는게 좋을꺼 같은데, 그전에 뭐하는 기능인지 설명해줘
+```
+
+### Product reuse
+```text
+아 사용 시나리오중에 이런거 어때?  제품 추가하는데 사이트에 듀플리케이트 기능이 없어. 새로 탭하나 열어서 동일한 제품 만들어줘. 이러면 그냥 get product 하고 그 데이타 ai가 들고 새탭에 new product 페이지 열고 set product 하면 되잖아
+```
+
+### Storefront source editing and duplication limits
+```text
+아니뭐 그건 프롬프트 나름이고 중복 제한이 걸리는건 duplicate가 자동으로 체크되는게 일반 사이트겠지, 우린 예제니깐 그거 필요없고.
+
+**Planning board → 스토어 공지** - 이건 좀 약해.
+창위아래로 나눠, 위에 storefront Custom TextArea에 div 로된 뭔가가 있고 preview 버튼 있고 밑레 preview 화면이 있어.&#x20;
+대충 카테고리 명 위에 있고 아래 사진 있는거 3개가 나열되어 있는 레이어야.
+프롬프트는 해당 배너?(명칭이 뭐지) 수정해줘, 카테고리명이 이미지 중앙에 오도록 하게 잘보이게 하얀색 쉐도우(맞나?)를 넣어줘&#x20;
+이런식으로&#x20;
+AI 안쓰면 일반인은 힘든 작업을 시키는거지
+```
+
+### Light project information
+```text
+Guides & navigation → 이건 그냥 좀 chill하게 가자. 예제 프롬프트는 "이거 사이트 너무 맘에 드는데, 어디서 자세한 정보를 얻을 수 있지?" 하면 일단 가이드에 당연히 사이트 자세한 정보는 링크 뭐다라고 알려줘 놓고, 해당 링크엔 가볍게 깃헙 링크 달랑 있고 프로젝트는 여기서 확인해줘 이런거 넣자
+
+Save & recovery 이건 어찌보면 아까 이야기한 듀플레케이션 처리가 이걸 대신하는거네
+```
+```text
+아니 듀플리케이트 작업 자체가 어찌보면 Save & recovery랑 비슷한 내용이야. 근데 내용에 Memory and Reuse 이런식으로 바뀌는거 뿐이지
+```
+
+### Search followed by read-only context
+```text
+아.. 재고를 그냥 그렇게 하면 안되겠지만 좀 스토리텔링이, 임의의 제품 검색을 하게할꺼잖아? SKU에 KEY가 포함된 제품중에 가격이 $20 이하인걸 찾아줘. 이런식으로 하고, 지금 검색된 제품중에 재고가 5개 이하인 제품들 있어? 이런식으로
+
+멀티 검색했을 시에 이어지는 프롬프트로..
+괜찮을꺼 같지? 그럼 이런식으로 해서 시나리오 잡고 다시 전체 시나리오들 표로 정리해줘
+```
+
+### Final tutorial and landing layout
+```text
+**Product editor**  이부분은 영문 디스크립션, 한국어 디스크립션 두개 칸 놔두고 영문쪽에 오타 작렬 저렴한 말투로 디스크립션 써놓고서,
+프롬프트는 "디스크립션 다듬어주고, 번역해서 한국어 디스크립션도 기입해줘" 이정도
+Bulk editor는 좀 많아야하니 - 이 두 상품의 가격을 각각 10% 내려줘. 아직 저장하지 말고 보여줘 라기보단 이것도 KEY-1로 시작하는 제품들 다 10% 내려줘 이런식으로 말을 바꾸자.&#x20;
+
+그리고, 랜딩페이지?에 "WebMCP 인식 못하는 AI에게 인식시키는 프롬프트"랑
+어느 상황이든 "WebMCP 인식 후, 지금페이지에서 WebMCP로 할 수 있는일이 뭐야?" 라고 물어보라고.
+"그리고 메뉴에서 각 페이지로 이동해 튜토리얼을 수행해봐" 이런말&#x20;
+나머진 웹페이지 하나보고 컴퓨터 캐릭터랑 사람 캐릭터랑 같이 토론하는 느낌의  카툰 느낌 배너
+첫페이지는 뭐 당연히 기본 공통 함수인 site map(명칭이 달랐나?) 정도겠지만.
+아 그리고 기본적으로 수정사항 하이라이트 되게 하는건 디폴트로 On하고, 별도로 하이라이트 Off는 Ai에게 시켜서 할 수 있게 하는정도로해 UI에 넣지 말고,
+
+랜딩 페이지 제외는  프롬프트가 가장 상단에 약간 카툰 느낌으로 이런 프롬프트 하고&#x20;
+밑에 구역 확 나눠지게 하고서 밑에는 그냥 정상 웹사이트 처럼만 보이고 자잘한 설명 넣지 마
+
+이정도면 다음 작업 진행할 수 있지? 아 깃 정리 안되어 있음 한번 정리하고 가자.
+```
+
+## H35 — Optional Korean interface, English default
+
+Human request (verbatim):
+
+```text
+아참 내 이해를 도울겸 정채성을 들어낼겸 사이트 한/영 버튼 넣어줘 디폴트론 영문으로 하고
+```
