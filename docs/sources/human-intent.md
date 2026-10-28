@@ -554,3 +554,20 @@ The message opens by naming README and linking the development guide through a l
 ```
 
 Agent summary: Tell development AI/workers/reviewers to follow the development guide. Link WebMCP, retain the personal motivation and discovery of an existing specification, and check for equivalent standard behavior before extending functionality. Assess Lite honestly. AP assessment: the optional connector and app adoption scope are small; the React/UI gallery has separate dependencies and is not a minimal-bundle example. This question does not request replacing the human-selected UI stack.
+
+## H39 — Keep Lite as an approachable start and commit the introduction
+
+Status: Explicit naming/positioning clarification and follow-up commit request in the execution chat, 2026-10-28 (America/Los_Angeles).
+
+Human request (verbatim):
+
+```text
+소개문구가 "WebMCP 실전 적용을 위한 개발 가이드와 예제 키트" 느낌으로 되어있어? 
+그래도 이름은 그냥 Lite가 좋은거 같아 가볍게 시작해라 하는 느낌으로, 그래서 예제에도 가이드를 카툰theme으로 한거고
+```
+
+```text
+아 방금 네가 추가로 수정한거까지 다PR26 에 커밋해줘
+```
+
+Agent summary: Keep WebMCPLite and express Lite as an approachable way to start, consistent with the cartoon tutorials. Put the practical development-guide/working-example positioning in the introduction. The tagline had only been proposed in chat, not edited. PR #26 was already merged when the commit request arrived; a linked follow-up PR is the implementation route, not a claim that the merged PR can accept new commits. No gallery redesign or production-readiness claim follows.
