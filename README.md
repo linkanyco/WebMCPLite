@@ -1,5 +1,7 @@
 # WebMCPLite
 
+> A friendly starting point for building with WebMCP, with practical development guidelines and working examples.
+
 I started this project because I wanted an easier way for people and AI to work together on the same website. During that exploration, I found that the existing **[WebMCP draft](https://webmachinelearning.github.io/webmcp/)** already defines the browser interface. WebMCPLite follows that specification and offers practical examples for people who want to use it as easily as I do.
 
 **[Open the examples](https://linkanyco.github.io/WebMCPLite/)** · [Development guidelines](docs/development-guidelines.md) · [Example walkthroughs](examples/README.md)
@@ -20,9 +22,9 @@ When extending functionality, check the [current WebMCP draft](https://webmachin
 
 ## What Lite means here
 
-Lite describes the small amount of extra app structure needed for adoption: shared app actions, thin standard tool registration and short guidance. The registration helper is optional and has no external runtime dependencies. You can follow the guide and register directly without installing this gallery.
+Lite means “start simply.” The practical guide and cartoon-themed tutorials make WebMCP approachable and help you try shared human–AI editing. Adoption uses shared app actions, thin standard tool registration and short guidance. The registration helper is optional and has no external runtime dependencies. You can follow the guide and register directly without installing this gallery.
 
-The example website is a separate React application with Ant Design, the LobeHub theme and other UI dependencies. Its bundle is larger than the reusable connector. Lite describes the adoption scope; the gallery is not a minimal-bundle demonstration.
+The example website is a separate React application with Ant Design, the LobeHub theme and other UI dependencies. Its bundle is larger than the reusable connector. The name emphasizes an approachable start; the gallery is not a minimal-bundle demonstration.
 
 ## Try it locally
 

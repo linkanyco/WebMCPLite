@@ -1,6 +1,6 @@
 # WebMCPLite — intent, research, and execution plan
 
-Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37's developer guide was delivered in PR #25 ([issue #24](https://github.com/linkanyco/WebMCPLite/issues/24)). H38 adds README handoff and specification-first extension guidance.
+Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37's developer guide was delivered in PR #25 ([issue #24](https://github.com/linkanyco/WebMCPLite/issues/24)). H38's README handoff and specification-first extension guidance was delivered in PR #26. H39 clarifies Lite as an approachable start.
 
 ## 1. How to read this document
 
@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H38 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H39 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -197,3 +197,7 @@ AP delivery: one self-contained `docs/development-guidelines.md`, a compact cons
 [H38 evidence](docs/sources/human-intent.md) follows issue #24/PR #25 and the index issue #1. Add a direct instruction for development AI/workers/reviewers to follow the guide, link the existing WebMCP draft alongside the personal motivation, and consult/reuse equivalent standard behavior before extending functionality. Keep that last principle in the portable guide as well.
 
 AP direction assessment: the adoption scope remains small and the dependency-free connector is optional; the human-selected React/Ant Design/LobeHub gallery has separate UI dependencies. Explain this boundary rather than claim the whole website has a minimal bundle. No runtime/UI-stack change or new feature is requested. Validate document links, obtain final-commit fresh-context review and passing CI, and record merge evidence on the follow-up PR.
+
+## 18. An approachable start — H39
+
+[H39 evidence](docs/sources/human-intent.md) keeps the WebMCPLite name and defines its intended tone as “start simply,” consistent with the cartoon tutorials. Add the practical development-guide/working-example introduction and explain that naming intent in README. This is a documentation follow-up to merged PR #26 and issue #24/index #1; PR #26 cannot accept additional commits after merge. Preserve the existing specification alignment, host authority and honest gallery-dependency boundary. No runtime or gallery layout change is needed. Record final-commit independent review and CI on the follow-up PR.
