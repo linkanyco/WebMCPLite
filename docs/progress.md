@@ -38,3 +38,9 @@ The original Korean human quotations and historical AP/verification remain prese
 [Issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) follows merged #21. Human requests are preserved separately from AP implementation choices in PLANS §15 and the source evidence. The implementation replaces the former generic examples with six administrator scenarios, a cartoon welcome page, a supporting New product form, English-default/Korean UI, tool-only highlight visibility control, and a developer tab.
 
 Nineteen automated tests and real IAB edits/search/preview/multi-tab reuse were observed before review; see [verification](verification.md) for limits, including unverified mobile rendering. Final-SHA review, checks, merge and deployment must be recorded on the PR/issue when completed. No new runtime dependency or connector change was needed.
+
+## Portable development guidelines — H36/H37
+
+[Issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) follows merged gallery PR #23. The human requests a useful worker/reviewer guide for new WebMCP-friendly screens: ordinary app actions reused by API load/save, UI and tools; optional app getters for existing authorized collections; separate edit/save intent; simple replaceable runtime guidance.
+
+The documentation adds a self-contained [development guide](development-guidelines.md), updates the compact harness and README entry points, and separates gallery-specific contracts from host requirements. No gallery behavior, helper code, downstream repository, private data or dependency changes are included. Snippet/link checks, required CI, exact final-commit independent review and merge outcomes are recorded on the linked PR as observed; this entry does not pre-approve them or establish target-app/browser compatibility.

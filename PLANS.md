@@ -1,6 +1,6 @@
 # WebMCPLite — intent, research, and execution plan
 
-Reference date: 2026-10-25. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21. H34/H35 define the current administrator tutorial follow-up in [issue #22](https://github.com/linkanyco/WebMCPLite/issues/22).
+Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37 define the current developer-guidelines follow-up in [issue #24](https://github.com/linkanyco/WebMCPLite/issues/24).
 
 ## 1. How to read this document
 
@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [full H01–H35 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [full H01–H37 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -25,7 +25,7 @@ A separate hosted chatbot, model service, voice-recognition system, or browser c
 ### 3.1 Deliverables
 
 - Product principles and development conventions.
-- An **AGENTS.md harness** for development AI integrating tools into an existing website.
+- **Development guidelines and an AGENTS.md harness** for workers/reviewers building new WebMCP-friendly screens or adapting existing ones (H36/H37).
 - Small common connecting code and understandable app-level contracts.
 - **5–6 runnable examples**. Single-product and bulk editors are explicit starting requests; selection of the remaining examples is AP.
 - Simple object-oriented reads and edits such as `getBoard`/`setBoard` or the historical `get_sheet`/`set_sheet` illustration, instead of automatically adding a verb per field.
@@ -64,6 +64,8 @@ Development AGENTS.md tells **AI building a site** what to connect and verify. R
 
 Read copies of the current editable data. Validate allowed fields and use the same actions as UI, including authorized related-object getters. The example choice is **partial patch → shared draft and visible UI → separate save**. Clearly define omitted fields, null, arrays, invalid values, and read-only fields; do not build a universal state engine or schema DSL.
 
+Under H36, structure ordinary app get/set/save actions first, reused by API loading, payload composition, UI and WebMCP. A correctly scoped existing collection can be read by a registered callback without adding an app getter solely for WebMCP. This does not turn an ordinary variable into a second public discovery protocol.
+
 ### AP-04: Visible shared editing
 
 UI and AI enter the same validation/state path. Mark actual AI changes and reflect human continuation, save, and cancel. **H33 removes the example revision/expectedRevision mechanism.** It was an agent choice for detecting stale writes, never a WebMCP requirement. Real apps retain whatever concurrency guarantees their own server requires; the gallery does not add that mechanism.
@@ -73,6 +75,8 @@ UI and AI enter the same validation/state path. Mark actual AI changes and refle
 Distinguish draft edits, requested persistence, confirmed save, failure, and cancellation. Keep existing app permissions and audits. Where real confirmation is required, tie it to a concrete proposal and do not reuse stale approval after edits.
 
 The examples let people inspect drafts and explicitly save them. H23 also allows more automation when the app/user permits it; do not impose a new universal confirmation dialog on every setter.
+
+H36 clarifies the minimal runtime guidance: requests to edit/change stop at setters; saving requires an explicit user request within host permissions and confirmation policy. Keep the prompt simple. Reuse existing save/recovery behavior rather than adding WebMCP-specific undo, confirmation or recovery machinery.
 
 ### AP-06: Small manuals
 
@@ -170,7 +174,7 @@ The earlier revision question did not authorize a change during H32. H33 now exp
 
 The user will test after delivery. Required automated checks, actual browser observations, fresh-context final-SHA review, merge, and public deployment must be recorded as they happen in the issue/PR; this section does not claim those steps have already passed.
 
-## 15. Administrator tutorials and welcome page — H34/H35, current follow-up
+## 15. Administrator tutorials and welcome page — H34/H35, delivered in PR #23
 
 [H34/H35 evidence](docs/sources/human-intent.md) and [issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) define one ordinary ecommerce store administrator, six tutorials, a welcome page, and a supporting New product destination. H34 supersedes the selection-sheet, board-note, two-note guide and save-recovery AP examples. H35 allows Korean site UI while keeping English as the default; repository documentation remains English.
 
@@ -179,3 +183,11 @@ Human-selected scenarios: polish deliberately poor English copy and fill a separ
 AP choices: keep legacy route IDs for shared links; use 12 fictional products (eight KEY-1 matches, six KEY/≤$20 results, four of those with stock ≤5), descriptionEn/descriptionKo fields, and a local newProduct draft. getProducts on the list reads current search results including read-only stock; setSearch uses visible UI filters. Storefront source renders only on Preview in a script-disabled sandbox. Tabs have independent memory; the browser AI carries values and opens the destination tab using browser controls. No cross-tab protocol or hidden storage transfer. Landing discovery copy describes required browser/AI support honestly; it cannot enable missing support. Generated banner assets are stored with the example. UI language switching changes copy and document language without editing drafts.
 
 Verify meaningful contracts, actual browser edits/previews and multi-tab reuse, both UI languages, desktop/mobile layout, final-SHA independent review and Pages deployment. Report observed support separately from automated stub tests.
+
+## 16. Portable developer guidelines — H36/H37, current follow-up
+
+[H36/H37 evidence](docs/sources/human-intent.md) and [issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) emphasize two deliverables: the example site and development guidelines. The current work improves guidance so a worker/reviewer can understand how to build a new WebMCP-friendly screen from a small Markdown handoff. Downstream integration and possible gallery removal are not part of this documentation task.
+
+Human direction: structure ordinary app functions for reuse rather than adding WebMCP-only business logic; separate draft setters from save; require an explicit save request in simple runtime guidance; permit direct reads of existing authorized data without a mandatory extra getter layer; avoid investing in elaborate prompts or new undo/recovery machinery. H32's standard entry point and host authority still apply.
+
+AP delivery: one self-contained `docs/development-guidelines.md`, a compact consumer harness, clear README entry points and gallery-contract boundaries. Use independently written fictional wiring examples for API loading, UI edits, tool registration and authorized detail reads, with proportionate worker/reviewer checks. Documentation remains English under H33. Do not copy private target code or modify another repository. Verify links and illustrative snippets with injected app functions, run required CI, and obtain fresh-context review of the final commit before merge; do not claim target-app or new browser validation from documentation checks.
