@@ -1,6 +1,6 @@
 # WebMCPLite — intent, research, and execution plan
 
-Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37 define the current developer-guidelines follow-up in [issue #24](https://github.com/linkanyco/WebMCPLite/issues/24).
+Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37's developer guide was delivered in PR #25 ([issue #24](https://github.com/linkanyco/WebMCPLite/issues/24)). H38 adds README handoff and specification-first extension guidance.
 
 ## 1. How to read this document
 
@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [full H01–H37 evidence](docs/sources/human-intent.md) and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H38 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -184,10 +184,16 @@ AP choices: keep legacy route IDs for shared links; use 12 fictional products (e
 
 Verify meaningful contracts, actual browser edits/previews and multi-tab reuse, both UI languages, desktop/mobile layout, final-SHA independent review and Pages deployment. Report observed support separately from automated stub tests.
 
-## 16. Portable developer guidelines — H36/H37, current follow-up
+## 16. Portable developer guidelines — H36/H37, delivered in PR #25
 
 [H36/H37 evidence](docs/sources/human-intent.md) and [issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) emphasize two deliverables: the example site and development guidelines. The current work improves guidance so a worker/reviewer can understand how to build a new WebMCP-friendly screen from a small Markdown handoff. Downstream integration and possible gallery removal are not part of this documentation task.
 
 Human direction: structure ordinary app functions for reuse rather than adding WebMCP-only business logic; separate draft setters from save; require an explicit save request in simple runtime guidance; permit direct reads of existing authorized data without a mandatory extra getter layer; avoid investing in elaborate prompts or new undo/recovery machinery. H32's standard entry point and host authority still apply.
 
 AP delivery: one self-contained `docs/development-guidelines.md`, a compact consumer harness, clear README entry points and gallery-contract boundaries. Use independently written fictional wiring examples for API loading, UI edits, tool registration and authorized detail reads, with proportionate worker/reviewer checks. Documentation remains English under H33. Do not copy private target code or modify another repository. Verify links and illustrative snippets with injected app functions, run required CI, and obtain fresh-context review of the final commit before merge; do not claim target-app or new browser validation from documentation checks.
+
+## 17. README handoff and Lite scope — H38
+
+[H38 evidence](docs/sources/human-intent.md) follows issue #24/PR #25 and the index issue #1. Add a direct instruction for development AI/workers/reviewers to follow the guide, link the existing WebMCP draft alongside the personal motivation, and consult/reuse equivalent standard behavior before extending functionality. Keep that last principle in the portable guide as well.
+
+AP direction assessment: the adoption scope remains small and the dependency-free connector is optional; the human-selected React/Ant Design/LobeHub gallery has separate UI dependencies. Explain this boundary rather than claim the whole website has a minimal bundle. No runtime/UI-stack change or new feature is requested. Validate document links, obtain final-commit fresh-context review and passing CI, and record merge evidence on the follow-up PR.

@@ -44,3 +44,7 @@ Nineteen automated tests and real IAB edits/search/preview/multi-tab reuse were 
 [Issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) follows merged gallery PR #23. The human requests a useful worker/reviewer guide for new WebMCP-friendly screens: ordinary app actions reused by API load/save, UI and tools; optional app getters for existing authorized collections; separate edit/save intent; simple replaceable runtime guidance.
 
 The documentation adds a self-contained [development guide](development-guidelines.md), updates the compact harness and README entry points, and separates gallery-specific contracts from host requirements. No gallery behavior, helper code, downstream repository, private data or dependency changes are included. Snippet/link checks, required CI, exact final-commit independent review and merge outcomes are recorded on the linked PR as observed; this entry does not pre-approve them or establish target-app/browser compatibility.
+
+## README handoff and Lite scope — H38
+
+This documentation follow-up to issue #24 and merged PR #25 adds an explicit development-AI instruction, links the WebMCP draft at the motivation, and asks builders to check/reuse equivalent specification behavior before extending it. The portable guide carries the same extension principle. README distinguishes small adoption scope and an optional dependency-free connector from the gallery's React/UI bundle. Runtime and UI dependencies are unchanged; final-commit review and CI evidence belong on the follow-up PR linked to index #1.

@@ -2,6 +2,8 @@
 
 Build ordinary app actions that both people and AI can use. WebMCP registers those actions; it does not own a second editor, business logic or persistence path.
 
+Before extending tool registration, discovery, invocation or lifecycle behavior, check the [current WebMCP draft](https://webmachinelearning.github.io/webmcp/). If equivalent behavior already exists there, follow and reuse it. Keep app-specific get/set/save contracts in the app and add only what its workflow needs.
+
 This is a self-contained handoff for workers and reviewers building new screens or adapting existing ones. Copy this file into the consuming project and reference it from that project's worker/reviewer instructions. Keep the host's product rules, permissions and delivery process. Its domain model, validation, confirmation requirements and server guarantees govern the implementation.
 
 WebMCPLite has two deliverables: an example website and development guidelines. The website demonstrates possible interactions. Its UI stack, fictional product fields, tab-memory save, developer playground and cancel controls are not requirements for a consuming app. The patterns below are development conventions, not additional WebMCP APIs.
