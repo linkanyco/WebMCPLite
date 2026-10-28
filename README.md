@@ -1,6 +1,6 @@
 # WebMCPLite
 
-I started this project because I wanted an easier way for people and AI to work together on the same website. During that exploration, I found that **WebMCP already defines the browser interface**. WebMCPLite follows that existing specification and offers practical examples for people who want to use it as easily as I do.
+I started this project because I wanted an easier way for people and AI to work together on the same website. During that exploration, I found that the existing **[WebMCP draft](https://webmachinelearning.github.io/webmcp/)** already defines the browser interface. WebMCPLite follows that specification and offers practical examples for people who want to use it as easily as I do.
 
 **[Open the examples](https://linkanyco.github.io/WebMCPLite/)** · [Development guidelines](docs/development-guidelines.md) · [Example walkthroughs](examples/README.md)
 
@@ -11,6 +11,18 @@ This is an independent companion to the [WebMCP draft](https://webmachinelearnin
 The project has two deliverables: an example site and developer guidelines. Start with the [self-contained development guidelines](docs/development-guidelines.md) when building a screen. They cover ordinary get/set/save actions reused by API loading, UI and WebMCP; authorized detail reads without mandatory getter layers; thin registration; a short edit-versus-save instruction; and worker/reviewer checks.
 
 The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage, UI dependencies and developer controls are not prerequisites for your app.
+
+Ask your development AI, worker or reviewer to follow the guide:
+
+> Read and follow [development-guidelines.md](docs/development-guidelines.md) when building or reviewing this screen. Reuse ordinary app get/set/save actions for UI and WebMCP, and preserve this project's permissions and product rules.
+
+When extending functionality, check the [current WebMCP draft](https://webmachinelearning.github.io/webmcp/) first. If it already provides equivalent behavior, follow and reuse that capability. Keep app-specific contracts in the app; the conventions here do not replace the specification.
+
+## What Lite means here
+
+Lite describes the small amount of extra app structure needed for adoption: shared app actions, thin standard tool registration and short guidance. The registration helper is optional and has no external runtime dependencies. You can follow the guide and register directly without installing this gallery.
+
+The example website is a separate React application with Ant Design, the LobeHub theme and other UI dependencies. Its bundle is larger than the reusable connector. Lite describes the adoption scope; the gallery is not a minimal-bundle demonstration.
 
 ## Try it locally
 

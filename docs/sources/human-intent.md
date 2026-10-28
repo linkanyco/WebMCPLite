@@ -537,3 +537,20 @@ Human request (verbatim):
 ```
 
 Agent summary: The example site and development guidelines are separate deliverables. Make the guidelines usable by downstream workers and reviewers, with development examples where useful. Keep runtime prompts simple and replaceable. The current task improves WebMCPLite guidance; target-repository integration is a later activity.
+
+## H38 — README handoff, WebMCP alignment and the meaning of Lite
+
+Status: Explicit documentation request and a direction question in the execution chat, 2026-10-28 (America/Los_Angeles).
+
+Human request (verbatim excerpts):
+
+The message opens by naming README and linking the development guide through a local workspace URL. That local path is not published here. The first excerpt begins immediately after that link; the wording and literal Markdown/HTML escapes below are preserved. These are excerpts, not a reproduction of the entire message.
+
+```text
+이거 맞춰서 개발하라고 하면 돼\~ 이런 말 넣어놓고&#x20;
+아 WebMCP 쪽도 링크해주고, 내가 필요해서 만들다보니 이미 규약이 있어서 이거 따라서 만들었다. 추가적으로 기능을 확장하려면 해당 규측을 확인하고 유사한 내용이 있으면 따르자 이런 이야기도 넣고..
+
+음.. 지금, 근데 우리께 확실히 Lite하긴 한가?
+```
+
+Agent summary: Tell development AI/workers/reviewers to follow the development guide. Link WebMCP, retain the personal motivation and discovery of an existing specification, and check for equivalent standard behavior before extending functionality. Assess Lite honestly. AP assessment: the optional connector and app adoption scope are small; the React/UI gallery has separate dependencies and is not a minimal-bundle example. This question does not request replacing the human-selected UI stack.
