@@ -2,9 +2,15 @@
 
 I started this project because I wanted an easier way for people and AI to work together on the same website. During that exploration, I found that **WebMCP already defines the browser interface**. WebMCPLite follows that existing specification and offers practical examples for people who want to use it as easily as I do.
 
-**[Open the examples](https://linkanyco.github.io/WebMCPLite/)** · [Example walkthroughs](examples/README.md) · [Integration guide](docs/consumer-AGENTS.md)
+**[Open the examples](https://linkanyco.github.io/WebMCPLite/)** · [Development guidelines](docs/development-guidelines.md) · [Example walkthroughs](examples/README.md)
 
 This is an independent companion to the [WebMCP draft](https://webmachinelearning.github.io/webmcp/): small development conventions, a framework independent registration helper, and six ecommerce administrator tutorials. It does not define another discovery protocol, require a hosted chatbot, or claim official affiliation or universal browser support.
+
+## Build a WebMCP-friendly screen
+
+The project has two deliverables: an example site and developer guidelines. Start with the [self-contained development guidelines](docs/development-guidelines.md) when building a screen. They cover ordinary get/set/save actions reused by API loading, UI and WebMCP; authorized detail reads without mandatory getter layers; thin registration; a short edit-versus-save instruction; and worker/reviewer checks.
+
+The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage, UI dependencies and developer controls are not prerequisites for your app.
 
 ## Try it locally
 
@@ -42,7 +48,8 @@ The project follows the linked draft API; it is not a standards certification. [
 
 ## Project notes
 
-- [Contracts](docs/contracts.md) and [consumer AGENTS.md harness](docs/consumer-AGENTS.md): adapting an existing website.
+- [Development guidelines](docs/development-guidelines.md) and [consumer AGENTS.md harness](docs/consumer-AGENTS.md): building new screens or adapting existing ones.
+- [Example contracts](docs/contracts.md): the gallery's concrete inputs, effects and storage choices.
 - [PLANS.md](PLANS.md) and [source evidence](docs/sources/human-intent.md): human requests, research, and implementation choices kept separate.
 - [Progress](docs/progress.md), [independent reviews](docs/reviews/README.md), and [issue index](https://github.com/linkanyco/WebMCPLite/issues/1): delivery records.
 - [AGENTS.md](AGENTS.md): rules for development agents working in this repository, distinct from runtime manuals.

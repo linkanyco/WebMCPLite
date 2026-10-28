@@ -4,6 +4,8 @@
 >
 > Provenance: H01–H28 were visible user messages in the original discussion. Permanent message URLs, IDs, and individual timestamps were not supplied, so stable H identifiers and opening words serve as locators. H29 is the human-authored supplemental comment checked during handoff. H30–H31 and H33 are follow-up messages in this execution chat; H32 was forwarded here from the original planning chat.
 
+> H34–H37 are later execution-chat requests. H36/H37 distinguish the example site from portable development guidance and prioritize ordinary app-action reuse with a small edit-versus-save instruction. Their source locators are the section IDs and verbatim opening words; stable turn URLs were not supplied.
+
 ## Reading and authority boundaries
 
 - Direct quotations are the human's words. The status distinguishes questions, hypotheses, preferences, and authorization.
@@ -503,3 +505,35 @@ Human request (verbatim):
 ```text
 아참 내 이해를 도울겸 정채성을 들어낼겸 사이트 한/영 버튼 넣어줘 디폴트론 영문으로 하고
 ```
+
+## H36 — Ordinary app actions first, minimal runtime guidance
+
+Status: Explicit direction correction in the execution chat, 2026-10-28 (America/Los_Angeles). This changes development guidance; the remarks about removing example UI are not a request to remove the gallery in this documentation task.
+
+Human request (verbatim):
+
+```text
+아 탭 메모리? 개발자 도구같은거? 그건 그냥 예제고 좀 없앨껀데 예제로써도 가치가 없어보여. 기존 저장·재조회·복구는 기본적으로 AI가 하지 않을까?. AI가 바꾼걸 초기화? ctrl+z 버튼을 만들자는것도 잇는건가? 구지 필요없을꺼 같아
+
+AI 제안과 사용자 저장 확인의 연결 - set product()와 save()를 따로 구부하면돼 그리고  save는 명시적으로 저장해와 같은 단어를 썼을때만 진행하고, 수정해줘 바꿔줘 이런단어로 물어봣을때는 set..() 까지만 작업하는걸로 하게 가이드를 줘야해
+
+사실 내 입장에선, "기존 화면에 연결하는 구체적인 과정"은 별로 필요가 없는게, 기존 화면이 별로 없거든, 그냥 "신규 화면 개설시 WebMCP Friendly structure 만들기" 정도만 나오면 될꺼야.  
+
+아 참고로 set product() get product()는 예로 제품 로드할때는 api로 호출하고 화면에 set product() 를 쓴다던지, post 하기전에 get product()를 해서 json변수로 만들고 그걸 api post/put한다던지, save 버튼을 클릭시 save()를 호출하게 한다던지 즉, webMCP를 위한 함수를 따로 만들지 말고, 기존의 행동을 위한 함수를 webMCP가 재사용하게 할 수 있게하는 구조화가 중요한거야. 추후 webMCP만의 복잡한 기능을 추가로 제공할 수도 잇지만, 1차적으론 거의 get/set 같은 느낌이니깐, 그 말한것처럼, 예로 ai한테 제품 리스트화면에서 제품 디테일까지 다 확인할 수 있게 정보를 준다던지 하잖아? 이건 복잡하지 않게 그냥 var product_json_data[] 를 봐라고 하는게 좋을까? 아니면 get_product_json_data() 를 사용해 라고 할지는 선택사항, get_product_json_data()이 더 좋지만 product_json_data[]는 빠르게 적용할 수 잇지, 그리고 애초에 ai가 좀만 분석해도 product_json_data[]에 쉽게 접근할 수 있기 때문에 이걸 구지 get_product_json_data()로 wrapping 할 이유는 없는거 같아 좀 방향이 잡히나
+```
+
+Agent summary: Structure ordinary app data and actions for reuse by UI, API load/save and WebMCP. Prioritize new screens. Editing requests stop at setters; persistence requires an explicit user request and the host's authority. An additional app getter around existing authorized data is optional. Do not add undo or a general recovery framework solely for WebMCP. H32's standard runtime entry point remains; an existing variable is not itself a registered tool.
+
+## H37 — Portable developer guidelines as a primary deliverable
+
+Status: Explicit request to review and improve developer guidelines in this repository. A downstream copy is an intended use, not a completed integration.
+
+Human request (verbatim):
+
+```text
+어 지금 애초에 그래서 지금여기 프로젝트란게 "예제 사이트", "개발 가이드라인" 두가지거든, 뭐 "개발 가이드라인"에 좀더 "복잡하고 다양한 개발용 예제" 가 포함되야할 수도 있어. 
+여튼 "개발 가이드라인"이 지금 잘 정리가 되어있어서 이거보면, 아 우리 제품쪽 이렇게 수정하면 되겠네 싶어하게 하면 될꺼 같아 그래서 그냥 "개발 가이드라인".md 같은거 대군에 압축?해서 복사해 넣고, 워커나 리뷰어가 이 가이드 라인에 따라서 작업을 하게 하자. 그리고 자보자. 결국 구조잡고 함수화 + 프롬프트인데, 프롬프트는 일단 심플하게 가는걸로 프롬프트는 미래에 쉽게 바꿀 수 있는거라, 그부분까지 고민하고 가는건 초기 기회비용이 너무 커.. 이부분은 대군에 이식할때 내용이긴하고 
+여튼 "개발 가이드라인" 검토하고 부족하면 채우자
+```
+
+Agent summary: The example site and development guidelines are separate deliverables. Make the guidelines usable by downstream workers and reviewers, with development examples where useful. Keep runtime prompts simple and replaceable. The current task improves WebMCPLite guidance; target-repository integration is a later activity.

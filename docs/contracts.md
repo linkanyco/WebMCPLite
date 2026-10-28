@@ -2,6 +2,8 @@
 
 These are **agent implementation choices (AP)** for the human goals, updated by H32–H35. They are not extensions to the [WebMCP draft](https://webmachinelearning.github.io/webmcp/). UI and tools share application actions, state and validation. The current examples use one fictional ecommerce administrator.
 
+For new screens and consuming apps, use the [development guidelines](development-guidelines.md), updated under H36/H37. The contracts below describe this gallery; tab-memory storage, its cancel controls and batch limits do not prescribe a host architecture. Editing requests should stop at setters; saving requires an explicit user request within host authority. This follow-up documents that intent boundary without changing the gallery runtime in this documentation task.
+
 ## Products, drafts and related reads
 
 Products contain id, sku, productCode, name, price, descriptionEn and descriptionKo. Existing-product setters accept partial patches of name, price and both descriptions. Identifiers and stock are read-only. Omitted fields remain unchanged; null, unknown fields and invalid values are rejected. Descriptions allow empty strings and up to 4000 characters; product names allow 1–80 characters. Price is a finite number from 0 through 100000.

@@ -29,3 +29,7 @@ The English redesign and removal of the example revision mechanism require their
 ## H34/H35 follow-up
 
 [Issue #22](https://github.com/linkanyco/WebMCPLite/issues/22) tracks the administrator tutorials and optional Korean interface. Review the H34/H35 quotations and PLANS §15 against the entire final diff, original contracts, tests and rendered results. Final reviewed SHAs and any corrected-commit reviews are recorded on its PR; this entry does not pre-approve the implementation.
+
+## H36/H37 developer-guidelines follow-up
+
+[Issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) tracks the portable development guide. Review the entire actual documentation diff against H36/H37 and the retained H32/H33 boundaries. Check ordinary app-action reuse, optional getter layers, explicit save intent, host authority, lightweight scope and whether one Markdown file is sufficient for a consuming worker/reviewer. Check illustrative snippets and avoid treating them as production/browser evidence. The PR records the exact final reviewed commit, findings and validation; earlier approvals do not approve this follow-up.
