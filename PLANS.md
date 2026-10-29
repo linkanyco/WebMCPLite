@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H39 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H40 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -201,3 +201,11 @@ AP direction assessment: the adoption scope remains small and the dependency-fre
 ## 18. An approachable start — H39
 
 [H39 evidence](docs/sources/human-intent.md) keeps the WebMCPLite name and defines its intended tone as “start simply,” consistent with the cartoon tutorials. Add the practical development-guide/working-example introduction and explain that naming intent in README. This is a documentation follow-up to merged PR #26 and issue #24/index #1; PR #26 cannot accept additional commits after merge. Preserve the existing specification alignment, host authority and honest gallery-dependency boundary. No runtime or gallery layout change is needed. Record final-commit independent review and CI on the follow-up PR.
+
+## 19. Ordinary file inputs and runtime guidance — H40
+
+[H40 evidence](docs/sources/human-intent.md) and [issue #28](https://github.com/linkanyco/WebMCPLite/issues/28) request specification research first, then a practical alternative to passing file content through a base64 setter. The human proposes describing the ordinary file input, multiplicity, formats, related fields and usage in initial AI guidance if the standard has no suitable transfer mechanism. The `setFile` wording is a report of an earlier app approach, not an official API or a claim about assigning `input.value`.
+
+R: the 27 October WebMCP draft defines JSON tool inputs, without a file/reference transfer contract or fixed 2 MB file limit. Browser attachment capabilities are a separate layer. Current official OpenAI documentation says built-in-browser automatic uploads and declarative WebMCP forms are unsupported. These observations must not become universal client limits; see [research](docs/sources/research.md).
+
+AP: extend the portable guide and compact harness, and describe file inputs through existing registered manuals. Add optional PDF/PNG/JPEG reference files to the supporting New product form, keeping six tutorials. Use its ordinary input/change action, shared draft, tab-memory save and discard. Example choices: selector `#new-product-files`, multiple selection replacing the draft list, at most three files, 25 MiB each. These limits and metadata fields are gallery choices, not human-mandated or WebMCP limits. Keep actual File objects private and out of JSON tools; expose summaries and state only. Do not create an uploader, base64 tool, alternate protocol, automatic shrinking/splitting, real persistence or a new dependency. Verify contracts and actual available browser behavior separately, then obtain independent review of the final commit and record CI/merge evidence on the PR.

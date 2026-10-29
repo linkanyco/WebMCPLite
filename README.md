@@ -14,6 +14,8 @@ The project has two deliverables: an example site and developer guidelines. Star
 
 The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage, UI dependencies and developer controls are not prerequisites for your app.
 
+For files, the guide explains ordinary file inputs, concrete page-manual guidance and a mixed browser/tool workflow. Keep file bytes out of JSON setters; use a supported browser attachment action or let the user select files. The supporting New product form demonstrates optional reference files and their relation to the same product draft. See the [file walkthrough](examples/README.md#optional-reference-files-on-new-product) for limits and current client support.
+
 Ask your development AI, worker or reviewer to follow the guide:
 
 > Read and follow [development-guidelines.md](docs/development-guidelines.md) when building or reviewing this screen. Reuse ordinary app get/set/save actions for UI and WebMCP, and preserve this project's permissions and product rules.

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createWorkspace } from '../examples/workspace.js';
+import { createWorkspace, productFileInput } from '../examples/workspace.js';
 
 test('UI and AI share product draft; copies cannot mutate state; human takes over a field', () => {
   const w = createWorkspace();
@@ -59,6 +59,67 @@ test('new-product reuse keeps source and target tabs independent; no SKU uniquen
   assert.equal(source.read('newProduct').data.name, '');
   assert.equal(target.set('newProduct', { stock: 1 }).ok, false);
   assert.equal((await createWorkspace().save('newProduct')).ok, false);
+});
+
+test('native file selection replaces the shared draft, validates atomically and returns summaries only', () => {
+  const w = createWorkspace();
+  w.set('newProduct', { sku: 'REF-01', descriptionEn: 'Reference notes' }, 'ai');
+  const pdf = new File(['fictional PDF'], 'reference.PDF', { type: 'application/pdf', lastModified: 1 });
+  const png = new File(['fictional PNG'], 'diagram.png', { type: 'image/png', lastModified: 2 });
+  const selected = w.selectProductFiles([pdf, png]);
+  assert.equal(w.unsaved('new').unsaved, true);
+  assert.deepEqual(selected.files, [{ name: 'reference.PDF', size: pdf.size, type: pdf.type, lastModified: 1 }, { name: 'diagram.png', size: png.size, type: png.type, lastModified: 2 }]);
+  selected.files[0].name = 'mutated';
+  const before = w.read('newProduct');
+  for (const invalid of [null, {}, ['base64'], [{ name: 'fake.pdf', size: 1 }], [pdf, png, pdf, png], [pdf, new File(['text'], 'notes.txt')], [new File(['wrong MIME'], 'image.png', { type: 'application/pdf' })], [new File([new Uint8Array(productFileInput.maxBytesPerFile + 1)], 'large.pdf', { type: 'application/pdf' })]]) {
+    assert.equal(w.selectProductFiles(invalid).ok, false);
+    assert.deepEqual(w.read('newProduct'), before);
+  }
+  const replacement = w.selectProductFiles([png]);
+  assert.equal(replacement.files.length, 1); assert.equal(replacement.files[0].name, 'diagram.png');
+  assert.equal(replacement.data.sku, 'REF-01'); assert.equal(replacement.data.descriptionEn, 'Reference notes');
+  assert.deepEqual(replacement.aiFields, ['sku', 'descriptionEn']);
+  assert.equal(w.set('newProduct', { files: [] }, 'ai').ok, false);
+  assert.deepEqual(JSON.parse(JSON.stringify(replacement)), replacement);
+  assert.deepEqual(w.selectProductFiles([]).files, []);
+  assert.equal(w.read('catalog').dirty, false);
+});
+
+test('saved file identity detects different bytes with the same metadata and cancel restores actual baseline', async () => {
+  const w = createWorkspace();
+  w.set('newProduct', { name: 'Reference product', sku: 'REF-01', productCode: 'REF-1001' });
+  const original = new File(['one'], 'same.pdf', { type: 'application/pdf', lastModified: 1 });
+  const replacement = new File(['two'], 'same.pdf', { type: 'application/pdf', lastModified: 1 });
+  w.selectProductFiles([original]);
+  const saved = await w.save('newProduct');
+  assert.equal(saved.saved, true); assert.equal(saved.dirty, false); assert.equal(saved.storage, 'tab-memory');
+  const changed = w.selectProductFiles([replacement]);
+  assert.deepEqual(changed.files, saved.files); assert.equal(changed.dirty, true);
+  w.cancel('newProduct');
+  assert.equal(w.selectProductFiles([original]).dirty, false, 'cancel restores the original File, not only its summary');
+  w.selectProductFiles([]); assert.equal(w.unsaved('new').unsaved, true);
+  assert.deepEqual(w.cancel('newProduct').files, saved.files);
+  assert.deepEqual(createWorkspace().read('newProduct').files, [], 'another workspace/reload has no files');
+});
+
+test('file selection obeys save busy state and failure retains the draft without changing the baseline', async () => {
+  const w = createWorkspace();
+  const first = new File(['first'], 'first.jpg', { type: 'image/jpeg' });
+  w.selectProductFiles([first]);
+  assert.equal((await w.save('newProduct')).error.code, 'validation');
+  assert.equal(w.read('newProduct').files[0].name, 'first.jpg');
+  w.set('newProduct', { name: 'Reference product', sku: 'REF-01', productCode: 'REF-1001' });
+  await w.save('newProduct');
+  const next = new File(['second'], 'second.pdf', { type: 'application/pdf' });
+  w.selectProductFiles([next]);
+  const pending = w.save('newProduct', { latency: 10, shouldFail: true });
+  assert.equal(w.selectProductFiles([]).error.code, 'busy');
+  assert.equal(w.cancel('newProduct').error.code, 'busy');
+  assert.equal(w.unsaved('new').busy, true);
+  assert.equal((await pending).error.code, 'save_failed');
+  assert.equal(w.read('newProduct').files[0].name, 'second.pdf');
+  assert.equal(w.read('newProduct').dirty, true);
+  assert.equal(w.cancel('newProduct').files[0].name, 'first.jpg');
 });
 
 test('async failure preserves draft/markers and blocks edits, cancel and duplicate save', async () => {

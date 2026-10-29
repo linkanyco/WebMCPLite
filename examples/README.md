@@ -44,3 +44,27 @@ const result = JSON.parse(await context.executeTool(tool, {
 ```
 
 Only use this path where those APIs are implemented and registration succeeded. Ordinary UI actions remain usable without WebMCP. Setters patch drafts; save/cancel use the same application actions as the UI. The small [connector](../src/connect.js) is framework independent; [workspace.js](workspace.js), [tools.js](tools.js), [app.jsx](app.jsx) and [i18n.js](i18n.js) belong to the example app.
+
+## Optional reference files on New product
+
+Open `?page=new` directly or use Product list → Add product. This extends the supporting form, keeping six tutorials. It is an ordinary file-input example with no network upload, parsing or image processing. The files accompany this tab's newProduct values; they do not fill descriptions, copy from the source product or move between tabs.
+
+| Input contract | Example behavior |
+| --- | --- |
+| Selector and label | `#new-product-files`, **Product reference files** (상품 참고 파일 in Korean) |
+| Multiple / required | Multiple allowed; optional; at most 3 files |
+| Types | `.pdf`, `.png`, `.jpg`, `.jpeg`; MIME `application/pdf`, `image/png`, `image/jpeg` |
+| Demo size limit | 25 MiB (26,214,400 bytes) per file; this is an app choice, not a WebMCP limit |
+| Validation | Extension checked; a present MIME must match. `accept` is a picker hint. Invalid selections retain the previous list. This demo does not inspect file signatures; production apps retain their own validation. |
+| Selection / clearing | Each accepted selection replaces the entire draft file list. **Clear reference files** empties it. The native control resets after handing files to the app; the visible list is authoritative. |
+| Read / save / discard | `getProduct.files` returns name, size, type and lastModified only. Save retains actual Files and fields in tab memory. Discard restores the saved baseline; reload clears it. |
+
+Try this mixed workflow with fictional files you own:
+
+1. Discover this tab's tools through the browser's WebMCP capability. Call `page_manual({})` for `fileInputs`, then `getProduct({})` to identify the target draft.
+2. Call `setProduct({patch:{sku:"REF-001",productCode:"PRD-2001",name:"Reference keyboard",price:89}})`. This edits ordinary fields and does not select files or save.
+3. In an agent/browser that supports attaching local files, use its file-attachment action on `#new-product-files` to select `specification.pdf` and `front.png` together. This is a browser action, **not** a WebMCP `setFile` call. If attachment is unsupported or the files are inaccessible, ask the user to select them through that same input and continue after selection.
+4. Check the visible filenames/errors and call `getProduct({})` again. Its top-level `files` list should describe the two files; `dirty:true` means a draft, not upload success. Continue editing the name in ordinary UI; the file list stays intact.
+5. Only when explicitly asked to save, call `save({form:"newProduct"})` and await `saved:true, storage:"tab-memory"`. Clear the list, then Discard to see the saved list return. Reload to reset the form and files.
+
+Do not put base64, local paths or invented file references into setProduct. This approach keeps large bytes out of model/tool JSON; it does not add a new transport or remove host/browser upload limits. As checked on 2026-10-28, OpenAI's [Browser docs](https://learn.chatgpt.com/docs/browser) say built-in-browser automatic uploads are unsupported, and [Site tools docs](https://learn.chatgpt.com/docs/webmcp) exclude declarative forms. WebMCP tool discovery does not establish file attachment support. See [verification](../docs/verification.md) for actual observations and untested paths.

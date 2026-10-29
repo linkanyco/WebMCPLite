@@ -48,3 +48,9 @@ The documentation adds a self-contained [development guide](development-guidelin
 ## README handoff and Lite scope — H38
 
 This documentation follow-up to issue #24 and merged PR #25 adds an explicit development-AI instruction, links the WebMCP draft at the motivation, and asks builders to check/reuse equivalent specification behavior before extending it. The portable guide carries the same extension principle. README distinguishes small adoption scope and an optional dependency-free connector from the gallery's React/UI bundle. Runtime and UI dependencies are unchanged; final-commit review and CI evidence belong on the follow-up PR linked to index #1.
+
+## Ordinary file inputs — H40
+
+[Issue #28](https://github.com/linkanyco/WebMCPLite/issues/28) follows the developer-guide work and index #1. Official specification/client research led to guidance for ordinary file inputs, registered page manuals and a user-selection handoff when attachment is unavailable. No standard file transport, fixed 2 MB WebMCP cap or official setFile API was found in the current draft.
+
+AP delivery extends the existing supporting New product form with optional PDF/PNG/JPEG reference files, shared selection validation and tab-memory save/discard. It adds no seventh tutorial, dependency, server uploader, base64 tool or alternate discovery protocol. The guide, compact harness, contracts and walkthrough explain inputs and their relation to other fields and effects. Automated contracts and actual IAB selection/edit/save/discard observations are separated in [verification](verification.md), including the discrepancy with current official client support documentation. Final reviewed SHA, CI and merge outcome belong on the linked PR.

@@ -31,6 +31,17 @@ export const initialStorefront = `<style>
   <div class="category"><h2>Work together</h2><img alt="Shared workspace" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&auto=format&fit=crop&q=80"></div>
 </div>`;
 export const pageAreas = { home: [], product: ['catalog'], bulk: ['catalog'], sheet: [], board: ['storefront'], guide: [], async: ['catalog'], new: ['newProduct'] };
+// App-owned input guidance, reused by the ordinary UI and its registered page manual.
+export const productFileInput = {
+  id: 'new-product-files', selector: '#new-product-files', label: 'Product reference files',
+  multiple: true, accept: '.pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg',
+  maxFiles: 3, maxBytesPerFile: 25 * 1024 * 1024,
+  target: 'Optional reference files for this tab\'s newProduct draft, alongside its SKU, product code and descriptions. They are not copied from the source product or shared with other tabs.',
+  validation: 'Extensions must be PDF, PNG or JPEG; a present MIME must match the extension. Invalid selections retain the prior list. File signatures are not inspected in this demo.',
+  effect: 'Browser selection replaces the complete file list in the shared draft. Clear reference files empties it. The input clears after handoff; the visible list and getProduct.files show the draft selection. Selection does not upload or save. It does not parse files or fill product fields. save({form:"newProduct"}) retains the actual Files and product values in tab memory only; cancel restores that saved baseline. Reload clears everything.',
+  steps: ['Read getProduct and identify the intended new-product draft.', 'Use a supported browser file-attachment action on #new-product-files with all intended files; do not pass bytes, base64 or local paths to setProduct.', 'Verify the visible list or getProduct.files, then continue editing ordinary values with setProduct. Save only when the user explicitly requests it.'],
+  unsupported: 'If this browser agent cannot attach files, report that limitation and ask the user to choose them through this same input. Do not claim selection or upload succeeded.',
+};
 const clone = value => structuredClone(value);
 const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 export const fail = (code, message) => ({ ok: false, error: { code, message } });
@@ -52,10 +63,14 @@ const delay = (ms, signal) => new Promise((resolve, reject) => {
 
 export function createWorkspace({ onChange = () => {} } = {}) {
   const areas = Object.fromEntries(Object.entries(seeds).map(([id, value]) => [id, { draft: clone(value), saved: clone(value), aiFields: [], saving: false }]));
+  // Keep actual Files private. JSON summaries cannot distinguish different bytes.
+  let productFiles = [], savedProductFiles = [];
+  const sameFiles = () => productFiles.length === savedProductFiles.length && productFiles.every((file, i) => file === savedProductFiles[i]);
+  const fileSummaries = () => productFiles.map(({ name, size, type, lastModified }) => ({ name, size, type, lastModified }));
   let filters = { skuContains: '', maxPrice: null }, previewHtml = initialStorefront;
   function read(id) {
     const a = Object.hasOwn(areas, id) ? areas[id] : null;
-    return a ? { ok: true, data: clone(a.draft), dirty: !equal(a.draft, a.saved), saving: a.saving, aiFields: [...a.aiFields] } : fail('not_found', 'Unknown editing area.');
+    return a ? { ok: true, data: clone(a.draft), ...(id === 'newProduct' ? { files: fileSummaries() } : {}), dirty: !equal(a.draft, a.saved) || id === 'newProduct' && !sameFiles(), saving: a.saving, aiFields: [...a.aiFields] } : fail('not_found', 'Unknown editing area.');
   }
   function guard(id) {
     if (!Object.hasOwn(areas, id)) return fail('not_found', 'Unknown editing area.');
@@ -92,9 +107,20 @@ export function createWorkspace({ onChange = () => {} } = {}) {
     }
     return commit('catalog', next, changed, source);
   }
+  function selectProductFiles(files) {
+    const error = guard('newProduct'); if (error) return error;
+    if (!files || typeof files[Symbol.iterator] !== 'function') return fail('validation', 'Choose files through the Product reference files input.');
+    const next = Array.from(files);
+    if (next.length > productFileInput.maxFiles) return fail('validation', 'Choose up to 3 reference files.');
+    const types = { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg' };
+    if (next.some(file => !(file instanceof File) || !Object.hasOwn(types, file.name.split('.').pop().toLowerCase()) || file.type && file.type !== types[file.name.split('.').pop().toLowerCase()] || file.size > productFileInput.maxBytesPerFile)) return fail('validation', 'Use PDF, PNG or JPEG files, up to 25 MiB each.');
+    productFiles = next; onChange(); return read('newProduct');
+  }
   function cancel(id) {
     const error = guard(id); if (error) return error;
-    const a = areas[id]; a.draft = clone(a.saved); a.aiFields = []; onChange(); return read(id);
+    const a = areas[id]; a.draft = clone(a.saved); a.aiFields = [];
+    if (id === 'newProduct') productFiles = [...savedProductFiles];
+    onChange(); return read(id);
   }
   async function save(id, { latency = 0, shouldFail = false, signal } = {}) {
     const error = guard(id); if (error) return error;
@@ -105,6 +131,7 @@ export function createWorkspace({ onChange = () => {} } = {}) {
       if (signal?.aborted) return fail('aborted', 'Save cancelled; draft retained.');
       if (shouldFail) return fail('save_failed', 'Demo save failed. Draft retained; retry when ready.');
       a.saved = clone(a.draft); a.aiFields = [];
+      if (id === 'newProduct') savedProductFiles = [...productFiles];
       return { ...read(id), saving: false, saved: true, storage: 'tab-memory' };
     } catch { return fail('aborted', 'Save cancelled; draft retained.'); }
     finally { a.saving = false; onChange(); }
@@ -130,5 +157,5 @@ export function createWorkspace({ onChange = () => {} } = {}) {
     return p ? { ok: true, data: { ...clone(p), stock: stock[id] } } : fail('not_found', 'Unknown product.');
   }
   function previewStorefront() { previewHtml = areas.storefront.draft.html; onChange(); return { ok: true, previewed: true, html: previewHtml }; }
-  return { read, set, setProducts, save, cancel, unsaved, search, setSearch, getProduct, previewStorefront, getPreview: () => previewHtml };
+  return { read, set, setProducts, selectProductFiles, save, cancel, unsaved, search, setSearch, getProduct, previewStorefront, getPreview: () => previewHtml };
 }
