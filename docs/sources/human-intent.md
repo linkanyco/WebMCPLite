@@ -571,3 +571,17 @@ Human request (verbatim):
 ```
 
 Agent summary: Keep WebMCPLite and express Lite as an approachable way to start, consistent with the cartoon tutorials. Put the practical development-guide/working-example positioning in the introduction. The tagline had only been proposed in chat, not edited. PR #26 was already merged when the commit request arrived; a linked follow-up PR is the implementation route, not a claim that the merged PR can accept new commits. No gallery redesign or production-readiness claim follows.
+
+## H40 — Research file handling and guide ordinary file selection
+
+Status: Explicit follow-up request, 2026-10-28 (America/Los_Angeles). The quotation's literal escapes and API shorthand are preserved.
+
+Human request (verbatim):
+
+```text
+자 이거 좀 고민해서 webmcplite 부분을 바꿔야할꺼 같아. 쏠6.1 울트라로 새창 열여서 시켜,
+이번에 우리가 파일 업로드를`input type=file`에  setFile("base64 string") 이런식으로 했는데 용량이 큰 파일을 작업이 불가능했다. 아무래도 일반 브라우저 유즈처럼 `input type=file`에 직접 파일을 넣는 형태로 해야할것 같다. 일단 webmcp가 어떻게하는지 확인해보고&amp;#x20;
+좋은 방법이 없는 경우 파일의 경우 setFile 같은 함수를 제공하는 형태가 아니라 그냥 초기 프롬프트에 뭐뭐 하려면 어느 html 노드의 `input type=file`에 파일을 넣어라 , 복수파일 지원y/n 지원 파일확장자 뭐뭐.. 이런식으로 제공하고 해당 인풋파일이랑, 다른 데이타랑 관계나 사용 예시를 좀 자세히 적는게 맞는거 같아.
+```
+
+Agent summary: Inspect the official standard before choosing a file-transfer approach. If it has no suitable mechanism, guide the AI to an ordinary file input and explain multiplicity, formats, related data and realistic usage. The earlier shorthand describes inline base64 tool arguments leading to app File/draft preparation; it is not evidence of an official `setFile` API or local-path assignment to `input.value`. Selector fields, demo limits, a supporting example and manual format remain AP. The request does not authorize changes to another repository or a new upload service.

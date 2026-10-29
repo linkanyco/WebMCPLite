@@ -1,4 +1,4 @@
-import { fail, keys, pageAreas, products } from './workspace.js';
+import { fail, keys, pageAreas, products, productFileInput } from './workspace.js';
 export const pages = [
   { id: 'home', title: 'Welcome', purpose: 'Connect your AI, discover the site and try the tutorials.' },
   { id: 'product', title: 'Product editor', purpose: 'Polish an English description and translate it into Korean.', example: true },
@@ -31,7 +31,7 @@ export function buildTools({ workspace: w, page, navigate, setHighlights, getToo
     try { const response = await fetch(new URL('./manual.json', import.meta.url)); if (!response.ok) throw Error(); return { ok: true, manual: await response.json() }; }
     catch { return fail('manual_unavailable', 'Could not load the site manual. Retry or call page_manual for current tool contracts.'); }
   }, true);
-  add('page_manual', 'Read this page purpose, editing areas and exact registered tool contracts.', object(), () => ({ ok: true, page: pages.find(p => p.id === page), areas, tools: getTools() }), true);
+  add('page_manual', 'Read this page purpose, editing areas, file-input guidance and exact registered tool contracts.', object(), () => ({ ok: true, page: pages.find(p => p.id === page), areas, fileInputs: page === 'new' ? [structuredClone(productFileInput)] : [], tools: getTools() }), true);
   add('isUnsavedContents', 'Check all editing areas on the CURRENT page when form is null or omitted.', object({ form: { type: ['string', 'null'], enum: [...areas, null] } }, []), ({ form = null }) => w.unsaved(page, form), true);
   add('navigate', 'Move within this tab. Unsaved drafts or pending saves block navigation. For a new tab use browser controls and a URL from site_map.', object({ page: { type: 'string', enum: pages.map(p => p.id) } }), ({ page: target }) => navigate(target));
   add('setHighlights', 'AI changes are highlighted by default. Show or hide these marks without changing any data. No UI switch is shown.', object({ enabled: { type: 'boolean' } }), ({ enabled }) => typeof enabled === 'boolean' ? setHighlights(enabled) : fail('validation', 'enabled must be boolean.'));
@@ -55,8 +55,8 @@ export function buildTools({ workspace: w, page, navigate, setHighlights, getToo
     add('previewStorefront', 'Render the current source in the same sandboxed preview as the UI Preview button. Does not save or change the draft.', object(), () => w.previewStorefront());
   }
   if (page === 'new') {
-    add('getProduct', 'Read the new-product form draft. Its local ID belongs to this destination, not to the source product.', object(), () => w.read('newProduct'), true);
-    add('setProduct', 'Patch the new-product form with remembered values. Editable: sku, productCode, name, price, descriptionEn, descriptionKo. Omit source id and read-only stock. No uniqueness restriction in this fictional demo. Save separately.', object({ patch: patch({ sku: { type: 'string', maxLength: 80 }, productCode: { type: 'string', maxLength: 80 }, ...editableProduct, name: { type: 'string', maxLength: 80 } }) }), ({ patch: values }) => w.set('newProduct', values, 'ai'));
+    add('getProduct', 'Read the new-product form draft and read-only files summaries (name, size, type, lastModified; no bytes). Its local ID belongs to this destination, not to the source product. File input guidance is in page_manual.', object(), () => w.read('newProduct'), true);
+    add('setProduct', 'Patch the new-product form with remembered values. Editable: sku, productCode, name, price, descriptionEn, descriptionKo. Omit source id and read-only stock. Files cannot be set through this tool; use the existing file input described in page_manual. No uniqueness restriction in this fictional demo. Save separately.', object({ patch: patch({ sku: { type: 'string', maxLength: 80 }, productCode: { type: 'string', maxLength: 80 }, ...editableProduct, name: { type: 'string', maxLength: 80 } }) }), ({ patch: values }) => w.set('newProduct', values, 'ai'));
   }
   return result;
 }

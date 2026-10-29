@@ -33,3 +33,7 @@ The English redesign and removal of the example revision mechanism require their
 ## H36/H37 developer-guidelines follow-up
 
 [Issue #24](https://github.com/linkanyco/WebMCPLite/issues/24) tracks the portable development guide. Review the entire actual documentation diff against H36/H37 and the retained H32/H33 boundaries. Check ordinary app-action reuse, optional getter layers, explicit save intent, host authority, lightweight scope and whether one Markdown file is sufficient for a consuming worker/reviewer. Check illustrative snippets and avoid treating them as production/browser evidence. The PR records the exact final reviewed commit, findings and validation; earlier approvals do not approve this follow-up.
+
+## H40 file-input guidance follow-up
+
+[Issue #28](https://github.com/linkanyco/WebMCPLite/issues/28) tracks the current-spec research, ordinary file-input guidance and supporting New product example. The fresh-context reviewer must inspect the full diff, H40 quotation, researched support limits, shared file state/validation, tool/manual contracts, automated tests and rendered evidence. Reconsider whether this remains a small guide/example rather than recreating browser file transport or adding a framework. Keep the documented client limitation and this task's successful chooser observation distinct. Exact final reviewed commit, findings, checks and merge outcome are recorded on the linked PR; this entry does not pre-approve it.

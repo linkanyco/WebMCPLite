@@ -145,13 +145,46 @@ Start with this replaceable runtime text, adapting names to the host:
 
 This is guidance for intent interpretation, not a keyword parser or a permission mechanism. A mention of saving is not necessarily a save request. No prompt engine or exhaustive language rules are needed initially. Host-required review/confirmation remains in the app; a tool description cannot grant it.
 
-## 6. Keep the implementation proportional
+## 6. Use the ordinary file input for files
+
+Check the current standard and the target browser/agent before choosing a transfer path. The [27 October WebMCP draft](https://webmachinelearning.github.io/webmcp/) uses JSON tool arguments and defines no File/Blob transfer, file-reference contract or `setFile` API. It specifies no fixed 2 MB file limit. Do not make inline base64 a default file setter contract: it puts the bytes into the model/tool request and may exceed a client's context, review or message budget. A failure in one client does not establish a WebMCP size limit.
+
+Keep the app's ordinary `<input type="file">` and its change handler. A browser agent with a supported attachment capability can supply authorized files to that input, triggering the same app selection/validation path as a person. A typed local path or `input.value = path` is not file attachment. Do not create an AI-only file input, upload endpoint or alternate draft store. Keep the host's existing upload/streaming/chunking behavior where it already exists; do not add a transport framework just for WebMCP.
+
+Describe inputs in the existing registered page manual, with a short initial instruction pointing there. These are ordinary HTML selectors inside tool-returned guidance, not a second discovery protocol or special DOM markers. Example app-owned manual content:
+
+```json
+{
+  "selector": "#new-product-files",
+  "label": "Product reference files",
+  "multiple": true,
+  "accept": ".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg",
+  "limits": { "maxFiles": 3, "maxBytesPerFile": 26214400 },
+  "target": "Optional files for the current newProduct draft, alongside its SKU, name and descriptions.",
+  "selection": "Each accepted selection replaces the whole file list. Invalid selections retain the prior list. Clear files empties it.",
+  "effects": "Selection prepares a draft only. Save retains fields and files in this tab; no network upload. Discard restores the saved baseline. Reload resets it."
+}
+```
+
+Use actual selectors, accessible labels and limits from the host screen. Explain whether fields select a record before attachment, whether a file fills fields or merely accompanies them, whether selection appends or replaces, and how to remove/retry. Include required versus optional files, allowed extensions/MIME, count/size limits and validation errors. HTML `accept` is a picker hint; the ordinary app and server still validate. The limits above are gallery AP, not WebMCP limits or requirements for video editors or large-file services.
+
+Keep actual File objects in the app's existing state/upload pipeline. Tool reads can return safe file summaries and processing status; normal setters handle the related non-file fields. Never claim an uploaded/saved result from a filename or a successful chooser action alone. In a real app, explain separately when bytes leave the device, when processing finishes, when references attach to the record and what save/cancel/failure does. Do not invent server behavior from the gallery's tab-memory example.
+
+Example mixed workflow: read `page_manual` and `getProduct`; set a new product's SKU/name with `setProduct`; use the browser's supported attachment action on `#new-product-files` with the user's chosen `specification.pdf` and `front.png`; reread `getProduct` and inspect the visible list/errors; let the person continue editing. Save only if explicitly requested. Selecting these reference files does not parse them or fill descriptions automatically.
+
+Initial/runtime instruction to adapt:
+
+> For files, read the page manual's file-input guidance. Use your supported browser attachment capability on the described ordinary input with files authorized by the user, then check the shared draft and validation result. If your client cannot attach files or access the authorized files, ask the user to select them in that input and continue after selection. Keep file bytes out of tool JSON; do not replace attachment with base64, a local-path string or an invented file reference. Selection, upload and save have the distinct effects documented by this app.
+
+As checked on 2026-10-28, official OpenAI [Browser documentation](https://learn.chatgpt.com/docs/browser) says built-in-browser automatic uploads are unsupported, and [Site tools documentation](https://learn.chatgpt.com/docs/webmcp) excludes declarative WebMCP forms. In this task, one built-in-browser chooser did successfully select a 1,956,627-byte PNG into the example, despite that documentation. This is a narrow observation, not guaranteed client support or a maximum-size test. Other browsers/agents need their own checks. Ordinary user selection must remain available; a discovery prompt cannot enable attachment support. See the [HTML file-input standard](https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)) for native behavior.
+
+## 7. Keep the implementation proportional
 
 Reuse the host's save outcomes, validation, concurrency, audit, confirmation and failure behavior. Return enough information for the caller to understand the result and use existing reread/recovery actions as needed. Do not build a separate recovery system just for WebMCP or assume that AI can turn an uncertain write into a confirmed one.
 
 New undo/reset controls, mandatory confirmation dialogs, revision parameters, a universal transaction model, AI-only setters/state, hosted chat and a general agent framework are not prerequisites. Preserve safeguards the host already requires. The gallery's simulated save and controls teach its own fictional app; they do not prescribe backend or UX architecture.
 
-## 7. Worker and reviewer checks
+## 8. Worker and reviewer checks
 
 A worker should identify the app state owner and shared actions, add thin registrations and short runtime guidance, then verify one complete workflow. A reviewer should inspect the actual calls and effects, not only names or schemas:
 
@@ -160,6 +193,7 @@ A worker should identify the app state owner and shared actions, add thin regist
 - Does “edit” stop at the draft, while explicit saving uses the ordinary save path and host confirmation? Are outcomes accurate?
 - Do AI marks reflect actual changes, and do current callbacks and route cleanup avoid stale targets/state?
 - Do existing validation and applicable unsaved/save-failure behavior still work? Is an added abstraction needed by this screen?
+- For file screens, does the manual identify the real input and its relation to other fields? Check replacement/removal, invalid-selection retention and actual save/upload effects through ordinary app actions. Do not mistake metadata-only tests or injected File objects for successful agent attachment or network upload.
 
 Exercise human edit → AI read/edit → human continuation → explicitly requested save. Also check invalid input and the host's relevant failure path without losing edits. Use fictional or approved test data. Record real browser/agent discovery, invocation and visible results separately from fake-API tests, with date, browser/version when available and limitations. A stub registration test cannot establish browser support.
 

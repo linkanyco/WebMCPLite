@@ -216,6 +216,31 @@ main {
   background:#fafafa;
   min-height:480px;
 }
+.reference-files {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:12px;
+}
+.reference-files p {
+  line-height:1.6;
+}
+.reference-files input {
+  max-width:100%;
+}
+.reference-files ul {
+  margin:0;
+  padding-left:20px;
+  width:100%;
+}
+.reference-files li {
+  padding:4px 0;
+  overflow-wrap:anywhere;
+}
+.reference-files li span+span {
+  margin-left:12px;
+  white-space:nowrap;
+}
 .workspace-tabs>.ant-tabs-nav {
   margin-bottom:22px;
 }

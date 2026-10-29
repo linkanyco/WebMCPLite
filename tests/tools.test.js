@@ -67,3 +67,32 @@ test('new product accepts remembered editable values and rejects source identity
   assert.equal((await target.call('save', { form: 'newProduct' })).saved, true);
   assert.deepEqual((await target.call('getProduct')).data, { id: 'new-product', ...values });
 });
+
+test('new-product manual guides the ordinary input while tools accept no file payload and expose only summaries', async () => {
+  const { w, call, metadata } = fixture('new');
+  const manual = await call('page_manual');
+  assert.equal(manual.fileInputs.length, 1);
+  const input = manual.fileInputs[0];
+  assert.equal(input.selector, '#new-product-files'); assert.equal(input.label, 'Product reference files');
+  assert.equal(input.multiple, true); assert.equal(input.maxFiles, 3); assert.equal(input.maxBytesPerFile, 25 * 1024 * 1024);
+  assert.match(input.accept, /application\/pdf/); assert.match(input.accept, /image\/png/); assert.match(input.accept, /image\/jpeg/);
+  assert.match(input.effect, /does not upload or save/); assert.match(input.unsupported, /ask the user/);
+  assert.deepEqual((await fixture('product').call('page_manual')).fileInputs, []);
+  assert.ok(!metadata().some(tool => /file/i.test(tool.name)), 'file selection has no registered setter or upload tool');
+  w.selectProductFiles([new File(['private fictional bytes'], 'notes.pdf', { type: 'application/pdf', lastModified: 1 })]);
+  const before = await call('getProduct');
+  for (const patch of [{ files: ['base64'] }, { file: 'local/path.pdf' }, { base64: 'data:application/pdf;base64,AA==' }]) {
+    assert.equal((await call('setProduct', { patch })).ok, false);
+    assert.deepEqual(await call('getProduct'), before);
+  }
+  await call('setProduct', { patch: { name: 'Product with references', sku: 'REF-1', productCode: 'REF-1001' } });
+  const read = await call('getProduct');
+  assert.deepEqual(read.files, [{ name: 'notes.pdf', size: 23, type: 'application/pdf', lastModified: 1 }]);
+  assert.deepEqual(JSON.parse(JSON.stringify(read)), read);
+  assert.ok(!JSON.stringify(read).includes('private fictional bytes'));
+  assert.equal((await call('isUnsavedContents')).unsaved, true);
+  const saved = await call('save', { form: 'newProduct' });
+  assert.equal(saved.saved, true); assert.deepEqual(saved.files, read.files);
+  w.selectProductFiles([]);
+  assert.deepEqual((await call('cancel', { form: 'newProduct' })).files, read.files);
+});
