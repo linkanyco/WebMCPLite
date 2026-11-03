@@ -131,7 +131,6 @@ function ProjectInfo() {
     <div className="project-section"><h2>{t('What is WebMCP?')}</h2><p>{t('WebMCP is a draft browser API that lets websites offer JavaScript tools to AI agents.')}</p><a href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noreferrer">{t('Read the WebMCP draft')}<ExternalLink size={14} /></a></div>
     <div className="project-section"><h2>{t('Work together on the same screen')}</h2><p>{t('Connecting AI to ordinary app actions can reduce repeated screen interpretation and interaction overhead. The goal is responsive collaboration, where you and your AI can see changes and continue the work on the same screen, even in a complex app.')}</p></div>
     <div className="project-section"><h2>{t('Give AI useful context and intended actions')}</h2><p>{t('Provide authorized information that may not fit in the visible UI, alongside clear actions designed by the web developer.')}</p><p>{t('This helps people use more of a site’s features without first learning every menu. Existing permissions and validation still apply.')}</p></div>
-    <div className="project-actions"><Button type="primary" icon={<Github size={16} />} onClick={() => report(moveToGithub())}>{t('Open GitHub')}</Button><p>{t('Explore the development guide and examples on GitHub.')}</p></div>
   </section>;
 }
 function WorkspaceApp() {

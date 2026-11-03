@@ -6,7 +6,7 @@
     "purpose": "About: the last menu item introduces WebMCP and WebMCPLite.",
     "repository": "https://github.com/linkanyco/WebMCPLite",
     "action": "MoveToGithub",
-    "usage": "For a request such as \"I really like this site. Where can I find more information about it?\", call MoveToGithub({}) to navigate directly to the project repository in this tab rather than only reporting its address. It uses the ordinary Open GitHub action, accepts no URL, and refuses unsaved drafts or a pending save. It does not save. navigationRequested reports a request; inspect the browser destination to confirm arrival."
+    "usage": "For a request such as \"I really like this site. Where can I find more information about it?\", call MoveToGithub({}) to navigate directly to the project repository in this tab rather than only reporting its address. It uses the ordinary sidebar GitHub action, accepts no URL, and refuses unsaved drafts or a pending save. It does not save. navigationRequested reports a request; inspect the browser destination to confirm arrival."
   },
   "conventions": "site_map, site_manual, page_manual, navigate, MoveToGithub, isUnsavedContents and setHighlights are example naming conventions, not official WebMCP requirements. No extra HTML markers or JS globals are used.",
   "draft": "Product and storefront setters patch shared drafts through the same app actions as UI. Omitted fields remain; null, unknown fields and invalid types are rejected. No revision counters. Search filters apply immediately without editing product data.",

@@ -70,3 +70,7 @@ The human rejected the visible registration message after PR #30 because it cann
 ## About and direct project navigation — H43 (2026-11-02)
 
 The human replaces the former Guides & navigation destination with a bottom-menu About page and asks for MoveToGithub to navigate directly for the existing project-information prompt. This follow-up to index #1 and merged PR #31 retains six tutorials and the guide route, adds bilingual introductory copy, and uses one ordinary guarded fixed-destination action for UI and the registered tool. Current manuals describe the navigation effect and request-versus-arrival boundary. Actual browser evidence, final reviewed SHA, checks, merge and existing Pages deployment belong on the follow-up PR; proposed performance language is not a benchmark or coverage guarantee.
+
+## Remove the duplicate About-body repository action — H44 (2026-11-02)
+
+Following merged PR #32 and index #1, the human removes the About body's GitHub navigation control because the menu already has it. This follow-up removes the duplicate button and adjacent invitation, retaining the introduction, sidebar action and registered MoveToGithub tool. Current manual/contract descriptions now point to the sidebar action; H43's historical button implementation and verification remain preserved. Final-commit review, checks, merge and Pages evidence belong on the follow-up PR as observed.

@@ -409,17 +409,6 @@ main {
   margin-top:9px;
   font-size:13px;
 }
-.project-actions {
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:12px 18px;
-  padding-top:20px;
-  border-top:1px solid #efedf2;
-}
-.project-actions p {
-  font-size:12px;
-}
 .app-notice {
   margin-bottom:22px;
 }
