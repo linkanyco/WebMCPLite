@@ -49,7 +49,7 @@ The gallery uses **Ant Design with the LobeHub theme**. The reusable [registrati
 - Reduce prices across a SKU prefix with an atomic bulk update.
 - Search by SKU and price, then ask about authorized stock data omitted from the table, scoped to the current results.
 - Edit category-banner HTML/CSS and inspect it in a sandboxed Preview.
-- Find the project information page through registered manuals and navigation.
+- Read the About introduction, then use the shared MoveToGithub action to visit the project repository.
 - Remember product details and create the same product in another tab through its ordinary New product form.
 
 The welcome page introduces AI browser use and WebMCP discovery with a cartoon banner. Tutorial prompts sit above ordinary admin screens. The EN / 한국어 buttons switch interface copy without changing drafts; English is the default. AI highlights start on and `setHighlights` can hide them.

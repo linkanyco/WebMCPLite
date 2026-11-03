@@ -1,6 +1,6 @@
 // UI copy only. Switching language never translates or mutates product records.
 const korean = {
-  'New draft': '새 초안', 'Add product': '상품 추가', 'AI edited': 'AI 수정', 'Welcome': '시작하기', 'Product editor': '상품 편집', 'Bulk editor': '일괄 편집', 'Product list': '상품 목록', 'Storefront editor': '스토어프런트 편집', 'Guides & navigation': '가이드와 이동', 'Memory & Reuse': '기억과 재사용', 'New product': '새 상품',
+  'New draft': '새 초안', 'Add product': '상품 추가', 'AI edited': 'AI 수정', 'Welcome': '시작하기', 'Product editor': '상품 편집', 'Bulk editor': '일괄 편집', 'Product list': '상품 목록', 'Storefront editor': '스토어프런트 편집', 'About': '소개', 'Memory & Reuse': '기억과 재사용', 'New product': '새 상품',
   'Human + AI, together': '사람과 AI가 함께', 'WebMCP specification': 'WebMCP 명세', 'DEMO STORE': '데모 스토어', 'ASK YOUR AI': 'AI에게 이렇게 말해보세요',
   'Polish the English description, then translate it and fill in the Korean description too.': '디스크립션 다듬어주고, 번역해서 한국어 디스크립션도 기입해줘.',
   'Reduce the price of every product whose SKU starts with KEY-1 by 10%.': 'SKU가 KEY-1로 시작하는 제품들 가격을 모두 10% 내려줘.',
@@ -25,7 +25,18 @@ const korean = {
   'Saving…': '저장 중…', 'Unsaved changes': '저장하지 않은 변경사항', 'Saved': '저장됨', 'Save changes': '변경사항 저장', 'Create product': '상품 생성', 'Discard': '변경 취소',
   'Products': '상품', 'Product': '상품명', 'products': '개 상품', 'results': '개 결과', 'Price for': '판매가:', 'SKU contains': 'SKU 포함 문자', 'Maximum price': '최대 가격', 'Reset': '초기화',
   'Storefront custom HTML': '스토어프런트 커스텀 HTML', 'HTML / CSS': 'HTML / CSS', 'Preview': '미리보기', 'Storefront preview': '스토어프런트 미리보기',
-  'Explore the project on GitHub.': '프로젝트는 GitHub에서 확인해보세요.',
+  'ABOUT WEBMCPLITE': 'WEBMCPLITE 소개',
+  'AI-native development guidelines and working examples for building websites with the WebMCP draft.': 'AI-native 개발 가이드와 실행 예제로 WebMCP 규격에 맞는 웹사이트를 쉽게 제작할 수 있도록 돕습니다.',
+  'What is WebMCP?': 'WebMCP란?',
+  'WebMCP is a draft browser API that lets websites offer JavaScript tools to AI agents.': 'WebMCP는 웹사이트가 자바스크립트 도구를 AI 에이전트에 제공할 수 있도록 하는 브라우저 API 초안입니다.',
+  'Read the WebMCP draft': 'WebMCP 명세 보기',
+  'Work together on the same screen': '같은 화면에서 함께 작업하기',
+  'Connecting AI to ordinary app actions can reduce repeated screen interpretation and interaction overhead. The goal is responsive collaboration, where you and your AI can see changes and continue the work on the same screen, even in a complex app.': 'AI를 기존 앱의 작업과 연결해 반복적인 화면 해석과 조작으로 생기는 지연을 줄일 수 있습니다. 복잡한 사이트에서도 사용자와 AI가 같은 화면의 변경을 보고 이어서 작업하는, 자연스러운 협업 경험을 목표로 합니다.',
+  'Give AI useful context and intended actions': 'AI에 필요한 정보와 의도한 작업 제공하기',
+  'Provide authorized information that may not fit in the visible UI, alongside clear actions designed by the web developer.': 'UI 제약으로 화면에 모두 표현하기 어려운 정보도 기존 권한 범위 안에서 AI에 제공하고, 웹 개발자가 의도한 작업을 명확한 도구로 연결할 수 있습니다.',
+  'This helps people use more of a site’s features without first learning every menu. Existing permissions and validation still apply.': '사용자가 모든 메뉴를 미리 익히지 않아도 사이트의 기능을 더 폭넓게 활용하도록 돕습니다. 기존 권한과 검증 규칙은 그대로 적용됩니다.',
+  'Open GitHub': 'GitHub로 이동',
+  'Explore the development guide and examples on GitHub.': 'GitHub에서 개발 가이드와 예제를 살펴보세요.',
   'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드', 'License': '라이선스', 'Third-party notices': '제삼자 고지',
   'Save or discard changes in every form on this page before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.',
   'Name, SKU and product code are required before saving.': '저장하기 전에 상품명, SKU, 상품 코드를 입력해주세요.', 'Save or discard every current-page form before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.', 'Invalid product value.': '상품 입력값을 확인해주세요.', 'Invalid field type or length.': '입력값의 형식이나 길이를 확인해주세요.', 'Invalid search filters.': '검색 조건을 확인해주세요.'

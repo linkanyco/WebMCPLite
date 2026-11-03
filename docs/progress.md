@@ -66,3 +66,7 @@ All 23 contract/artifact tests passed, including a distribution check for the co
 ## Support guidance without a connection-status claim — H42 (2026-11-02)
 
 The human rejected the visible registration message after PR #30 because it cannot establish the AI's connection. This follow-up to index #1 removes the agent-selected status UI and its display-only state/copy, while retaining standard tool registration and ordinary UI. The existing welcome guidance states that both the browser and AI need WebMCP support; it does not report a confirmed connection. README, the runtime manual and current contracts now describe that boundary. H41's status implementation remains a historical record, superseded by H42. Actual browser checks, final-commit review, CI, merge and Pages evidence belong on the follow-up PR as observed.
+
+## About and direct project navigation — H43 (2026-11-02)
+
+The human replaces the former Guides & navigation destination with a bottom-menu About page and asks for MoveToGithub to navigate directly for the existing project-information prompt. This follow-up to index #1 and merged PR #31 retains six tutorials and the guide route, adds bilingual introductory copy, and uses one ordinary guarded fixed-destination action for UI and the registered tool. Current manuals describe the navigation effect and request-versus-arrival boundary. Actual browser evidence, final reviewed SHA, checks, merge and existing Pages deployment belong on the follow-up PR; proposed performance language is not a benchmark or coverage guarantee.
