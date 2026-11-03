@@ -10,10 +10,10 @@ One fictional ecommerce administrator uses six tutorials. English is the default
 | `?page=bulk` | Reduce the price of every product whose SKU starts with KEY-1 by 10%. | getProducts / setProducts |
 | `?page=sheet` | Find products with KEY in the SKU priced at $20 or less. Then: among these results, are any at 5 units of stock or fewer? | setSearch / getProducts, getProduct |
 | `?page=board` | Move each category name to the center of its image and add a white text shadow. | getStorefront / setStorefront / previewStorefront |
-| `?page=guide` | I really like this site. Where can I find more information about it? | site_manual / site_map / navigate |
 | `?page=async` | Create an identical product in a new tab. | getProduct; browser opens `?page=new`; destination setProduct / save |
+| `?page=guide` (About, last menu item) | I really like this site. Where can I find more information about it? | MoveToGithub: navigate directly to the fixed project repository in this tab |
 
-`?page=home` is the welcome page with discovery prompts and the cartoon banner. `?page=new` is the supporting creation form, not a seventh tutorial. The legacy `sheet`, `board` and `async` route IDs are retained for existing links. There is no duplicate button or tool, custom tool protocol, shared browser storage or cross-tab synchronization.
+`?page=home` is the welcome page with discovery prompts and the cartoon banner. `?page=new` is the supporting creation form, not a seventh tutorial. The legacy `sheet`, `board`, `async` and `guide` route IDs are retained for existing links. About introduces WebMCP and WebMCPLite; its Open GitHub action and the globally registered MoveToGithub tool share the same fixed-destination JavaScript navigation. No URL argument is accepted. Unsaved drafts or an active save block leaving; this action never saves. A returned navigationRequested is not proof of arrival: inspect the browser URL. This request uses the action instead of merely returning the repository address. There is no duplicate button or tool, custom tool protocol, shared browser storage or cross-tab synchronization.
 
 ## Data and visible outcomes
 

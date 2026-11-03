@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildTools, pages } from '../examples/tools.js';
+import { buildTools, pages, projectRepositoryUrl } from '../examples/tools.js';
 import { createWorkspace, pageAreas } from '../examples/workspace.js';
-function fixture(page) {
+function fixture(page, { moveToGithub = () => ({ ok: true, navigationRequested: true, url: projectRepositoryUrl }) } = {}) {
   const w = createWorkspace(); let tools;
   const metadata = () => tools.map(({ execute, ...info }) => structuredClone(info));
-  tools = buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), setHighlights: enabled => ({ ok: true, enabled }), getTools: metadata });
+  tools = buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), moveToGithub, setHighlights: enabled => ({ ok: true, enabled }), getTools: metadata });
   return { w, metadata, call: (name, input = {}) => tools.find(t => t.name === name).execute(input) };
 }
 test('page manuals derive exact contracts; map covers six tutorials and supporting routes', async () => {
@@ -18,6 +18,23 @@ test('page manuals derive exact contracts; map covers six tutorials and supporti
     }
     if (!pageAreas[p.id].length) assert.ok(!metadata().some(t => t.name === 'save'));
   }
+});
+test('project navigation delegates to the shared fixed-destination app action without accepting URLs', async () => {
+  assert.equal(pages.filter(page => page.id !== 'new').at(-1).id, 'guide');
+  for (const page of pages) {
+    let calls = 0;
+    const blocked = { ok: false, error: { code: 'unsaved', message: 'Save or discard before leaving.' } };
+    const { call, metadata } = fixture(page.id, { moveToGithub: () => { calls++; return blocked; } });
+    const tool = metadata().find(tool => tool.name === 'MoveToGithub');
+    assert.equal(tool.annotations.readOnlyHint, false);
+    for (const input of [null, [], { url: 'https://example.test/' }, { page: 'guide' }]) {
+      assert.equal((await call('MoveToGithub', input)).error.code, 'validation');
+      assert.equal(calls, 0);
+    }
+    assert.deepEqual(await call('MoveToGithub'), blocked);
+    assert.equal(calls, 1);
+  }
+  assert.deepEqual(await fixture('guide').call('MoveToGithub'), { ok: true, navigationRequested: true, url: projectRepositoryUrl });
 });
 test('product translation shares drafts, validates readonly fields and retains other values', async () => {
   const { w, call } = fixture('product'), before = w.read('catalog');

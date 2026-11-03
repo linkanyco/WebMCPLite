@@ -616,3 +616,22 @@ WebMCP tools registered. 는 없어야될꺼 같은데 확정 짓지도 못하�
 ```
 
 Agent summary: Do not present tool registration as a confirmed connection or readiness statement. A requirement to have browser/AI support is acceptable guidance. Removing the status component and keeping the existing welcome requirement text are AP choices; the human did not request removing WebMCP registration or adding a connection-detection feature.
+
+## H43 — About at the bottom and an action that opens GitHub
+
+Status: Explicit follow-up in this execution chat, 2026-11-02 (America/Los_Angeles). Source locator: the message opening “가이드 & 네비는”. This supersedes H34's link-only project-information choice.
+
+Human request (verbatim):
+
+```text
+가이드 & 네비는 메뉴 젤 밑으로 내리고 소개 페이지로 두자. 그리고 **I really like this site. Where can I find more information about it? 라고 하면 주소가 먼저 알려주는게 아니라 MoveToGithub() 을 호출 시키면서 js로 바로 깃헙으로 이동하면되는거야**
+
+설명에는 그냥 WebMCP가 뭐고 해당 사이트는 어디다. WebMCPLite는 해당 규격에 맞춰서 쉽게 사이트를 제작할 수 있는 ai natvie용 개발 가이드를 제공한다.
+복잡한 사이트에서도 Ai가 빠르게 작업할 수 있고 레이턴시를 최소화함으로써, 사용자와 AI가 화면 쉐어를 하고 같이 작업하는것과 같은 경험을 줄 수 있다.
+UI 제약상 표현할 수 없는 정보를 Ai에게 제공할 수 있고,
+웹 개발자가 의도한 액션을 Ai에게 제공해줄 수 있어서, 사용자가 사이트를 숙지하지 못해도 페이지를 100% 활용할 수 있게 해준다.
+
+이정도 어때?
+```
+
+Agent summary: Make the former guide/navigation page a bottom-menu introduction and map its existing English prompt to the exact app tool name MoveToGithub, which performs fixed-destination JavaScript navigation. Explain WebMCP and WebMCPLite's purpose in English-default/Korean UI. The proposed speed/latency/100% wording expresses the intended experience, not a measured result. AP copy preserves that purpose while avoiding guarantees; authorized hidden context and ordinary app actions retain existing permissions. Reusing the page route, making the tool available across pages, using existing unsaved/busy guards, scheduling the navigation callback and the exact prose are AP. The user authorizes the direct navigation example to this public repository, not another GitHub administration interface or new destination.

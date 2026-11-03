@@ -3,10 +3,12 @@
   "start": "Discover the tools registered on document.modelContext. Call site_map, site_manual and page_manual as needed. Read current data before editing and rediscover tools after changing pages or tabs.",
   "projectInformation": {
     "url": "?page=guide",
-    "purpose": "A short project introduction and its GitHub repository link.",
-    "repository": "https://github.com/linkanyco/WebMCPLite"
+    "purpose": "About: the last menu item introduces WebMCP and WebMCPLite.",
+    "repository": "https://github.com/linkanyco/WebMCPLite",
+    "action": "MoveToGithub",
+    "usage": "For a request such as \"I really like this site. Where can I find more information about it?\", call MoveToGithub({}) to navigate directly to the project repository in this tab rather than only reporting its address. It uses the ordinary Open GitHub action, accepts no URL, and refuses unsaved drafts or a pending save. It does not save. navigationRequested reports a request; inspect the browser destination to confirm arrival."
   },
-  "conventions": "site_map, site_manual, page_manual, navigate, isUnsavedContents and setHighlights are example naming conventions, not official WebMCP requirements. No extra HTML markers or JS globals are used.",
+  "conventions": "site_map, site_manual, page_manual, navigate, MoveToGithub, isUnsavedContents and setHighlights are example naming conventions, not official WebMCP requirements. No extra HTML markers or JS globals are used.",
   "draft": "Product and storefront setters patch shared drafts through the same app actions as UI. Omitted fields remain; null, unknown fields and invalid types are rejected. No revision counters. Search filters apply immediately without editing product data.",
   "save": "save({form}) saves only to this tab's memory. Await saved:true. Reload resets the examples. Tabs have independent state; there is no shared backend. cancel({form}) restores the saved draft baseline.",
   "search": "On Product list, setSearch patches visible skuContains and maxPrice controls. getProducts reads only the current filtered results and includes authorized stock data omitted from the table. For a follow-up stock question keep the filters and inspect these current results; do not search the whole catalog again or modify stock.",
