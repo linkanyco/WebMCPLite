@@ -16,7 +16,7 @@ The project has two deliverables: an example site and developer guidelines. Star
 
 The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage and UI dependencies are not prerequisites for your app.
 
-For files, the guide explains ordinary file inputs, concrete page-manual guidance and a mixed browser/tool workflow. Keep file bytes out of JSON setters; use a supported browser attachment action or let the user select files. The supporting New product form demonstrates optional reference files and their relation to the same product draft. See the [file walkthrough](examples/README.md#optional-reference-files-on-new-product) for limits and current client support.
+For files, the guide explains ordinary file inputs, file-input guidance in discovered tool definitions and a mixed browser/tool workflow. Keep file bytes out of JSON setters; use a supported browser attachment action or let the user select files. The supporting New product form demonstrates optional reference files and their relation to the same product draft. See the [file walkthrough](examples/README.md#optional-reference-files-on-new-product) for limits and current client support.
 
 Ask your development AI, worker or reviewer to follow the guide:
 
@@ -56,6 +56,12 @@ The welcome page introduces AI browser use and WebMCP discovery with a cartoon b
 
 Setters update drafts; saving is a separate action. Calls do not require revision counters. These are example app contracts, not additional requirements imposed by WebMCP.
 
+## One discovery for ordinary work
+
+Tool definitions carry the scope, draft/save effects, concise examples and relevant file guidance needed to start work. No `page_manual` or `site_manual` call is required. `site_map` is available for navigation; large specialized guidance should need at most one optional additional read. This is a design convention, not a client context-injection guarantee.
+
+Start with a developer-adjustable advisory of 100 KB (100,000 UTF-8 bytes of serialized metadata), measured by `npm run context:report`. It is not an official limit or a claim that every LLM accepts 100 KB safely. Keep definitions smaller when possible; never truncate required contracts or drop tools automatically. [Open questions](ISSUES.md) track sizing, split criteria and mobile support.
+
 ## One WebMCP entry point
 
 Runtime tools register through **`document.modelContext`**. Browser agents discover and invoke registered tools through the browser's capabilities. In-page JavaScript requires the draft's `getTools()` and `executeTool()` APIs; the [walkthrough](examples/README.md) shows that path separately.
@@ -70,6 +76,7 @@ The project follows the linked draft API; it is not a standards certification. [
 
 - [Development guidelines](docs/development-guidelines.md) and [consumer AGENTS.md harness](docs/consumer-AGENTS.md): building new screens or adapting existing ones.
 - [Example contracts](docs/contracts.md): the gallery's concrete inputs, effects and storage choices.
+- [ISSUES.md](ISSUES.md): open questions about sizing, splitting and mobile support.
 - [PLANS.md](PLANS.md) and [source evidence](docs/sources/human-intent.md): human requests, research, and implementation choices kept separate.
 - [Progress](docs/progress.md), [independent reviews](docs/reviews/README.md), and [issue index](https://github.com/linkanyco/WebMCPLite/issues/1): delivery records.
 - [AGENTS.md](AGENTS.md): rules for development agents working in this repository, distinct from runtime manuals.

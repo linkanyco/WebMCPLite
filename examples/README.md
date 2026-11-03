@@ -27,7 +27,7 @@ Save updates a baseline **in the current tab's memory only**. Reload resets all 
 
 ## Standard WebMCP entry point
 
-Tools register through `document.modelContext`. Discover site_map, site_manual and page_manual as needed; these names are example conventions, not official requirements. The landing prompt helps an AI find supported tools but cannot add missing browser or AI support. Rediscover tools after page/tab changes.
+Tools register through `document.modelContext`. Use discovered action descriptions, schemas and examples directly; this gallery has no page_manual/site_manual tools or prerequisite guidance fetch. site_map is the optional navigation read. These are example conventions, not official requirements. The landing prompt helps an AI find supported tools but cannot add missing browser or AI support. Rediscover tools after page/tab changes.
 
 Browser-agent discovery is separate from in-page getTools/executeTool support. In-page invocation passes the exact discovered RegisteredTool, including its host-object identity, and parses the returned JSON string once:
 
@@ -61,10 +61,10 @@ Open `?page=new` directly or use Product list → Add product. This extends the 
 
 Try this mixed workflow with fictional files you own:
 
-1. Discover this tab's tools through the browser's WebMCP capability. Call `page_manual({})` for `fileInputs`, then `getProduct({})` to identify the target draft.
+1. Discover this tab's tools through the browser's WebMCP capability. Read the `getProduct` definition for its embedded file-input guidance, then call `getProduct({})` to identify the target draft.
 2. Call `setProduct({patch:{sku:"REF-001",productCode:"PRD-2001",name:"Reference keyboard",price:89}})`. This edits ordinary fields and does not select files or save.
 3. In an agent/browser that supports attaching local files, use its file-attachment action on `#new-product-files` to select `specification.pdf` and `front.png` together. This is a browser action, **not** a WebMCP `setFile` call. If attachment is unsupported or the files are inaccessible, ask the user to select them through that same input and continue after selection.
 4. Check the visible filenames/errors and call `getProduct({})` again. Its top-level `files` list should describe the two files; `dirty:true` means a draft, not upload success. Continue editing the name in ordinary UI; the file list stays intact.
 5. Only when explicitly asked to save, call `save({form:"newProduct"})` and await `saved:true, storage:"tab-memory"`. Clear the list, then Discard to see the saved list return. Reload to reset the form and files.
 
-Do not put base64, local paths or invented file references into setProduct. This approach keeps large bytes out of model/tool JSON; it does not add a new transport or remove host/browser upload limits. As checked on 2026-10-28, OpenAI's [Browser docs](https://learn.chatgpt.com/docs/browser) say built-in-browser automatic uploads are unsupported, and [Site tools docs](https://learn.chatgpt.com/docs/webmcp) exclude declarative forms. WebMCP tool discovery does not establish file attachment support. See [verification](../docs/verification.md) for actual observations and untested paths.
+Do not put base64, local paths or invented file references into setProduct. This approach keeps large bytes out of model/tool JSON; it does not add a new transport or remove host/browser upload limits. WebMCP discovery does not establish browser file-attachment support. See [verification](../docs/verification.md) for dated observations and untested paths.

@@ -31,7 +31,7 @@ export const initialStorefront = `<style>
   <div class="category"><h2>Work together</h2><img alt="Shared workspace" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&auto=format&fit=crop&q=80"></div>
 </div>`;
 export const pageAreas = { home: [], product: ['catalog'], bulk: ['catalog'], sheet: [], board: ['storefront'], guide: [], async: ['catalog'], new: ['newProduct'] };
-// App-owned input guidance, reused by the ordinary UI and its registered page manual.
+// App-owned input guidance, reused by the ordinary UI and its registered tool definitions.
 export const productFileInput = {
   id: 'new-product-files', selector: '#new-product-files', label: 'Product reference files',
   multiple: true, accept: '.pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg',

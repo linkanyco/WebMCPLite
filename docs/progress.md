@@ -74,3 +74,7 @@ The human replaces the former Guides & navigation destination with a bottom-menu
 ## Remove the duplicate About-body repository action — H44 (2026-11-02)
 
 Following merged PR #32 and index #1, the human removes the About body's GitHub navigation control because the menu already has it. This follow-up removes the duplicate button and adjacent invitation, retaining the introduction, sidebar action and registered MoveToGithub tool. Current manual/contract descriptions now point to the sidebar action; H43's historical button implementation and verification remain preserved. Final-commit review, checks, merge and Pages evidence belong on the follow-up PR as observed.
+
+## Discovery-first guidance — H45 (2026-11-02)
+
+This follow-up to index #1 removes the gallery's duplicate page/site-manual tool reads and fetched manual asset. Action descriptions, schemas/examples and New product's embedded input guidance provide ordinary task context on discovery; site_map remains. A build-only context reporter uses an adjustable 100,000-byte advisory without truncating, blocking or dropping tools. ISSUES.md preserves split criteria, mobile and sizing as open questions. Documentation/consumer harness follow the same convention; historical manual tests remain dated history. Native browser observations, final reviewed SHA, required checks, merge and Pages evidence belong on the follow-up PR. Separately authorized downstream adoption waits for this exact-final review and retains the consuming repository's own gates.

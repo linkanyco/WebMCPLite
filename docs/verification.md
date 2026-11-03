@@ -4,6 +4,14 @@ Reference date: **2026-10-25 (America/Los_Angeles)**. GitHub records may show th
 
 The initial tables below are **historical observations before H32/H33**. Their public JS fallback, revision checks, domain terminology, setup, and artifact layout are not current recommendations. Subsequent corrections are described separately.
 
+## Discovery-first guidance — H45 (2026-11-02)
+
+All 24 automated contract/artifact tests and the production build passed on the local Node/macOS environment. The existing large UI-chunk advisory remains. The context reporter measured 1,816–5,574 UTF-8 bytes of JSON-serialized tool definitions per page, excluding callbacks and results, against the initial 100,000-byte advisory. Running with WEBMCP_CONTEXT_BUDGET_BYTES=10 reported every page over budget with unchanged counts/sizes and a successful exit; the reporter does not block or truncate registration. These are local source-metadata measurements, not browser/model context sizes or latency guarantees.
+
+Actual local Codex IAB discovery exposed ten bulk-page tools with descriptions, schemas and the setter example, and no page_manual/site_manual. Without a manual call, getProducts returned current data and setProducts reduced all eight KEY-1-prefixed products by 10%; visible prices and AI marks matched the returned draft. Ordinary UI Discard restored the original prices and removed the unsaved state. A desktop screenshot was inspected. After normal tool navigation, New product discovery exposed nine tools and included the complete app-owned ordinary-file-input guidance in getProduct's description, including selector, limits, replacement/save semantics and user handoff. No file attachment was repeated in this pass.
+
+These observations verify available browser discovery and invocation separately from fake-registration tests. They do not guarantee every AI will select an action, inject all definitions into its prompt, accept 100 KB, or discover every registered tool. Engine/version was not exposed; mobile, other clients and measured discovery latency remain unverified. Final-commit independent review, CI, merge and deployment evidence belong on the follow-up PR.
+
 ## Historical initial environments
 
 | Environment | Observed | Limits |

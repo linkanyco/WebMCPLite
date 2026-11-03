@@ -21,9 +21,7 @@ test('bundled artifact contains only runtime files, stamps its SHA and resolves 
     assert.ok(files.some(file => /^assets\/.+\.css$/.test(file)));
     assert.ok(files.every(file => ['index.html', 'version.json', 'third-party-notices.txt'].includes(file) || file.startsWith('assets/')));
     assert.ok(files.every(file => !/\.(?:map|md|jsx)$/.test(file)));
-    const manualFile = files.find(file => /^assets\/manual-.+\.json$/.test(file));
-    assert.ok(manualFile, 'the runtime manual is emitted as a bundled asset');
-    JSON.parse(await readFile(path.join(destination, manualFile), 'utf8'));
+    assert.ok(!files.some(file => /^assets\/manual-.+\.json$/.test(file)), 'discovery guidance does not need a fetched manual asset');
     const licenseFile = files.find(file => /^assets\/LICENSE-.+\.txt$/.test(file));
     assert.ok(licenseFile, 'the distributed site includes the full project license');
     assert.equal(await readFile(path.join(destination, licenseFile), 'utf8'),
@@ -56,7 +54,7 @@ test('bundled artifact contains only runtime files, stamps its SHA and resolves 
     }
     const runtime = (await Promise.all(files.filter(file => file.endsWith('.js')).map(file => readFile(path.join(destination, file), 'utf8')))).join('\n');
     assert.doesNotMatch(runtime, /window\.webmcpLite/);
-    assert.ok(runtime.includes(path.basename(manualFile)), 'the bundled tool references its emitted manual');
+    assert.doesNotMatch(runtime, /page_manual|site_manual/, 'the runtime does not require separate manual tools');
     assert.ok(runtime.includes(path.basename(licenseFile)), 'the site links to its emitted license notice');
     assert.ok(runtime.includes('third-party-notices.txt'), 'the site links to bundled upstream notices');
     await assert.rejects(buildSite(destination, 'invalid'), TypeError);
