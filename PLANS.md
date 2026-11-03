@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H41 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H42 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -217,3 +217,9 @@ AP: extend the portable guide and compact harness, and describe file inputs thro
 R: WebMCP's official repository licenses its reports under the W3C Software and Document License (2023 version). That is a permissive license with notice and other conditions, not no license. SPDX retains `W3C-20150513` for the 2023 text; see [research](docs/sources/research.md).
 
 AP: remove the dedicated playground/tab and its unused caller while keeping a small registration-status message and the six tutorials. Introduce AI browser use in the English-default/bilingual welcome page, README and the guide without claiming a measured speedup or universal compatibility. Attribute README's ChatGPT test statement to the project author; existing recorded browser tests remain Codex IAB observations, not new ChatGPT validation. Apply the same W3C license to original WebMCPLite code/documents, preserve third-party terms, and make the full project and bundled-dependency notices available in the built gallery. No new dependency, protocol, tutorial, production service or publishing destination is added. Validate shared editing and navigation in the real available browser, required checks, final-commit independent review, merge and existing Pages deployment.
+
+## 21. Support guidance without a connection-status claim — H42
+
+[H42 evidence](docs/sources/human-intent.md) rejects the visible “WebMCP tools registered.” message because the site cannot establish the AI's connection. It allows guidance about the need to be connected rather than a confirmed-status claim. This supersedes H41's agent-selected registration-status UI, not standard tool registration.
+
+AP: remove the registration-status component, its display-only state and copy. Keep the existing welcome guidance that both the browser and AI need WebMCP support, without adding a replacement status indicator or connection detector. Update current README/manual/contract descriptions; preserve H41's historical implementation and verification record. Verify ordinary editing and actual browser tool discovery separately, then record final-commit review, required checks and the existing Pages deployment on the follow-up PR.

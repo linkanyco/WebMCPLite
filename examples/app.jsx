@@ -24,7 +24,7 @@ const workspace = createWorkspace({ onChange: () => { notice = null; emit(); } }
 let page = new URL(location.href).searchParams.get('page') || 'home';
 if (!pages.some(p => p.id === page)) page = 'home';
 let entry = Number.isInteger(history.state?.liteEntry) ? history.state.liteEntry : 0;
-let restoring = false, bridge, definitions = [], registration = 'pending', highlights = true;
+let restoring = false, bridge, definitions = [], highlights = true;
 let notice = null, language = 'en';
 const t = text => translate(text, language);
 function setLanguage(value) { language = value; document.documentElement.lang = value; emit(); }
@@ -58,15 +58,9 @@ function setHighlights(enabled) { highlights = enabled; emit(); return { ok: tru
 const saveOptions = () => ({});
 const metadata = () => definitions.map(({ execute, ...tool }) => structuredClone(tool));
 function activate() {
-  bridge?.dispose(); registration = 'pending';
+  bridge?.dispose();
   definitions = buildTools({ workspace, page, navigate, setHighlights, getTools: metadata, saveOptions });
   bridge = connectTools(definitions);
-  const owner = bridge;
-  owner.ready.then(states => {
-    if (owner !== bridge) return;
-    registration = states.every(s => s.state === 'registered') ? 'registered' : states.some(s => s.state === 'failed') ? 'failed' : 'unsupported';
-    emit();
-  });
   emit();
 }
 activate();
@@ -128,14 +122,10 @@ function StorefrontEditor() {
 function ProjectInfo() {
   return <section className="surface project-info"><Github size={36} strokeWidth={1.4} /><h2>{t('Explore the project on GitHub.')}</h2><a href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer">WebMCPLite<ExternalLink size={15} /></a></section>;
 }
-function RegistrationStatus() {
-  const message = registration === 'pending' ? 'Checking browser support…' : registration === 'failed' ? 'Registration failed. Ordinary UI remains usable.' : registration === 'registered' ? 'WebMCP tools registered.' : 'WebMCP is unavailable. Ordinary UI remains usable.';
-  return <p className="connection-status" role="status">{t(message)}</p>;
-}
 function WorkspaceApp() {
   useSyncExternalStore(subscribe, () => snapshot);
   const current = pages.find(p => p.id === page), commit = document.querySelector('meta[name="build-commit"]')?.content;
   const content = page === 'home' ? <Home /> : page === 'product' || page === 'async' || page === 'new' ? <ProductEditor /> : page === 'bulk' ? <BulkEditor /> : page === 'sheet' ? <ProductList /> : page === 'board' ? <StorefrontEditor /> : <ProjectInfo />;
-  return <ConfigProvider locale={language === 'ko' ? koKR : enUS}><div className="app-shell"><aside className="sidebar"><a className="brand" href="?page=home" onClick={e => { e.preventDefault(); report(navigate('home')); }}><span className="brand-mark"><Workflow size={22} /></span><span>WebMCP<span className="brand-lite">Lite</span><small>{t('Human + AI, together')}</small></span></a><nav aria-label="Tutorial pages">{pages.filter(p => p.id !== 'new').map(p => { const Icon = icons[p.id]; return <a key={p.id} href={'?page=' + p.id} aria-current={page === p.id ? 'page' : undefined} onClick={e => { e.preventDefault(); report(navigate(p.id)); }}><Icon size={17} /><span>{t(p.title)}</span></a>; })}</nav><div className="sidebar-bottom"><a className="sidebar-link" href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer"><Github size={16} />GitHub<ExternalLink size={12} /></a><a className="sidebar-link" href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noreferrer"><BookOpen size={16} />{t('WebMCP specification')}<ExternalLink size={12} /></a></div></aside><div className="main-shell"><header className="topbar"><div className="breadcrumbs"><span>WebMCPLite</span><ChevronRight size={13} /><strong>{t(current.title)}</strong></div><div className="topbar-actions"><div className="language-switch" role="group" aria-label="Interface language"><button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button><button type="button" aria-pressed={language === 'ko'} onClick={() => setLanguage('ko')}>한국어</button></div><span className="store-label">{t('DEMO STORE')}</span></div></header><main>{page !== 'home' && <PromptCard />}<div className={page === 'home' ? 'home-content' : 'application-stage'}><RegistrationStatus />{notice && <Alert className="app-notice" type={notice.type} showIcon title={t(notice.message)} closable onClose={() => { notice = null; emit(); }} />}{content}</div><footer><span>{t('Fictional data · Saved in this tab · Reload to reset')} · <a className="license-link" href={licenseUrl} target="_blank" rel="noreferrer">{t('License')}</a>{import.meta.env.PROD && <> · <a className="license-link" href={import.meta.env.BASE_URL + 'third-party-notices.txt'} target="_blank" rel="noreferrer">{t('Third-party notices')}</a></>}</span>{commit ? <a href={'https://github.com/linkanyco/WebMCPLite/commit/' + commit} target="_blank" rel="noreferrer">{t('Build')} {commit.slice(0, 7)}<ExternalLink size={11} /></a> : <span>{t('Local preview')}</span>}</footer></main></div></div></ConfigProvider>;
+  return <ConfigProvider locale={language === 'ko' ? koKR : enUS}><div className="app-shell"><aside className="sidebar"><a className="brand" href="?page=home" onClick={e => { e.preventDefault(); report(navigate('home')); }}><span className="brand-mark"><Workflow size={22} /></span><span>WebMCP<span className="brand-lite">Lite</span><small>{t('Human + AI, together')}</small></span></a><nav aria-label="Tutorial pages">{pages.filter(p => p.id !== 'new').map(p => { const Icon = icons[p.id]; return <a key={p.id} href={'?page=' + p.id} aria-current={page === p.id ? 'page' : undefined} onClick={e => { e.preventDefault(); report(navigate(p.id)); }}><Icon size={17} /><span>{t(p.title)}</span></a>; })}</nav><div className="sidebar-bottom"><a className="sidebar-link" href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer"><Github size={16} />GitHub<ExternalLink size={12} /></a><a className="sidebar-link" href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noreferrer"><BookOpen size={16} />{t('WebMCP specification')}<ExternalLink size={12} /></a></div></aside><div className="main-shell"><header className="topbar"><div className="breadcrumbs"><span>WebMCPLite</span><ChevronRight size={13} /><strong>{t(current.title)}</strong></div><div className="topbar-actions"><div className="language-switch" role="group" aria-label="Interface language"><button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button><button type="button" aria-pressed={language === 'ko'} onClick={() => setLanguage('ko')}>한국어</button></div><span className="store-label">{t('DEMO STORE')}</span></div></header><main>{page !== 'home' && <PromptCard />}<div className={page === 'home' ? 'home-content' : 'application-stage'}>{notice && <Alert className="app-notice" type={notice.type} showIcon title={t(notice.message)} closable onClose={() => { notice = null; emit(); }} />}{content}</div><footer><span>{t('Fictional data · Saved in this tab · Reload to reset')} · <a className="license-link" href={licenseUrl} target="_blank" rel="noreferrer">{t('License')}</a>{import.meta.env.PROD && <> · <a className="license-link" href={import.meta.env.BASE_URL + 'third-party-notices.txt'} target="_blank" rel="noreferrer">{t('Third-party notices')}</a></>}</span>{commit ? <a href={'https://github.com/linkanyco/WebMCPLite/commit/' + commit} target="_blank" rel="noreferrer">{t('Build')} {commit.slice(0, 7)}<ExternalLink size={11} /></a> : <span>{t('Local preview')}</span>}</footer></main></div></div></ConfigProvider>;
 }
 createRoot(document.getElementById('root')).render(<LobeConfigProvider motion={motion} locale="en-US"><ThemeProvider defaultAppearance="light" enableCustomFonts={false} customTheme={{ neutralColor: 'slate' }} theme={{ token: { fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', borderRadius: 8, controlHeight: 38 } }}><WorkspaceApp /></ThemeProvider></LobeConfigProvider>);

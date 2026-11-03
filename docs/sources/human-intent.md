@@ -604,3 +604,15 @@ Human request (verbatim):
 ```
 
 Agent summary: Add introductory positioning, not a request to expand the guide's technical instructions. Remove the dedicated Developer tools tab/playground while retaining normal UI and WebMCP registrations. Add a short author-reported ChatGPT test statement; do not relabel recorded Codex browser checks as new ChatGPT testing. Research WebMCP's license before selecting a similar permissive license: the later wording qualifies the initial MIT suggestion. Exact copy, selecting the same W3C software/document license and bundling its notice are AP; they do not imply W3C affiliation or zero conditions.
+
+## H42 — Remove the registration-status assertion
+
+Status: Explicit follow-up in this execution chat, 2026-11-02 (America/Los_Angeles). Source locator: the message opening “WebMCP tools registered.”. This corrects the agent-selected status UI retained during H41.
+
+Human request (verbatim):
+
+```text
+WebMCP tools registered. 는 없어야될꺼 같은데 확정 짓지도 못하고 연결되어 있어야해요. 뭐 이런거면 모르겠지만
+```
+
+Agent summary: Do not present tool registration as a confirmed connection or readiness statement. A requirement to have browser/AI support is acceptable guidance. Removing the status component and keeping the existing welcome requirement text are AP choices; the human did not request removing WebMCP registration or adding a connection-detection feature.
