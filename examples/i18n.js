@@ -12,8 +12,8 @@ const korean = {
   'Use the product details you read in the other tab to fill in this new product.': '다른 탭에서 읽은 상품 정보로 이 새 상품을 채워줘.',
   'This website exposes WebMCP tools through document.modelContext. Use your browser’s WebMCP support to discover the tools registered on this page. Read site_manual, site_map and page_manual to get started. For file tasks, read page_manual for the ordinary file input and use supported browser attachment or ask me to select the files. If WebMCP is unavailable in your browser or AI environment, tell me.': '이 웹사이트는 document.modelContext를 통해 WebMCP 도구를 제공해. 브라우저의 WebMCP 기능으로 이 페이지에 등록된 도구를 찾아줘. site_manual, site_map, page_manual을 읽고 시작해줘. 파일 작업은 page_manual에서 일반 파일 입력 안내를 읽고, 지원되는 브라우저 첨부 기능을 쓰거나 내가 파일을 선택하도록 요청해줘. 브라우저나 AI 환경에서 WebMCP를 사용할 수 없다면 알려줘.',
   'Now that you have discovered WebMCP, what can you do on this page?': 'WebMCP 인식 후, 지금 페이지에서 WebMCP로 할 수 있는 일이 뭐야?',
-  'A SHARED WORKSPACE FOR YOU AND YOUR AI': '나와 AI가 함께 사용하는 작업 공간', 'One website.': '하나의 웹사이트.', 'Two collaborators.': '함께하는 사람과 AI.',
-  'Ask your AI. Watch the page change. Pick up where it leaves off.': 'AI에게 부탁하고, 화면의 변화를 확인하고, 이어서 작업하세요.',
+  'A SHARED WORKSPACE FOR YOU AND YOUR AI': '나와 AI가 함께 사용하는 작업 공간', 'Give AI browser use': 'AI 브라우저 유즈에', 'a boost.': '날개를 달아주세요.',
+  'A practical way to build websites for AI browser use, with WebMCP connecting AI to the data and actions people use on the same page.': 'AI 브라우저 유즈를 돕는 웹사이트 개발법입니다. WebMCP로 같은 화면의 데이터와 작업을 연결해 사람과 AI가 함께 사용할 수 있게 합니다.',
   'Help your AI find WebMCP': 'AI가 WebMCP를 발견하도록 도와주세요', 'Already connected? Skip to the next prompt. Your AI and browser need WebMCP access.': '이미 연결됐다면 다음 프롬프트로 넘어가세요. AI와 브라우저의 WebMCP 지원이 필요해요.',
   'Ask what this page can do': '지금 페이지에서 가능한 일을 물어보세요', 'You can ask this on any page.': '어느 페이지에서든 물어볼 수 있어요.',
   'Take a tour': '각 페이지를 둘러보세요', 'Use the menu to visit each page and try its tutorial prompt with your AI.': '메뉴에서 각 페이지로 이동해 AI와 튜토리얼 프롬프트를 실행해보세요.', 'Try the product editor': '상품 편집 시작하기', 'Copy prompt': '프롬프트 복사', 'Copied': '복사됨',
@@ -25,9 +25,9 @@ const korean = {
   'Saving…': '저장 중…', 'Unsaved changes': '저장하지 않은 변경사항', 'Saved': '저장됨', 'Save changes': '변경사항 저장', 'Create product': '상품 생성', 'Discard': '변경 취소',
   'Products': '상품', 'Product': '상품명', 'products': '개 상품', 'results': '개 결과', 'Price for': '판매가:', 'SKU contains': 'SKU 포함 문자', 'Maximum price': '최대 가격', 'Reset': '초기화',
   'Storefront custom HTML': '스토어프런트 커스텀 HTML', 'HTML / CSS': 'HTML / CSS', 'Preview': '미리보기', 'Storefront preview': '스토어프런트 미리보기',
-  'Explore the project on GitHub.': '프로젝트는 GitHub에서 확인해보세요.', 'Developer tools': '개발자 도구', 'Tool playground': '도구 플레이그라운드', 'Registered tool': '등록된 도구', 'Arguments': '입력값', 'Execute tool': '도구 실행', 'Response': '응답', 'Input schema': '입력 스키마', 'No tool response yet.': '아직 도구 응답이 없어요.',
-  'Checking browser support…': '브라우저 지원 확인 중…', 'Registration failed.': '도구 등록에 실패했어요.', 'WebMCP is unavailable. Ordinary UI remains usable.': 'WebMCP를 사용할 수 없어요. 일반 화면은 그대로 이용할 수 있어요.', 'Tools registered. In-page invocation is unavailable.': '도구가 등록됐어요. 페이지 내 호출 기능은 사용할 수 없어요.', 'tools registered · in-page invocation ready': '개 도구 등록 · 페이지 내 호출 가능',
-  'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드',
+  'Explore the project on GitHub.': '프로젝트는 GitHub에서 확인해보세요.',
+  'Checking browser support…': '브라우저 지원 확인 중…', 'Registration failed. Ordinary UI remains usable.': '도구 등록에 실패했어요. 일반 화면은 그대로 이용할 수 있어요.', 'WebMCP tools registered.': 'WebMCP 도구가 등록됐어요.', 'WebMCP is unavailable. Ordinary UI remains usable.': 'WebMCP를 사용할 수 없어요. 일반 화면은 그대로 이용할 수 있어요.',
+  'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드', 'License': '라이선스', 'Third-party notices': '제삼자 고지',
   'Save or discard changes in every form on this page before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.',
   'Name, SKU and product code are required before saving.': '저장하기 전에 상품명, SKU, 상품 코드를 입력해주세요.', 'Save or discard every current-page form before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.', 'Invalid product value.': '상품 입력값을 확인해주세요.', 'Invalid field type or length.': '입력값의 형식이나 길이를 확인해주세요.', 'Invalid search filters.': '검색 조건을 확인해주세요.'
 };

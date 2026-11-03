@@ -2,7 +2,7 @@
 
 Open the [public gallery](https://linkanyco.github.io/WebMCPLite/) or use Node 22.22+, `npm install`, then `npm start`. `PORT=4187 npm start` changes the local port. `npm test` checks contracts and `npm run build:site` bundles the public runtime. The footer identifies the last deployed main commit.
 
-One fictional ecommerce administrator uses six tutorials. English is the default; EN / 한국어 changes interface copy and prompts without changing any draft data. Each tutorial places its prompt above ordinary app UI. The manual tool caller and schemas are under **Developer tools**; it does not host an AI or automatically perform the natural-language task.
+One fictional ecommerce administrator uses six tutorials. English is the default; EN / 한국어 changes interface copy and prompts without changing any draft data. Each tutorial places its prompt above ordinary app UI. Ask your browser AI to discover and invoke the registered tools; this site does not host an AI or automatically perform the natural-language task.
 
 | Page | Ask your AI | Read / action tools |
 |---|---|---|

@@ -241,15 +241,6 @@ main {
   margin-left:12px;
   white-space:nowrap;
 }
-.workspace-tabs>.ant-tabs-nav {
-  margin-bottom:22px;
-}
-.workspace-tabs>.ant-tabs-nav .ant-tabs-tab {
-  font-size:12px;
-}
-.workspace-tabs>.ant-tabs-nav .ant-tabs-tab+.ant-tabs-tab {
-  margin-left:26px;
-}
 .surface {
   background:white;
   border:1px solid #e5e3ea;
@@ -401,34 +392,10 @@ main {
   gap:8px;
   align-items:center;
 }
-.tool-form {
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:24px 26px;
-}
-.tool-form label {
+.connection-status {
+  color:#77717f;
   font-size:12px;
-  font-weight:600;
-}
-.tool-form>p {
-  font-size:12px;
-  color:#86808f;
-  margin-bottom:10px;
-}
-.tool-panel>.ant-tabs {
-  padding:0 26px;
-}
-.result-code {
-  margin:0 0 22px;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  max-height:500px;
-  overflow:auto;
-  background:#f7f6f9;
-  border-radius:8px;
-  padding:20px;
-  font:12px/1.7 ui-monospace,monospace;
+  margin:0 0 16px;
 }
 .app-notice {
   margin-bottom:22px;
@@ -518,6 +485,10 @@ footer {
   border-top:1px solid #ece9ef;
   color:#a29aa9;
   font-size:10px;
+}
+footer .license-link {
+  display:inline;
+  text-decoration:underline;
 }
 footer a {
   display:flex;

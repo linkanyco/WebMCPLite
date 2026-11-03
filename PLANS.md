@@ -1,6 +1,6 @@
 # WebMCPLite — intent, research, and execution plan
 
-Reference date: 2026-10-25; current direction updated 2026-10-28. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37's developer guide was delivered in PR #25 ([issue #24](https://github.com/linkanyco/WebMCPLite/issues/24)). H38's README handoff and specification-first extension guidance was delivered in PR #26. H39 clarifies Lite as an approachable start.
+Reference date: 2026-10-25; current direction updated 2026-11-02. The initial implementation and subsequent standard-entry-point correction have historical delivery records below. H33 was delivered in PR #21 and H34/H35 in PR #23. H36/H37's developer guide was delivered in PR #25 ([issue #24](https://github.com/linkanyco/WebMCPLite/issues/24)). H38's README handoff and specification-first extension guidance was delivered in PR #26. H39 clarifies Lite as an approachable start.
 
 ## 1. How to read this document
 
@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H40 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H41 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -140,7 +140,7 @@ The existing public repository was empty at the first check. It was reused.
 - **Historical AP contracts:** allowed-field patches, omitted-field retention, explicit array replacement, null rejection, separate save/cancel. Those meanings remain. Revision-based conflict checks were AP and are removed under H33.
 - **Save model, still current:** tab-memory baselines reset on reload, with simulated delay/failure for async examples; no server persistence.
 - **Historical work units:** contracts/harness, helper/tests, product/bulk/sheet, board/manuals/async, browser verification/final docs. Shared gallery work was combined into one PR; the helper and final documentation stayed separate. This adjusted AP sequencing, not H.
-- **License, unresolved:** no reuse license selected by the human. Viewing/running does not grant redistribution or publishing permission.
+- **Historical license status:** no reuse license was selected at initial delivery. H41 now authorizes following WebMCP's license; see §20.
 
 ## 11. Initial delivery — historical record
 
@@ -209,3 +209,11 @@ AP direction assessment: the adoption scope remains small and the dependency-fre
 R: the 27 October WebMCP draft defines JSON tool inputs, without a file/reference transfer contract or fixed 2 MB file limit. Browser attachment capabilities are a separate layer. Current official OpenAI documentation says built-in-browser automatic uploads and declarative WebMCP forms are unsupported. These observations must not become universal client limits; see [research](docs/sources/research.md).
 
 AP: extend the portable guide and compact harness, and describe file inputs through existing registered manuals. Add optional PDF/PNG/JPEG reference files to the supporting New product form, keeping six tutorials. Use its ordinary input/change action, shared draft, tab-memory save and discard. Example choices: selector `#new-product-files`, multiple selection replacing the draft list, at most three files, 25 MiB each. These limits and metadata fields are gallery choices, not human-mandated or WebMCP limits. Keep actual File objects private and out of JSON tools; expose summaries and state only. Do not create an uploader, base64 tool, alternate protocol, automatic shrinking/splitting, real persistence or a new dependency. Verify contracts and actual available browser behavior separately, then obtain independent review of the final commit and record CI/merge evidence on the PR.
+
+## 20. Community introduction, gallery simplification and license — H41
+
+[H41 evidence](docs/sources/human-intent.md) clarifies that the planned guide addition is an introduction, recalls removing Developer tools, requests a short ChatGPT test statement in README, and proposes explicit AI “browser use” positioning on the first page. It first mentions MIT, then asks to research WebMCP and follow a similar license. This supersedes H34's separate Developer tools tab; it does not remove the development guide, ordinary UI or standard registered tools.
+
+R: WebMCP's official repository licenses its reports under the W3C Software and Document License (2023 version). That is a permissive license with notice and other conditions, not no license. SPDX retains `W3C-20150513` for the 2023 text; see [research](docs/sources/research.md).
+
+AP: remove the dedicated playground/tab and its unused caller while keeping a small registration-status message and the six tutorials. Introduce AI browser use in the English-default/bilingual welcome page, README and the guide without claiming a measured speedup or universal compatibility. Attribute README's ChatGPT test statement to the project author; existing recorded browser tests remain Codex IAB observations, not new ChatGPT validation. Apply the same W3C license to original WebMCPLite code/documents, preserve third-party terms, and make the full project and bundled-dependency notices available in the built gallery. No new dependency, protocol, tutorial, production service or publishing destination is added. Validate shared editing and navigation in the real available browser, required checks, final-commit independent review, merge and existing Pages deployment.
