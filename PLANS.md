@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H43 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H44 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -229,3 +229,9 @@ AP: remove the registration-status component, its display-only state and copy. K
 [H43 evidence](docs/sources/human-intent.md) moves Guides & navigation to the bottom as an introduction/About page, and explicitly selects `MoveToGithub()` plus JavaScript navigation for the existing project-information prompt instead of first returning an address. It proposes copy describing WebMCP, WebMCPLite's AI-native development guidance, collaborative work, useful context beyond the UI and developer-defined actions. This supersedes H34's link-only information-page choice, without creating a seventh tutorial.
 
 AP: retain `?page=guide`, label it About/소개, place it last in the menu/site map and add concise bilingual copy with the official WebMCP draft link. Describe responsiveness and lower interaction overhead as aims, without a measured speed/latency or 100% feature-coverage promise. Register the exact app-selected name `MoveToGithub` through document.modelContext on each page, taking no URL. It calls the same fixed-destination action as the ordinary Open GitHub button/sidebar link, applies existing unsaved/busy guards, never saves, and schedules location.assign for the next task so the callback can return navigationRequested. Browser location, not that result, establishes arrival. No global protocol, external URL setter, dependency or production integration is added. User-requested browser navigation to the existing public project repository is the product flow being tested; GitHub administration remains host-gh-only. Test input rejection/shared-action outcomes and real navigation separately, then obtain final-commit review, checks, merge and existing Pages deployment.
+
+## 23. Remove the duplicate About-body repository action — H44
+
+[H44 evidence](docs/sources/human-intent.md) removes the GitHub navigation control from the About body because the menu already provides it. This supersedes H43's agent-selected body button, not the requested MoveToGithub tool or shared sidebar action.
+
+AP: delete only the body button, its adjacent repository invitation and unused presentation copy/styles. Retain the introduction, final menu position, sidebar link, registered tool and existing unsaved/busy guard. Update current manuals/contracts while preserving H43's historical implementation and observations. Record final-commit review, checks, merge and existing Pages deployment on the follow-up PR.

@@ -635,3 +635,15 @@ UI 제약상 표현할 수 없는 정보를 Ai에게 제공할 수 있고,
 ```
 
 Agent summary: Make the former guide/navigation page a bottom-menu introduction and map its existing English prompt to the exact app tool name MoveToGithub, which performs fixed-destination JavaScript navigation. Explain WebMCP and WebMCPLite's purpose in English-default/Korean UI. The proposed speed/latency/100% wording expresses the intended experience, not a measured result. AP copy preserves that purpose while avoiding guarantees; authorized hidden context and ordinary app actions retain existing permissions. Reusing the page route, making the tool available across pages, using existing unsaved/busy guards, scheduling the navigation callback and the exact prose are AP. The user authorizes the direct navigation example to this public repository, not another GitHub administration interface or new destination.
+
+## H44 — Remove the duplicate About-body GitHub button
+
+Status: Explicit follow-up in this execution chat, 2026-11-02 (America/Los_Angeles). Source locator: the message opening “소개에서 깃헙으로 이동도”. This removes the agent-selected duplicate body control added during H43.
+
+Human request (verbatim):
+
+```text
+소개에서 깃헙으로 이동도 걍 빼줘 어짜피 메뉴에 있는거고
+```
+
+Agent summary: Remove the GitHub navigation control from the About body because the menu already offers it. Deleting its adjacent invitation and unused copy/styles is AP cleanup. The existing sidebar GitHub action, MoveToGithub tool, introduction and guarded navigation remain; no replacement control is requested.

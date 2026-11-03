@@ -35,8 +35,6 @@ const korean = {
   'Give AI useful context and intended actions': 'AI에 필요한 정보와 의도한 작업 제공하기',
   'Provide authorized information that may not fit in the visible UI, alongside clear actions designed by the web developer.': 'UI 제약으로 화면에 모두 표현하기 어려운 정보도 기존 권한 범위 안에서 AI에 제공하고, 웹 개발자가 의도한 작업을 명확한 도구로 연결할 수 있습니다.',
   'This helps people use more of a site’s features without first learning every menu. Existing permissions and validation still apply.': '사용자가 모든 메뉴를 미리 익히지 않아도 사이트의 기능을 더 폭넓게 활용하도록 돕습니다. 기존 권한과 검증 규칙은 그대로 적용됩니다.',
-  'Open GitHub': 'GitHub로 이동',
-  'Explore the development guide and examples on GitHub.': 'GitHub에서 개발 가이드와 예제를 살펴보세요.',
   'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드', 'License': '라이선스', 'Third-party notices': '제삼자 고지',
   'Save or discard changes in every form on this page before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.',
   'Name, SKU and product code are required before saving.': '저장하기 전에 상품명, SKU, 상품 코드를 입력해주세요.', 'Save or discard every current-page form before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.', 'Invalid product value.': '상품 입력값을 확인해주세요.', 'Invalid field type or length.': '입력값의 형식이나 길이를 확인해주세요.', 'Invalid search filters.': '검색 조건을 확인해주세요.'
