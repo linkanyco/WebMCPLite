@@ -1,17 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildTools, pages, projectRepositoryUrl } from '../examples/tools.js';
-import { createWorkspace, pageAreas } from '../examples/workspace.js';
+import { createWorkspace, pageAreas, productFileInput } from '../examples/workspace.js';
 function fixture(page, { moveToGithub = () => ({ ok: true, navigationRequested: true, url: projectRepositoryUrl }) } = {}) {
   const w = createWorkspace(); let tools;
   const metadata = () => tools.map(({ execute, ...info }) => structuredClone(info));
-  tools = buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), moveToGithub, setHighlights: enabled => ({ ok: true, enabled }), getTools: metadata });
+  tools = buildTools({ workspace: w, page, navigate: target => ({ ok: true, page: target }), moveToGithub, setHighlights: enabled => ({ ok: true, enabled }) });
   return { w, metadata, call: (name, input = {}) => tools.find(t => t.name === name).execute(input) };
 }
-test('page manuals derive exact contracts; map covers six tutorials and supporting routes', async () => {
+test('discovered definitions are self-contained; optional map covers six tutorials and supporting routes', async () => {
   for (const p of pages) {
-    const { metadata, call } = fixture(p.id), manual = await call('page_manual');
-    assert.equal(manual.page.id, p.id); assert.deepEqual(manual.areas, pageAreas[p.id]); assert.deepEqual(manual.tools, metadata());
+    const { metadata, call } = fixture(p.id);
+    const definitions = metadata();
+    assert.ok(!definitions.some(tool => ['site_manual', 'page_manual'].includes(tool.name)));
+    assert.ok(definitions.every(tool => tool.description && tool.inputSchema));
     const map = await call('site_map'); assert.equal(map.pages.filter(p => p.example).length, 6);
     for (const entry of map.pages) for (const base of ['https://example.test/', 'https://example.test/WebMCPLite/']) {
       const url = new URL(entry.url, base); assert.equal(url.pathname, new URL(base).pathname); assert.equal(url.searchParams.get('page'), entry.id);
@@ -49,7 +51,8 @@ test('product translation shares drafts, validates readonly fields and retains o
   assert.equal((await call('save', { form: 'catalog' })).saved, true);
 });
 test('bulk prefix selection updates eight matching products atomically', async () => {
-  const { w, call } = fixture('bulk'), before = (await call('getProducts')).data;
+  const { w, call, metadata } = fixture('bulk'), before = (await call('getProducts')).data;
+  assert.deepEqual(metadata().find(tool => tool.name === 'setProducts').inputSchema.examples, [{ updates: [{ id: 'p1', patch: { price: 80.1 } }] }]);
   const updates = before.filter(p => p.sku.startsWith('KEY-1')).map(p => ({ id: p.id, patch: { price: Math.round(p.price * 90) / 100 } }));
   assert.equal(updates.length, 8);
   assert.equal((await call('setProducts', { updates: [...updates, { id: 'p2', patch: { price: -1 } }] })).ok, false);
@@ -85,16 +88,19 @@ test('new product accepts remembered editable values and rejects source identity
   assert.deepEqual((await target.call('getProduct')).data, { id: 'new-product', ...values });
 });
 
-test('new-product manual guides the ordinary input while tools accept no file payload and expose only summaries', async () => {
+test('new-product discovery includes complete file guidance without a manual read and accepts no file payload', async () => {
   const { w, call, metadata } = fixture('new');
-  const manual = await call('page_manual');
-  assert.equal(manual.fileInputs.length, 1);
-  const input = manual.fileInputs[0];
-  assert.equal(input.selector, '#new-product-files'); assert.equal(input.label, 'Product reference files');
-  assert.equal(input.multiple, true); assert.equal(input.maxFiles, 3); assert.equal(input.maxBytesPerFile, 25 * 1024 * 1024);
-  assert.match(input.accept, /application\/pdf/); assert.match(input.accept, /image\/png/); assert.match(input.accept, /image\/jpeg/);
-  assert.match(input.effect, /does not upload or save/); assert.match(input.unsupported, /ask the user/);
-  assert.deepEqual((await fixture('product').call('page_manual')).fileInputs, []);
+  const definitions = metadata();
+  const getter = definitions.find(tool => tool.name === 'getProduct');
+  assert.ok(getter.description.includes(JSON.stringify(productFileInput)));
+  assert.match(getter.description, /#new-product-files/);
+  assert.match(getter.description, /application\/pdf/);
+  assert.match(getter.description, /image\/png/);
+  assert.match(getter.description, /image\/jpeg/);
+  assert.match(getter.description, /does not upload or save/);
+  assert.match(getter.description, /ask the user/);
+  assert.ok(!definitions.some(tool => ['site_manual', 'page_manual'].includes(tool.name)));
+  assert.ok(!fixture('product').metadata().some(tool => tool.description.includes('#new-product-files')));
   assert.ok(!metadata().some(tool => /file/i.test(tool.name)), 'file selection has no registered setter or upload tool');
   w.selectProductFiles([new File(['private fictional bytes'], 'notes.pdf', { type: 'application/pdf', lastModified: 1 })]);
   const before = await call('getProduct');

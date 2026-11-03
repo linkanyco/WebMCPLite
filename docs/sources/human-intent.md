@@ -647,3 +647,21 @@ Human request (verbatim):
 ```
 
 Agent summary: Remove the GitHub navigation control from the About body because the menu already offers it. Deleting its adjacent invitation and unused copy/styles is AP cleanup. The existing sidebar GitHub action, MoveToGithub tool, introduction and guarded navigation remain; no replacement control is requested.
+
+## H45 — Put ordinary guidance in discovery; keep split/mobile/size questions open
+
+Status: Explicit instruction in this execution chat, 2026-11-02 (America/Los_Angeles), following discussion of understandable names, small JSON examples and avoiding repetitive manual reads. Source locator: the message opening “어 전반적으로 좀 더 한번만 읽게 하자”. The following are bounded verbatim excerpts: the separately authorized private downstream target is omitted from this public source; that work remains under its own repository rules.
+
+Human request (verbatim excerpts):
+
+```text
+어 전반적으로 좀 더 한번만 읽게 하자. ㅇㅋ 공식을 따르면서 `modelContext`에 좀 많이 넣는 형태로 하자. 일단 나누는거에 대한 논의를 좀 적어두고&#x20;
+이게 몇가지 포인트가 있는데, 일단.... 일단은 모바일인 경우 뺄까? 모바일 Ai 브라우저가 없을꺼라고 생각해서.. 아니다 이건 이슈정도로 표시하자.&#x20;
+이슈 .md를 추가해서 해당 부분 오픈된 고민으로 남겨놓자.&#x20;
+```
+
+```text
+또한 적정 `modelContext` 사이즈에대한것도 너무 크면 로딩에 문제되거나 llm이 한번에 읽는데 너무 크다고 판단 될 수 있다. 일반적으로 llm이 읽는데 100kb정도까진 문제 없잖아? 그래서 우선 default는 100kb로 잡아놨는데, 사이트 개발자의 경험에 따라 변경해라 이런식으로 오픈 결말?
+```
+
+Agent summary: Favor sufficient standard tool definitions at discovery and readable names/schema/examples over compulsory manual calls. Record split criteria, mobile and context sizing as open questions; do not implement the withdrawn mobile exclusion. The human selects an initial adjustable 100 KB recommendation; the claim that LLMs generally accept that size without difficulty remains a factual hypothesis, not a guarantee. Decimal UTF-8 measurement, metadata-only scope, an advisory reporter and removal of the gallery's redundant manual tools are AP. Browser/AI tool-selection and context-injection behavior remain client-owned. The condition to review before downstream adoption is preserved; that authorization does not grant downstream merge or deployment authority.

@@ -24,7 +24,7 @@ const workspace = createWorkspace({ onChange: () => { notice = null; emit(); } }
 let page = new URL(location.href).searchParams.get('page') || 'home';
 if (!pages.some(p => p.id === page)) page = 'home';
 let entry = Number.isInteger(history.state?.liteEntry) ? history.state.liteEntry : 0;
-let restoring = false, bridge, definitions = [], highlights = true;
+let restoring = false, bridge, highlights = true;
 let notice = null, language = 'en';
 const t = text => translate(text, language);
 function setLanguage(value) { language = value; document.documentElement.lang = value; emit(); }
@@ -62,10 +62,9 @@ window.addEventListener('beforeunload', event => {
 });
 function setHighlights(enabled) { highlights = enabled; emit(); return { ok: true, enabled }; }
 const saveOptions = () => ({});
-const metadata = () => definitions.map(({ execute, ...tool }) => structuredClone(tool));
 function activate() {
   bridge?.dispose();
-  definitions = buildTools({ workspace, page, navigate, moveToGithub, setHighlights, getTools: metadata, saveOptions });
+  const definitions = buildTools({ workspace, page, navigate, moveToGithub, setHighlights, saveOptions });
   bridge = connectTools(definitions);
   emit();
 }
@@ -81,7 +80,7 @@ const prompts = {
   async: ['Create an identical product in a new tab.'],
   new: ['Use the product details you read in the other tab to fill in this new product.'],
 };
-const discoveryPrompt = 'This website exposes WebMCP tools through document.modelContext. Use your browser’s WebMCP support to discover the tools registered on this page. Read site_manual, site_map and page_manual to get started. For file tasks, read page_manual for the ordinary file input and use supported browser attachment or ask me to select the files. If WebMCP is unavailable in your browser or AI environment, tell me.';
+const discoveryPrompt = 'Discover this page’s document.modelContext tools and use the relevant action directly. Tool descriptions, schemas and examples include the needed guidance; no manual lookup is required. Read current values before editing, leave edits as drafts, and save only when I explicitly ask. Use site_map only if you need another destination. For files, follow the guidance in the discovered getProduct description and use supported browser attachment or ask me to select files. If browser/AI support is unavailable, tell me.';
 const pagePrompt = 'Now that you have discovered WebMCP, what can you do on this page?';
 function PromptCard() {
   return <section className="prompt-stage" aria-label="Tutorial prompts"><div className="prompt-avatar"><Sparkles size={25} /></div><div className="speech-bubble"><span className="comic-label">{t('ASK YOUR AI')}</span>{prompts[page].map((text, index) => <div className="prompt-line" key={text}>{prompts[page].length > 1 && <span className="prompt-step">{index + 1}</span>}<p>{t(text)}</p></div>)}</div></section>;

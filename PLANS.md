@@ -10,7 +10,7 @@ This plan carries a brainstorming discussion into development without mixing sou
 - **R — researched facts:** observations supported by linked official drafts, documentation, or source. Preserve the date and limits. A draft API and actual browser/AI support are different.
 - **AP — agent proposals:** implementation choices, examples, and sequencing. They may change when evidence warrants it and must not be relabeled as human instructions.
 
-Read the [H01–H44 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
+Read the [H01–H45 evidence](docs/sources/human-intent.md), including H38's explicitly bounded excerpts, and [research with limitations](docs/sources/research.md). Summaries do not replace those sources. Confident prior AI answers, existing code, human silence, or a merged PR do not turn AP into H. This plan is not proof that an implementation or verification is complete.
 
 ## 2. The problem — agent synthesis of H
 
@@ -52,11 +52,11 @@ Initial delivery excluded deployments and package publishing. H31 subsequently a
 
 ### AP-01: Two audiences for manuals
 
-Development AGENTS.md tells **AI building a site** what to connect and verify. Runtime manuals tell **AI using that site** what it can read, edit, save, and navigate. Do not copy this repository's operating policy wholesale into a consumer harness.
+Development AGENTS.md tells **AI building a site** what to connect and verify. Runtime guidance in registered definitions tells **AI using that site** what it can read, edit, save, and navigate. H45 removes a routine manual-read prerequisite. Do not copy this repository's operating policy wholesale into a consumer harness.
 
 ### AP-02: One standard runtime entry point
 
-**Current, under H32/H33:** register, discover, and invoke through `document.modelContext`. Manuals and site maps are registered tools. Browser agents use browser discovery/invocation; in-page JavaScript requires implemented `getTools()`/`executeTool()` APIs. Detect these separately and keep ordinary UI working when unavailable.
+**Current, under H32/H33:** register, discover, and invoke through `document.modelContext`. Under H45, baseline guidance lives in the registered action definitions; site maps and genuinely needed supplemental reads remain registered tools. Browser agents use browser discovery/invocation; in-page JavaScript requires implemented `getTools()`/`executeTool()` APIs. Detect these separately and keep ordinary UI working when unavailable.
 
 **Historical, superseded by H32:** the early AP proposed shared definitions for both native registration and a public JS list/call fallback with a short metadata/DOM entry guide. It mentioned `#agentsmd`/`#llms` without treating them as official APIs. That proposal was implemented in the early examples, then removed. It is not current guidance or a prior human decision to create a second protocol.
 
@@ -80,7 +80,7 @@ H36 clarifies the minimal runtime guidance: requests to edit/change stop at sett
 
 ### AP-06: Small manuals
 
-Use a short site map for pages/URLs/purposes, common guidance for shared concepts, and a page manual for current tools and workflows. Static same-origin JSON is enough for these examples; do not add an LLM, search engine, or vector database just to retrieve guidance.
+Current under H45: make discovery sufficient for ordinary work using concise action descriptions, schemas and examples. Keep a registered site map for navigation. A genuinely needed large/specialized supplement should need at most one additional guidance read, without chained manuals. The earlier static site/page manual arrangement is historical AP, now removed from this gallery; no LLM, search engine or vector database is needed.
 
 ## 5. Initial six examples — historical AP selection, superseded by H34
 
@@ -235,3 +235,9 @@ AP: retain `?page=guide`, label it About/소개, place it last in the menu/site 
 [H44 evidence](docs/sources/human-intent.md) removes the GitHub navigation control from the About body because the menu already provides it. This supersedes H43's agent-selected body button, not the requested MoveToGithub tool or shared sidebar action.
 
 AP: delete only the body button, its adjacent repository invitation and unused presentation copy/styles. Retain the introduction, final menu position, sidebar link, registered tool and existing unsaved/busy guard. Update current manuals/contracts while preserving H43's historical implementation and observations. Record final-commit review, checks, merge and existing Pages deployment on the follow-up PR.
+
+## 24. Discovery-first context and open sizing questions — H45
+
+[H45 evidence](docs/sources/human-intent.md) adopts concise readable names/keys, enough context in standard modelContext registration to avoid routine manual reads, at most one additional guidance read when truly needed, and an initial developer-adjustable 100 KB advisory. The human withdrew an immediate mobile exclusion and requested an open-questions Markdown file. These directions supersede earlier mandatory site/page-manual discovery choices. A separately authorized consuming-repository adoption is conditional on this change's review and follows that repository's own permissions; WebMCPLite merge authority does not transfer.
+
+AP: descriptions/schemas/examples carry action scope, draft/save effects and ordinary file-input guidance. Remove duplicate page_manual/site_manual tools and the fetched static manual; retain site_map. Keep live data in ordinary scoped getters, not discovery metadata. Define the initial 100 KB advisory as 100,000 UTF-8 bytes of JSON-serialized metadata excluding executable callbacks, measure it through a configurable build-only report, and never truncate/drop/block tools to hit it. This is not a standard limit or a tested all-client safety guarantee. ISSUES.md keeps split criteria, mobile support and size tradeoffs open. No mobile exclusion, parallel document property, new dependency, state owner or hosted service is introduced. Verify direct actions without manual reads, file guidance on discovery, existing app contracts, browser calls, final-commit independent review and required checks before merge and existing Pages deployment.
