@@ -585,3 +585,22 @@ Human request (verbatim):
 ```
 
 Agent summary: Inspect the official standard before choosing a file-transfer approach. If it has no suitable mechanism, guide the AI to an ordinary file input and explain multiplicity, formats, related data and realistic usage. The earlier shorthand describes inline base64 tool arguments leading to app File/draft preparation; it is not evidence of an official `setFile` API or local-path assignment to `input.value`. Selector fields, demo limits, a supporting example and manual format remain AP. The request does not authorize changes to another repository or a new upload service.
+
+## H41 — Browser-use introduction, removal reminder and permissive licensing
+
+Status: Explicit follow-up in this execution chat, 2026-11-02 (America/Los_Angeles). Source locator: the message opening “가이드 보강이 아니라”. The quotation below preserves the entire message. It now directs removal of the Developer tools UI retained by H34; H36's earlier discussion had not removed it during that documentation task.
+
+Human request (verbatim):
+
+```text
+가이드 보강이 아니라 가이드에 소개를 더 넣으려고 했던거야. 
+
+아 개발자 도구 페이지 없애기로 하지 않았나?
+라이센스는 MIT로 해 아무 제한없이 아니다 애초에 WebMCP가 뭘로 되어 있지? 걘 거의 규약?이니깐 없을꺼 같긴한데 비슷하게 가자
+
+ㅇㅇ 일단 리드미에 챗지피티에서 테스트했다고 짧게 써놔 
+
+그리고, 완전 첫페이지에, AI 브라우저 유즈기능에 날개를 달아주기 위한 개발법? 이런식으로 소개를 추가하는게 좋지 않을까? 딱 "브라우저 유즈" 단어가 없어서
+```
+
+Agent summary: Add introductory positioning, not a request to expand the guide's technical instructions. Remove the dedicated Developer tools tab/playground while retaining normal UI and WebMCP registrations. Add a short author-reported ChatGPT test statement; do not relabel recorded Codex browser checks as new ChatGPT testing. Research WebMCP's license before selecting a similar permissive license: the later wording qualifies the initial MIT suggestion. Exact copy, selecting the same W3C software/document license and bundling its notice are AP; they do not imply W3C affiliation or zero conditions.

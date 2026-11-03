@@ -1,6 +1,6 @@
 import React, { useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Alert, Button, ConfigProvider, Input, InputNumber, Select, Table, Tabs, Tag } from 'antd';
+import { Alert, Button, ConfigProvider, Input, InputNumber, Table, Tag } from 'antd';
 import enUS from 'antd/locale/en_US';
 import koKR from 'antd/locale/ko_KR';
 import LobeConfigProvider from '@lobehub/ui/es/ConfigProvider/index';
@@ -8,9 +8,10 @@ import ThemeProvider from '@lobehub/ui/es/ThemeProvider/index';
 import { motion } from 'motion/react';
 import { ArrowRight, BookOpen, ChevronRight, ExternalLink, Github, Layers, LayoutDashboard, List, Package, Play, RotateCcw, Save, Sparkles, Workflow } from 'lucide-react';
 import { connectTools } from '../src/connect.js';
-import { createWorkspace, fail, pageAreas, productFileInput } from './workspace.js';
+import { createWorkspace, fail, productFileInput } from './workspace.js';
 import { buildTools, pages } from './tools.js';
 import bannerUrl from './assets/collaboration-banner.png';
+import licenseUrl from '../LICENSE.txt?url&no-inline';
 import { translate } from './i18n.js';
 import './style.css';
 
@@ -24,12 +25,11 @@ let page = new URL(location.href).searchParams.get('page') || 'home';
 if (!pages.some(p => p.id === page)) page = 'home';
 let entry = Number.isInteger(history.state?.liteEntry) ? history.state.liteEntry : 0;
 let restoring = false, bridge, definitions = [], registration = 'pending', highlights = true;
-let lastResult = null, notice = null, language = 'en';
+let notice = null, language = 'en';
 const t = text => translate(text, language);
 function setLanguage(value) { language = value; document.documentElement.lang = value; emit(); }
 history.replaceState({ litePage: page, liteEntry: entry }, '', `?page=${page}`);
-const publish = result => { lastResult = result; emit(); return result; };
-function report(result) { notice = result.ok === false ? { type: 'error', message: result.error.message } : null; return publish(result); }
+function report(result) { notice = result.ok === false ? { type: 'error', message: result.error.message } : null; emit(); return result; }
 function canLeave() {
   const state = workspace.unsaved(page);
   if (state.unsaved || state.busy) { notice = { type: 'warning', message: 'Save or discard changes in every form on this page before leaving.' }; emit(); return false; }
@@ -57,7 +57,6 @@ window.addEventListener('beforeunload', event => {
 function setHighlights(enabled) { highlights = enabled; emit(); return { ok: true, enabled }; }
 const saveOptions = () => ({});
 const metadata = () => definitions.map(({ execute, ...tool }) => structuredClone(tool));
-const inPageSupported = () => typeof document.modelContext?.getTools === 'function' && typeof document.modelContext?.executeTool === 'function';
 function activate() {
   bridge?.dispose(); registration = 'pending';
   definitions = buildTools({ workspace, page, navigate, setHighlights, getTools: metadata, saveOptions });
@@ -69,17 +68,6 @@ function activate() {
     emit();
   });
   emit();
-}
-async function callTool(name, input = {}) {
-  if (!inPageSupported()) return fail('unsupported', 'This browser does not support in-page WebMCP invocation. You can still use the editor.');
-  const owner = bridge; await owner.ready;
-  try {
-    const tools = await document.modelContext.getTools();
-    if (owner !== bridge) return fail('inactive', 'The page changed. Select a tool from the current page.');
-    const tool = tools.find(t => t.name === name && t.window === window);
-    if (!tool) return fail('not_found', 'The requested tool is not registered on this page.');
-    return JSON.parse(await document.modelContext.executeTool(tool, input));
-  } catch { return fail('tool_failed', 'The browser could not execute this tool. Check support and try again.'); }
 }
 activate();
 
@@ -93,13 +81,8 @@ const prompts = {
   async: ['Create an identical product in a new tab.'],
   new: ['Use the product details you read in the other tab to fill in this new product.'],
 };
-const defaultTool = { home: 'site_map', product: 'getProduct', bulk: 'getProducts', sheet: 'getProducts', board: 'getStorefront', guide: 'site_manual', async: 'getProduct', new: 'getProduct' };
 const discoveryPrompt = 'This website exposes WebMCP tools through document.modelContext. Use your browser’s WebMCP support to discover the tools registered on this page. Read site_manual, site_map and page_manual to get started. For file tasks, read page_manual for the ordinary file input and use supported browser attachment or ask me to select the files. If WebMCP is unavailable in your browser or AI environment, tell me.';
 const pagePrompt = 'Now that you have discovered WebMCP, what can you do on this page?';
-function sample(name) {
-  const examples = { getProduct: page === 'new' ? {} : { id: 'p1' }, setProduct: page === 'new' ? { patch: { name: 'Mechanical keyboard', sku: 'KEY-101', productCode: 'PRD-1001', price: 89 } } : { id: 'p1', patch: { descriptionEn: 'A compact mechanical keyboard with quiet switches and a comfortable typing feel.', descriptionKo: '조용한 스위치와 편안한 타건감을 갖춘 컴팩트한 기계식 키보드입니다.' } }, setProducts: { updates: [{ id: 'p1', patch: { price: 80.1 } }] }, setSearch: { patch: { skuContains: 'KEY', maxPrice: 20 } }, setStorefront: { patch: { html: workspace.read('storefront').data.html } }, save: { form: pageAreas[page][0] }, cancel: { form: pageAreas[page][0] }, navigate: { page: 'guide' }, setHighlights: { enabled: false } };
-  return JSON.stringify(examples[name] || {}, null, 2);
-}
 function PromptCard() {
   return <section className="prompt-stage" aria-label="Tutorial prompts"><div className="prompt-avatar"><Sparkles size={25} /></div><div className="speech-bubble"><span className="comic-label">{t('ASK YOUR AI')}</span>{prompts[page].map((text, index) => <div className="prompt-line" key={text}>{prompts[page].length > 1 && <span className="prompt-step">{index + 1}</span>}<p>{t(text)}</p></div>)}</div></section>;
 }
@@ -108,7 +91,7 @@ function CopyPrompt({ text, label }) {
   return <div className="copy-prompt"><p>{t(text)}</p><Button aria-label={'Copy ' + label} onClick={async () => { try { await navigator.clipboard.writeText(text); setCopied(true); } catch { setCopied(false); } }}>{t(copied ? 'Copied' : 'Copy prompt')}</Button></div>;
 }
 function Home() {
-  return <div className="landing"><div className="landing-heading"><span className="eyebrow">{t('A SHARED WORKSPACE FOR YOU AND YOUR AI')}</span><h1>{t('One website.')}<br />{t('Two collaborators.')}</h1><p>{t('Ask your AI. Watch the page change. Pick up where it leaves off.')}</p></div><img className="hero-banner" src={bannerUrl} alt="A store administrator and a friendly computer character discussing one shared webpage" /><div className="landing-start"><div className="landing-step"><span className="step-number">01</span><div><h2>{t('Help your AI find WebMCP')}</h2><p>{t('Already connected? Skip to the next prompt. Your AI and browser need WebMCP access.')}</p><CopyPrompt text={t(discoveryPrompt)} label="discovery prompt" /></div></div><div className="landing-step"><span className="step-number">02</span><div><h2>{t('Ask what this page can do')}</h2><p>{t('You can ask this on any page.')}</p><CopyPrompt text={t(pagePrompt)} label="page prompt" /></div></div><div className="landing-step"><span className="step-number">03</span><div><h2>{t('Take a tour')}</h2><p>{t('Use the menu to visit each page and try its tutorial prompt with your AI.')}</p><Button type="primary" icon={<ArrowRight size={15} />} onClick={() => report(navigate('product'))}>{t('Try the product editor')}</Button></div></div></div></div>;
+  return <div className="landing"><div className="landing-heading"><span className="eyebrow">{t('A SHARED WORKSPACE FOR YOU AND YOUR AI')}</span><h1>{t('Give AI browser use')}<br />{t('a boost.')}</h1><p>{t('A practical way to build websites for AI browser use, with WebMCP connecting AI to the data and actions people use on the same page.')}</p></div><img className="hero-banner" src={bannerUrl} alt="A store administrator and a friendly computer character discussing one shared webpage" /><div className="landing-start"><div className="landing-step"><span className="step-number">01</span><div><h2>{t('Help your AI find WebMCP')}</h2><p>{t('Already connected? Skip to the next prompt. Your AI and browser need WebMCP access.')}</p><CopyPrompt text={t(discoveryPrompt)} label="discovery prompt" /></div></div><div className="landing-step"><span className="step-number">02</span><div><h2>{t('Ask what this page can do')}</h2><p>{t('You can ask this on any page.')}</p><CopyPrompt text={t(pagePrompt)} label="page prompt" /></div></div><div className="landing-step"><span className="step-number">03</span><div><h2>{t('Take a tour')}</h2><p>{t('Use the menu to visit each page and try its tutorial prompt with your AI.')}</p><Button type="primary" icon={<ArrowRight size={15} />} onClick={() => report(navigate('product'))}>{t('Try the product editor')}</Button></div></div></div></div>;
 }
 function DraftStatus({ state, newProduct = false }) { return <Tag color={state.saving ? 'processing' : state.dirty ? 'gold' : undefined}>{t(state.saving ? 'Saving…' : state.dirty ? 'Unsaved changes' : newProduct && !state.data.name ? 'New draft' : 'Saved')}</Tag>; }
 function Field({ state, name, label, children, product }) {
@@ -145,17 +128,14 @@ function StorefrontEditor() {
 function ProjectInfo() {
   return <section className="surface project-info"><Github size={36} strokeWidth={1.4} /><h2>{t('Explore the project on GitHub.')}</h2><a href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer">WebMCPLite<ExternalLink size={15} /></a></section>;
 }
-function ToolPlayground() {
-  const [selected, setSelected] = useState(defaultTool[page]), [args, setArgs] = useState(sample(defaultTool[page])), [running, setRunning] = useState(false);
-  const available = registration === 'registered' && inPageSupported(), selectedDefinition = definitions.find(t => t.name === selected);
-  async function run() { setRunning(true); try { report(await callTool(selected, JSON.parse(args))); } catch { report(fail('validation', 'Enter a valid JSON object.')); } finally { setRunning(false); } }
-  const status = registration === 'pending' ? t('Checking browser support…') : registration === 'failed' ? t('Registration failed.') : registration !== 'registered' ? t('WebMCP is unavailable. Ordinary UI remains usable.') : !inPageSupported() ? t('Tools registered. In-page invocation is unavailable.') : definitions.length + ' ' + t('tools registered · in-page invocation ready');
-  return <section className="surface tool-panel" aria-label="WebMCP tool playground"><div className="surface-heading"><h2>{t('Tool playground')}</h2><Tag>document.modelContext</Tag></div><div className="tool-form"><p role="status">{status}</p><label htmlFor="tool-select">{t('Registered tool')}</label><Select id="tool-select" showSearch={{ optionFilterProp: 'label' }} value={selected} disabled={!available || running} options={definitions.map(t => ({ value: t.name, label: t.name }))} onChange={value => { setSelected(value); setArgs(sample(value)); }} /><label htmlFor="tool-args">{t('Arguments')}</label><Input.TextArea id="tool-args" className="source-editor" value={args} disabled={!available || running} rows={6} spellCheck={false} onChange={e => setArgs(e.target.value)} /><Button type="primary" disabled={!available || running} loading={running} onClick={run}>{t('Execute tool')}</Button></div><Tabs items={[{ key: 'result', label: t('Response'), children: <pre className="result-code" aria-live="polite">{lastResult === null ? t('No tool response yet.') : JSON.stringify(lastResult, null, 2)}</pre> }, { key: 'schema', label: t('Input schema'), children: <pre className="result-code">{JSON.stringify(selectedDefinition?.inputSchema, null, 2)}</pre> }]} /></section>;
+function RegistrationStatus() {
+  const message = registration === 'pending' ? 'Checking browser support…' : registration === 'failed' ? 'Registration failed. Ordinary UI remains usable.' : registration === 'registered' ? 'WebMCP tools registered.' : 'WebMCP is unavailable. Ordinary UI remains usable.';
+  return <p className="connection-status" role="status">{t(message)}</p>;
 }
 function WorkspaceApp() {
   useSyncExternalStore(subscribe, () => snapshot);
   const current = pages.find(p => p.id === page), commit = document.querySelector('meta[name="build-commit"]')?.content;
   const content = page === 'home' ? <Home /> : page === 'product' || page === 'async' || page === 'new' ? <ProductEditor /> : page === 'bulk' ? <BulkEditor /> : page === 'sheet' ? <ProductList /> : page === 'board' ? <StorefrontEditor /> : <ProjectInfo />;
-  return <ConfigProvider locale={language === 'ko' ? koKR : enUS}><div className="app-shell"><aside className="sidebar"><a className="brand" href="?page=home" onClick={e => { e.preventDefault(); report(navigate('home')); }}><span className="brand-mark"><Workflow size={22} /></span><span>WebMCP<span className="brand-lite">Lite</span><small>{t('Human + AI, together')}</small></span></a><nav aria-label="Tutorial pages">{pages.filter(p => p.id !== 'new').map(p => { const Icon = icons[p.id]; return <a key={p.id} href={'?page=' + p.id} aria-current={page === p.id ? 'page' : undefined} onClick={e => { e.preventDefault(); report(navigate(p.id)); }}><Icon size={17} /><span>{t(p.title)}</span></a>; })}</nav><div className="sidebar-bottom"><a className="sidebar-link" href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer"><Github size={16} />GitHub<ExternalLink size={12} /></a><a className="sidebar-link" href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noreferrer"><BookOpen size={16} />{t('WebMCP specification')}<ExternalLink size={12} /></a></div></aside><div className="main-shell"><header className="topbar"><div className="breadcrumbs"><span>WebMCPLite</span><ChevronRight size={13} /><strong>{t(current.title)}</strong></div><div className="topbar-actions"><div className="language-switch" role="group" aria-label="Interface language"><button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button><button type="button" aria-pressed={language === 'ko'} onClick={() => setLanguage('ko')}>한국어</button></div><span className="store-label">{t('DEMO STORE')}</span></div></header><main>{page !== 'home' && <PromptCard />}<div className={page === 'home' ? 'home-content' : 'application-stage'}>{notice && <Alert className="app-notice" type={notice.type} showIcon title={t(notice.message)} closable onClose={() => { notice = null; emit(); }} />}<Tabs key={page} defaultActiveKey="workspace" className="workspace-tabs" items={[{ key: 'workspace', label: t(page === 'home' ? 'Welcome' : current.title), children: content }, { key: 'developer', label: t('Developer tools'), children: <ToolPlayground key={page} /> }]} /></div><footer><span>{t('Fictional data · Saved in this tab · Reload to reset')}</span>{commit ? <a href={'https://github.com/linkanyco/WebMCPLite/commit/' + commit} target="_blank" rel="noreferrer">{t('Build')} {commit.slice(0, 7)}<ExternalLink size={11} /></a> : <span>{t('Local preview')}</span>}</footer></main></div></div></ConfigProvider>;
+  return <ConfigProvider locale={language === 'ko' ? koKR : enUS}><div className="app-shell"><aside className="sidebar"><a className="brand" href="?page=home" onClick={e => { e.preventDefault(); report(navigate('home')); }}><span className="brand-mark"><Workflow size={22} /></span><span>WebMCP<span className="brand-lite">Lite</span><small>{t('Human + AI, together')}</small></span></a><nav aria-label="Tutorial pages">{pages.filter(p => p.id !== 'new').map(p => { const Icon = icons[p.id]; return <a key={p.id} href={'?page=' + p.id} aria-current={page === p.id ? 'page' : undefined} onClick={e => { e.preventDefault(); report(navigate(p.id)); }}><Icon size={17} /><span>{t(p.title)}</span></a>; })}</nav><div className="sidebar-bottom"><a className="sidebar-link" href="https://github.com/linkanyco/WebMCPLite" target="_blank" rel="noreferrer"><Github size={16} />GitHub<ExternalLink size={12} /></a><a className="sidebar-link" href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noreferrer"><BookOpen size={16} />{t('WebMCP specification')}<ExternalLink size={12} /></a></div></aside><div className="main-shell"><header className="topbar"><div className="breadcrumbs"><span>WebMCPLite</span><ChevronRight size={13} /><strong>{t(current.title)}</strong></div><div className="topbar-actions"><div className="language-switch" role="group" aria-label="Interface language"><button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button><button type="button" aria-pressed={language === 'ko'} onClick={() => setLanguage('ko')}>한국어</button></div><span className="store-label">{t('DEMO STORE')}</span></div></header><main>{page !== 'home' && <PromptCard />}<div className={page === 'home' ? 'home-content' : 'application-stage'}><RegistrationStatus />{notice && <Alert className="app-notice" type={notice.type} showIcon title={t(notice.message)} closable onClose={() => { notice = null; emit(); }} />}{content}</div><footer><span>{t('Fictional data · Saved in this tab · Reload to reset')} · <a className="license-link" href={licenseUrl} target="_blank" rel="noreferrer">{t('License')}</a></span>{commit ? <a href={'https://github.com/linkanyco/WebMCPLite/commit/' + commit} target="_blank" rel="noreferrer">{t('Build')} {commit.slice(0, 7)}<ExternalLink size={11} /></a> : <span>{t('Local preview')}</span>}</footer></main></div></div></ConfigProvider>;
 }
 createRoot(document.getElementById('root')).render(<LobeConfigProvider motion={motion} locale="en-US"><ThemeProvider defaultAppearance="light" enableCustomFonts={false} customTheme={{ neutralColor: 'slate' }} theme={{ token: { fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', borderRadius: 8, controlHeight: 38 } }}><WorkspaceApp /></ThemeProvider></LobeConfigProvider>);

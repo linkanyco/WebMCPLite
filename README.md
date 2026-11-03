@@ -1,6 +1,8 @@
 # WebMCPLite
 
-> A friendly starting point for building with WebMCP, with practical development guidelines and working examples.
+> Give AI browser use a boost: practical WebMCP development guidelines and working examples.
+
+Build websites that work better with AI browser use. Connect the page's data and ordinary app actions through WebMCP so people and AI can work on the same screen.
 
 I started this project because I wanted an easier way for people and AI to work together on the same website. During that exploration, I found that the existing **[WebMCP draft](https://webmachinelearning.github.io/webmcp/)** already defines the browser interface. WebMCPLite follows that specification and offers practical examples for people who want to use it as easily as I do.
 
@@ -12,7 +14,7 @@ This is an independent companion to the [WebMCP draft](https://webmachinelearnin
 
 The project has two deliverables: an example site and developer guidelines. Start with the [self-contained development guidelines](docs/development-guidelines.md) when building a screen. They cover ordinary get/set/save actions reused by API loading, UI and WebMCP; authorized detail reads without mandatory getter layers; thin registration; a short edit-versus-save instruction; and worker/reviewer checks.
 
-The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage, UI dependencies and developer controls are not prerequisites for your app.
+The guide can be carried as one Markdown handoff into a consuming project. Its local rules still govern. The [AGENTS.md harness](docs/consumer-AGENTS.md) is a compact entry point. Gallery-specific tab-memory storage and UI dependencies are not prerequisites for your app.
 
 For files, the guide explains ordinary file inputs, concrete page-manual guidance and a mixed browser/tool workflow. Keep file bytes out of JSON setters; use a supported browser attachment action or let the user select files. The supporting New product form demonstrates optional reference files and their relation to the same product draft. See the [file walkthrough](examples/README.md#optional-reference-files-on-new-product) for limits and current client support.
 
@@ -50,7 +52,7 @@ The gallery uses **Ant Design with the LobeHub theme**. The reusable [registrati
 - Find the project information page through registered manuals and navigation.
 - Remember product details and create the same product in another tab through its ordinary New product form.
 
-The welcome page introduces WebMCP discovery with a cartoon banner. Tutorial prompts sit above ordinary admin screens; the tool playground is in a separate Developer tools tab. The EN / 한국어 buttons switch interface copy without changing drafts; English is the default. AI highlights start on and `setHighlights` can hide them.
+The welcome page introduces AI browser use and WebMCP discovery with a cartoon banner. Tutorial prompts sit above ordinary admin screens. The EN / 한국어 buttons switch interface copy without changing drafts; English is the default. AI highlights start on and `setHighlights` can hide them.
 
 Setters update drafts; saving is a separate action. Calls do not require revision counters. These are example app contracts, not additional requirements imposed by WebMCP.
 
@@ -58,7 +60,9 @@ Setters update drafts; saving is a separate action. Calls do not require revisio
 
 Runtime tools register through **`document.modelContext`**. Browser agents discover and invoke registered tools through the browser's capabilities. In-page JavaScript requires the draft's `getTools()` and `executeTool()` APIs; the [walkthrough](examples/README.md) shows that path separately.
 
-Registration support and in-page invocation support are reported independently. Ordinary UI editing, save, and cancel remain available when WebMCP is unavailable. There is no extra public global API, HTML discovery marker, transport, or polyfill.
+The site reports registration status; successful registration alone does not establish browser-agent discovery or in-page invocation support. Ordinary UI editing, save, and cancel remain available when WebMCP is unavailable. There is no extra public global API, HTML discovery marker, transport, or polyfill.
+
+Tested in ChatGPT (reported by the project author). See the [verification notes](docs/verification.md) for recorded Codex browser checks and support limits.
 
 The project follows the linked draft API; it is not a standards certification. [Verification notes](docs/verification.md) distinguish automated stubs from observed browser calls and list untested environments.
 
@@ -72,4 +76,4 @@ The project follows the linked draft API; it is not a standards certification. [
 
 GitHub Actions tests and builds pull requests. Changes merged to `main` are published to GitHub Pages; the public site shows the last successful deployment. The footer's **Build** link and [version.json](https://linkanyco.github.io/WebMCPLite/version.json) identify that commit.
 
-The repository is public, but a reuse license has not yet been selected. Publication does not grant a redistribution or package publishing license. No private customer code or data is included.
+Original WebMCPLite code and documentation use the [W3C Software and Document License](LICENSE.txt), matching the license used for the WebMCP reports. It permits use, modification and redistribution subject to its notice and other terms. Third-party dependencies and assets retain their own terms. No private customer code or data is included.

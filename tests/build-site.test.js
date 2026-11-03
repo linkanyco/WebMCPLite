@@ -24,6 +24,10 @@ test('bundled artifact contains only runtime files, stamps its SHA and resolves 
     const manualFile = files.find(file => /^assets\/manual-.+\.json$/.test(file));
     assert.ok(manualFile, 'the runtime manual is emitted as a bundled asset');
     JSON.parse(await readFile(path.join(destination, manualFile), 'utf8'));
+    const licenseFile = files.find(file => /^assets\/LICENSE-.+\.txt$/.test(file));
+    assert.ok(licenseFile, 'the distributed site includes the full project license');
+    assert.equal(await readFile(path.join(destination, licenseFile), 'utf8'),
+      await readFile(new URL('../LICENSE.txt', import.meta.url), 'utf8'));
     const html = await readFile(path.join(destination, 'index.html'), 'utf8');
     assert.ok(html.includes(`<meta name="build-commit" content="${commit}">`));
     assert.doesNotMatch(html, /agentsmd|webmcpLite/);
@@ -40,6 +44,7 @@ test('bundled artifact contains only runtime files, stamps its SHA and resolves 
     const runtime = (await Promise.all(files.filter(file => file.endsWith('.js')).map(file => readFile(path.join(destination, file), 'utf8')))).join('\n');
     assert.doesNotMatch(runtime, /window\.webmcpLite/);
     assert.ok(runtime.includes(path.basename(manualFile)), 'the bundled tool references its emitted manual');
+    assert.ok(runtime.includes(path.basename(licenseFile)), 'the site links to its emitted license notice');
     await assert.rejects(buildSite(destination, 'invalid'), TypeError);
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'version.json'), 'utf8')), { commit });
   } finally { await rm(temporary, { recursive: true, force: true }); }
