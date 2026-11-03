@@ -27,7 +27,7 @@ const korean = {
   'Storefront custom HTML': '스토어프런트 커스텀 HTML', 'HTML / CSS': 'HTML / CSS', 'Preview': '미리보기', 'Storefront preview': '스토어프런트 미리보기',
   'Explore the project on GitHub.': '프로젝트는 GitHub에서 확인해보세요.',
   'Checking browser support…': '브라우저 지원 확인 중…', 'Registration failed. Ordinary UI remains usable.': '도구 등록에 실패했어요. 일반 화면은 그대로 이용할 수 있어요.', 'WebMCP tools registered.': 'WebMCP 도구가 등록됐어요.', 'WebMCP is unavailable. Ordinary UI remains usable.': 'WebMCP를 사용할 수 없어요. 일반 화면은 그대로 이용할 수 있어요.',
-  'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드', 'License': '라이선스',
+  'Fictional data · Saved in this tab · Reload to reset': '가상 데이터 · 현재 탭에 저장 · 새로고침하면 초기화', 'Local preview': '로컬 미리보기', 'Build': '빌드', 'License': '라이선스', 'Third-party notices': '제삼자 고지',
   'Save or discard changes in every form on this page before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.',
   'Name, SKU and product code are required before saving.': '저장하기 전에 상품명, SKU, 상품 코드를 입력해주세요.', 'Save or discard every current-page form before leaving.': '이동하기 전에 현재 페이지의 변경사항을 저장하거나 취소해주세요.', 'Invalid product value.': '상품 입력값을 확인해주세요.', 'Invalid field type or length.': '입력값의 형식이나 길이를 확인해주세요.', 'Invalid search filters.': '검색 조건을 확인해주세요.'
 };

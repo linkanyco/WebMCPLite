@@ -76,4 +76,4 @@ The project follows the linked draft API; it is not a standards certification. [
 
 GitHub Actions tests and builds pull requests. Changes merged to `main` are published to GitHub Pages; the public site shows the last successful deployment. The footer's **Build** link and [version.json](https://linkanyco.github.io/WebMCPLite/version.json) identify that commit.
 
-Original WebMCPLite code and documentation use the [W3C Software and Document License](LICENSE.txt), matching the license used for the WebMCP reports. It permits use, modification and redistribution subject to its notice and other terms. Third-party dependencies and assets retain their own terms. No private customer code or data is included.
+Original WebMCPLite code and documentation use the [W3C Software and Document License](LICENSE.txt), matching the license used for the WebMCP reports. It permits use, modification and redistribution subject to its notice and other terms. Third-party dependencies and assets retain their own terms; the production footer links the bundled dependency notices. No private customer code or data is included.
