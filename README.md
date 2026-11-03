@@ -60,7 +60,7 @@ Setters update drafts; saving is a separate action. Calls do not require revisio
 
 Runtime tools register through **`document.modelContext`**. Browser agents discover and invoke registered tools through the browser's capabilities. In-page JavaScript requires the draft's `getTools()` and `executeTool()` APIs; the [walkthrough](examples/README.md) shows that path separately.
 
-The site reports registration status; successful registration alone does not establish browser-agent discovery or in-page invocation support. Ordinary UI editing, save, and cancel remain available when WebMCP is unavailable. There is no extra public global API, HTML discovery marker, transport, or polyfill.
+Using these tools requires WebMCP support in both the browser and AI environment; successful registration alone does not establish browser-agent discovery or in-page invocation support. Ordinary UI editing, save, and cancel remain available when WebMCP is unavailable. There is no extra public global API, HTML discovery marker, transport, or polyfill.
 
 Tested in ChatGPT (reported by the project author). See the [verification notes](docs/verification.md) for recorded Codex browser checks and support limits.
 

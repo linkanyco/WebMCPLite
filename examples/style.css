@@ -392,11 +392,6 @@ main {
   gap:8px;
   align-items:center;
 }
-.connection-status {
-  color:#77717f;
-  font-size:12px;
-  margin:0 0 16px;
-}
 .app-notice {
   margin-bottom:22px;
 }
